@@ -1,8 +1,8 @@
-# scalability-compose
+# cdemo - an tour of Conjur using containers
 
 Goal: A self-contained implementation of a simple Conjur application for demonstration in docker-compose and serve as a reference model for best practices.
 
-NOTE: This demo uses a single identity for all instances of the application. This is best practice as it is scalable to potentially thousands of instances, whereas use of the Host Factory token is not.
+NOTE: This demo uses a single identity for all instances of the application. This is best practice as it is scalable to potentially thousands of instances, whereas use of the Host Factory token does not.
 
 Scenario: Spin up a bunch of minimal containers, each of which fetches a secret every few seconds in a continuous loop. Change the secret, deny access, rotate the API key and watch effects.
 
