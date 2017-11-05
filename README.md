@@ -1,4 +1,4 @@
-# cdemo - an tour of Conjur using containers
+# cdemo - a tour of Conjur using containers
 
 Goal: A self-contained implementation of a simple Conjur application for demonstration in docker-compose and serve as a reference model for best practices.
 
