@@ -1,0 +1,21 @@
+- !variable
+  id: conjur/ldap-sync/bind-password/default
+  owner: !host conjur/ldap-sync
+
+- !resource
+    kind: configuration
+    id: conjur/ldap-sync/default
+    owner: !host conjur/ldap-sync
+    annotations:
+      ldap-sync/port: "389"
+      ldap-sync/host: "ldap"
+      ldap-sync/bind-dn: "cn=admin,dc=example,dc=org"
+      ldap-sync/connect-type: "plain"
+      ldap-sync/base-dn: "dc=example,dc=org"
+      ldap-sync/import-public-keys: "false"
+      ldap-sync/import-uid-numbers: "false"
+      ldap-sync/import-gid-numbers: "false"
+      ldap-sync/user-filter: "(objectClass=posixAccount)"
+      ldap-sync/group-filter: "(objectClass=posixGroup)"
+      ldap-sync/user-attribute-mapping/name: "uid"
+      ldap-sync/group-attribute-mapping/name: "cn"

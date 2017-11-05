@@ -1,0 +1,13 @@
+---
+- !user bob
+- !group devops
+
+- !grant
+  role: !group devops 
+  members: 
+    !user bob
+
+- !user carol
+- !user ted
+- !user alice
+

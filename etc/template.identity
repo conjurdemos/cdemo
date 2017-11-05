@@ -1,0 +1,4 @@
+machine https://conjur/api/authn
+        login host/{{NAME}}
+        password {{PWD}}
+

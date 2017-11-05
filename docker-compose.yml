@@ -1,0 +1,111 @@
+version: '2'
+services:
+
+# The Conjur, CLI and Weave Scope services are started by the 0-startup-conjur.sh script.
+# The Conjur service is a single master. 
+# The CLI container is used to execute Conjur commands in lieu of requiring the CLI
+# package installation on the host machine. This makes managing multi-version Conjur
+# environments easier.
+  conjur:
+    image: registry.tld/conjur-appliance:4.9.7.0
+    hostname: conjur
+    environment:
+      CONJUR_MASTER_HOSTNAME: "conjur.cyberark.local"
+      CONJUR_MASTER_PASSWORD: "Cyberark1"
+      CONJUR_MASTER_ORGACCOUNT: "dev"
+    volumes:
+      - ./:/src:z
+      - ./log:/var/log/conjur   # exported conjur audit log
+      - ./log:/var/log/nginx    # exported nginx audit log
+    security_opt:
+      - seccomp:unconfined
+    ports:
+      - 443:443
+      - 636:636
+    restart: always
+
+  cli:
+    environment:
+      CONJUR_ACCOUNT: dev
+      CONJUR_APPLIANCE_URL: https://conjur/api
+    image: my-conjurcli:5.4.0
+    build: ./build/conjurcli
+    volumes:
+      - data:/data
+      - ./:/src:z
+      - "/var/run/docker.sock:/var/run/docker.sock:rw"  # enable docker commands from in container
+      - "/usr/bin/docker:/usr/bin/docker:z"
+    hostname: conjurcli
+    entrypoint: sleep
+    command: infinity
+
+  scope:
+    image: weaveworks/scope:1.6.5
+    privileged: true
+    ports:
+      - "0.0.0.0:4040:4040"
+    labels:
+      - "works.weave.role=system"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:rw"
+    command:
+      - "--probe.docker=true"
+
+# The webapp service is just a simple script running in a container - not really a web app.
+# This service is brought up by the 1-setup-containers.sh script.
+  webapp:
+    image: webapp
+    build: ./build/webapp
+    volumes:
+      - data:/data
+    entrypoint: /root/webapp1.sh
+    environment:
+      - APP_HOSTNAME              # values for these variables are in .env file
+      - VAR_ID
+      - SLEEP_TIME
+
+# VM containers for SSH management demonstration.
+# This service is brought up by the ./ssh/0-setup-ssh.sh script.
+  vm:
+    image: rack-vm:1.0
+    build: ./build/vm
+    volumes:
+      - .:/src
+      - data:/data
+
+# Open LDAP server for ldap sync demonstration.
+# This service is brought up by the ./ldap/0-setup-ldap.sh script.
+  ldap:
+    image: osixia/openldap:1.1.7
+    build: ./build/ldap
+    restart: always
+    volumes:
+      - ./ldap/ldap-bootstrap.ldif:/ldap-bootstrap.ldif
+
+# Splunk enterprise server for Splunk monitoring demonstration.
+# This requires the Conjur and Nginx logs be exported from the Conjur container.
+# See volumes: specification for the Conjur service above.
+# This service is brought up by the ./splunk/0-setup-splunk.sh script.
+  splunk:
+    hostname: splunkenterprise
+    image: splunk/splunk:7.0.0
+    build: ./build/splunk
+    environment:
+      SPLUNK_START_ARGS: --accept-license
+      SPLUNK_ENABLE_LISTEN: 9997
+      SPLUNK_ADD: tcp 1514
+    volumes:
+      - .:/src
+      - opt-splunk-etc:/opt/splunk/etc
+      - opt-splunk-var:/opt/splunk/var
+    ports:
+      - "8000:8000"
+      - "9997:9997"
+      - "8088:8088"
+      - "1514:1514"
+
+volumes:
+  data:
+  opt-splunk-etc:
+  opt-splunk-var:
+

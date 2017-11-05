@@ -1,0 +1,15 @@
+---
+- !policy
+  id: webapp1
+  owner: !group devops
+  body:
+  - &variables
+    - !variable database_password
+
+  - !host &tomcat_host tomcat_host
+
+  - !permit
+    role: *tomcat_host 
+    privileges: [ read, execute ]
+    resource: *variables
+
