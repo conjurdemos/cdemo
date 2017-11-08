@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash -ex
 set -o pipefail
 
 RACK_SERVICE_NAME=vm
@@ -19,9 +19,7 @@ main() {
 	docker-compose up -d --scale $RACK_SERVICE_NAME=$NUM_CONTS $RACK_SERVICE_NAME
 
 	printf "\n-----\nConstructing & loading rack host policy...\n"
-	cat > $RACK_POLICY_FILE << EOF
----
-EOF
+	echo "---" > $RACK_POLICY_FILE
 	rack_cont_names=$(docker ps --format "{{.Names}}" | grep $RACK_SERVICE_NAME)
 	for cname in $rack_cont_names; do
 		echo "- !host" $cname >> $RACK_POLICY_FILE
@@ -30,26 +28,33 @@ EOF
 	docker-compose exec -T cli conjur policy load --as-group=security_admin /src/ssh/$RACK_POLICY_FILE
 
 
-	printf "\n-----\nCreating host identity files and copying to shared volume in CLI container...\n"
+	printf "\n-----\nCreating host identity files and copying into containers...\n"
 	CLI_CONT_ID=$(docker-compose ps -q cli)
 	for cname in $rack_cont_names; do
-		api_key=$(docker-compose exec -T cli conjur host rotate_api_key --host $cname)
-		cat ../etc/template.identity | sed s={{NAME}}=$cname= | sed s/{{PWD}}/$api_key/ > $cname.identity
-		docker cp $cname.identity $CLI_CONT_ID:/data
-		rm $cname.identity
-	done
+			# note: conjur.conf and conjur-<orgacct>.pem are 
+			# copied from conjur container to shared volume 
+			# just after conjur service is brought up. 
+		docker cp ../etc/conjur.conf $cname:/etc
+		docker cp ../etc/conjur-dev.pem $cname:/etc
 
-	printf "\n-----\nIn each container, copying identity files from shared volume, then deleting...\n"
-	for cname in $rack_cont_names; do
-						# note conjur.conf and conjur.pem are 
-						# copied to shared volume after conjur 
-						# service is brought up and never deleted
-		docker exec $cname sudo cp /data/conjur.conf /etc/conjur.conf
-		docker exec $cname sudo cp /data/conjur.pem /etc/conjur-dev.pem
-						# identity files contain API key - need to protect
-		docker exec $cname sudo cp /data/$cname.identity /etc/conjur.identity
-		docker exec $cname sudo chmod 600 /etc/conjur.identity
-		docker exec $cname rm /data/$cname.identity
+			# put hostname (container name) and api-key in id file
+		api_key=$(docker-compose exec -T cli conjur host rotate_api_key --host $cname)
+		cat ../etc/template.identity | sed s={{NAME}}=host/$cname= | sed s/{{PWD}}/$api_key/ > $cname.identity
+
+			# copy host identity file to container
+		docker cp $cname.identity $cname:/etc/conjur.identity
+		rm $cname.identity
+
+#		docker cp ../build/vm/conjur_authorized_keys $cname:/opt/conjur/bin
+		docker cp ../build/vm/logshipper.conf $cname:/etc/init
+		docker exec \
+			-e CONJUR_AUTHN_LOGIN="host/$cname" \
+			-e CONJUR_AUTHN_API_KEY=$api_key \
+			$cname chef-solo -o conjur::configure
+
+			# finish configuration, start sshd & logshipper
+		docker cp ../build/vm/configure-ssh.sh $cname:/root
+		docker exec $cname sudo /root/configure-ssh.sh
 	done
 
 	printf "\nCompleted bringing up %n rack host identities.\n"
@@ -58,3 +63,4 @@ EOF
 }
 
 main "$@"
+

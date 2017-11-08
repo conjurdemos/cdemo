@@ -7,11 +7,10 @@
     - !grant
       role: !layer prod_rack
       members: 
-        - !host /cdemo_vm_2
+        - !host /cdemo_vm_1
 
     - !permit
       role: !group /devops
       privileges: [ read, execute ]
       resources:
-        - !layer prod_rack
-        - !host /cdemo_vm_2
+        - !host /cdemo_vm_1

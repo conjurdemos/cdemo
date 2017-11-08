@@ -1,8 +1,15 @@
-FROM ubuntu:14.04
-RUN apt-get update -y; \
-    apt-get install -y curl openssh-server; \
-    apt-get autoclean
-COPY write_id_files.sh /root
-RUN /root/write_id_files.sh && curl -L https://www.opscode.com/chef/install.sh | sudo -n bash
-RUN sudo -n chef-solo --recipe-url https://github.com/conjur-cookbooks/conjur/releases/download/v0.4.3/conjur-v0.4.3.tar.gz -o conjur
-ENTRYPOINT service ssh restart && sleep infinity
+FROM phusion/baseimage:0.9.16
+
+# Add scripts to finish the SSH configuration
+COPY configure-ssh.sh /root
+COPY write_dummy_id_files.sh /root
+
+# Install Chef to run the SSH configuration cookbooks
+RUN /root/write_dummy_id_files.sh \
+    && cd /tmp \
+    && curl -L https://www.opscode.com/chef/install.sh | sudo -n bash \
+    && sudo -n chef-solo --recipe-url https://github.com/conjur-cookbooks/conjur/releases/download/v0.4.3/conjur-v0.4.3.tar.gz -o conjur::install
+
+# Cleanup
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+

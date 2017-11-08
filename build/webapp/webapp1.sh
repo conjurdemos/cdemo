@@ -16,7 +16,7 @@ declare INPUT_FILE=/data/foo
 touch $LOGFILE
 
 OLD_APP_API_KEY=""
-while [ 1=1 ]; do
+while : ; do
 
 		# get API key from file in shared volume
     while : ; do
@@ -29,7 +29,7 @@ while [ 1=1 ]; do
     done
     echo "New API key is:" $APP_API_KEY >> $LOGFILE
 
-    while [ 1=1 ]; do
+    while : ; do
 	# Login container w/ its API key, authenticate and get API key for session
 	cont_login=host%2F$APP_HOSTNAME
 	response=$(curl -s -k \

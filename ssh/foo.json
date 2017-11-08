@@ -1,0 +1,9 @@
+{
+  "id": "foo",
+  "userid": "attic",
+  "created_at": "2017-11-07T20:15:12Z",
+  "ownerid": "dev:user:attic",
+  "roleid": "dev:host:foo",
+  "resource_identifier": "dev:host:foo",
+  "api_key": "2f0hya82dg022224e67mm3c59c1118nxdcj1qbrc7g215539jfy57dm"
+}

@@ -1,7 +1,9 @@
 #!/bin/bash -e
 set -o pipefail
 
-CONJUR_ADMIN_PWD=Cyberark1
+CONJUR_MASTER_HOSTNAME=cyberark.local
+CONJUR_MASTER_ORGACCOUNT=dev
+CONJUR_MASTER_PASSWORD=Cyberark1
 
 main() {
   all_down				# bring down anything still running
@@ -29,7 +31,7 @@ all_down() {
   docker-compose down --remove-orphans
   dangling_vols=$(docker volume ls -qf dangling=true)
   if [[ "$dangling_vols" != "" ]]; then
-	docker rm $dangling_vols
+	docker volume rm $dangling_vols
   fi
 }
 
@@ -43,14 +45,15 @@ conjur_up() {
 
   echo "-----"
   echo "Initializing Conjur"
-  runInConjur /src/etc/_conjur-init.sh
+  docker-compose exec conjur evoke configure master -h $CONJUR_MASTER_HOSTNAME -p $CONJUR_MASTER_PASSWORD $CONJUR_MASTER_ORGACCOUNT
 
   echo "-----"
   echo "Get certificate from Conjur"
-  rm -f ./etc/conjur.pem
-  docker cp -L $CONJUR_CONT_ID:/opt/conjur/etc/ssl/conjur.pem ./etc/conjur.pem
+  rm -f ./etc/conjur-$CONJUR_MASTER_ORGACCOUNT.pem
+					# cache cert for copying to other containers
+  docker cp -L $CONJUR_CONT_ID:/opt/conjur/etc/ssl/conjur.pem ./etc/conjur-$CONJUR_MASTER_ORGACCOUNT.pem
 
-  echo "---- Update hosts file with $CONJUR_HOSTNAME"
+  echo "---- Update hosts file with Conjur container hostname: $CONJUR_HOSTNAME"
   grep -v $CONJUR_HOSTNAME /etc/hosts > /tmp/foo
   echo -e 127.0.0.1 '\t' $CONJUR_HOSTNAME >> /tmp/foo
   sudo mv /tmp/foo /etc/hosts
@@ -65,24 +68,10 @@ cli_up() {
 
   echo "-----"
   echo "Copy Conjur config and certificate to CLI"
-  docker cp -L ./etc/conjur.conf $CLI_CONT_ID:/etc/conjur.conf
-  docker cp -L ./etc/conjur.pem $CLI_CONT_ID:/etc/conjur.pem
-  docker cp -L ./etc/conjur.conf $CLI_CONT_ID:/data/conjur.conf
-  docker cp -L ./etc/conjur.pem $CLI_CONT_ID:/data/conjur.pem
-  runIncli conjur authn login -u admin -p $CONJUR_ADMIN_PWD
-  runIncli conjur bootstrap -q
-}
-
-runInConjur() {
-  docker-compose exec -T conjur "$@"
-}
-
-runIncli() {
-  docker-compose exec -T cli "$@"
-}
-
-wait_for_conjur() {
-  docker-compose exec -T conjur bash -c 'while ! curl -sI localhost > /dev/null; do sleep 1; done'
+  docker cp -L ./etc/conjur.conf $CLI_CONT_ID:/etc
+  docker cp -L ./etc/conjur-$CONJUR_MASTER_ORGACCOUNT.pem $CLI_CONT_ID:/etc/conjur.pem
+  docker-compose exec cli conjur authn login -u admin -p $CONJUR_MASTER_PASSWORD
+  docker-compose exec cli conjur bootstrap -q
 }
 
 updatehostsfile() {

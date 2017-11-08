@@ -27,15 +27,19 @@ main() {
 	docker cp local_foo $(docker-compose ps -q cli):/data/foo
 	rm local_foo
 
+			# replace '/' and ':' w/ hex equivalents
 	urlify $APP_HOSTNAME
 	APP_HOSTNAME=$URLIFIED
 	urlify $VAR_ID
 	VAR_ID=$URLIFIED
 
+			# create .env file to set docker-compose env vars
 	echo "APP_HOSTNAME=$APP_HOSTNAME" > .env
 	echo "VAR_ID=$VAR_ID" >> .env
 	echo "SLEEP_TIME=$SLEEP_TIME" >> .env
 	docker-compose up -d --scale webapp=$NUM_CONTS webapp
+
+			# delete file w/ api-key
 	docker-compose exec -T cli rm /data/foo
 }
 
