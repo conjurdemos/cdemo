@@ -1,7 +1,11 @@
 #!/bin/bash
 
 set -e
-rm /etc/service/sshd/down
-/etc/my_init.d/00_regen_ssh_host_keys.sh 
-service ssh start
-/etc/service/logshipper/run &
+service nscd restart
+service nslcd restart
+service ssh restart
+service rsyslog restart
+
+chgrp conjur /usr/sbin/logshipper
+chown logshipper /usr/sbin/logshipper
+/usr/sbin/logshipper -n /var/run/logshipper >> /var/log/logshipper.log 2>&1 &

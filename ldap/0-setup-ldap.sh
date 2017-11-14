@@ -27,7 +27,7 @@ main() {
                 # hopefully prevent intermittent failures
   sleep 2
                         # load demo groups & users from mounted file
-  docker-compose exec -T ldap bash -c 'ldapadd -x -D cn=admin,dc=example,dc=org -w admin -f /ldap-bootstrap.ldif'
+  docker-compose exec -T ldap bash -c 'ldapadd -x -D cn=admin,dc=example,dc=org -w admin -f /src/ldap/ldap-bootstrap.ldif'
 }
 
 main "$@"

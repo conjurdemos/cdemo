@@ -1,6 +1,8 @@
-#!/bin/bash -ex
+#!/bin/bash -e
 set -o pipefail
 
+CONJUR_MASTER_ORGACCOUNT=dev
+CONJUR_MASTER_URL=https://conjur/api
 RACK_SERVICE_NAME=vm
 RACK_POLICY_NAME=rack
 RACK_POLICY_FILE=$RACK_POLICY_NAME.yml
@@ -37,7 +39,7 @@ main() {
 		docker cp ../etc/conjur.conf $cname:/etc
 		docker cp ../etc/conjur-dev.pem $cname:/etc
 
-			# put hostname (container name) and api-key in id file
+			# replace hostname (container name) and api-key in template file
 		api_key=$(docker-compose exec -T cli conjur host rotate_api_key --host $cname)
 		cat ../etc/template.identity | sed s={{NAME}}=host/$cname= | sed s/{{PWD}}/$api_key/ > $cname.identity
 
@@ -45,20 +47,20 @@ main() {
 		docker cp $cname.identity $cname:/etc/conjur.identity
 		rm $cname.identity
 
-#		docker cp ../build/vm/conjur_authorized_keys $cname:/opt/conjur/bin
-		docker cp ../build/vm/logshipper.conf $cname:/etc/init
+			# run chef recipe to configure vm for ssh access
 		docker exec \
-			-e CONJUR_AUTHN_LOGIN="host/$cname" \
-			-e CONJUR_AUTHN_API_KEY=$api_key \
+       		        -e CONJURRC=/etc/conjur.conf \
+                	-e CONJUR_ACCOUNT=$CONJUR_MASTER_ORGACCOUNT \
+	                -e CONJUR_APPLIANCE_URL=$CONJUR_MASTER_URL \
+       	        	-e CONJUR_AUTHN_LOGIN="host/$cname" \
+       		        -e CONJUR_AUTHN_API_KEY=$api_key \
 			$cname chef-solo -o conjur::configure
 
 			# finish configuration, start sshd & logshipper
-		docker cp ../build/vm/configure-ssh.sh $cname:/root
 		docker exec $cname sudo /root/configure-ssh.sh
 	done
 
-	printf "\nCompleted bringing up %n rack host identities.\n"
-	printf "\nRack host identities now in Conjur:\n"
+	printf "\n\nRack host identities now in Conjur:\n"
 	echo $rack_cont_names
 }
 

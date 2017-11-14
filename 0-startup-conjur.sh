@@ -6,9 +6,9 @@ CONJUR_MASTER_ORGACCOUNT=dev
 CONJUR_MASTER_PASSWORD=Cyberark1
 
 main() {
-  all_down				# bring down anything still running
+#  all_down				# bring down anything still running
 
-  conjur_up
+#  conjur_up
   cli_up
   docker-compose up -d scope		# weave scope
 
@@ -69,7 +69,7 @@ cli_up() {
   echo "-----"
   echo "Copy Conjur config and certificate to CLI"
   docker cp -L ./etc/conjur.conf $CLI_CONT_ID:/etc
-  docker cp -L ./etc/conjur-$CONJUR_MASTER_ORGACCOUNT.pem $CLI_CONT_ID:/etc/conjur.pem
+  docker cp -L ./etc/conjur-$CONJUR_MASTER_ORGACCOUNT.pem $CLI_CONT_ID:/etc
   docker-compose exec cli conjur authn login -u admin -p $CONJUR_MASTER_PASSWORD
   docker-compose exec cli conjur bootstrap -q
 }

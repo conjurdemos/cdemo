@@ -7,7 +7,7 @@ services:
 # package installation on the host machine. This makes managing multi-version Conjur
 # environments easier.
   conjur:
-    image: registry2.itci.conjur.net/conjur-appliance:4.9.9.1
+    image: registry2.itci.conjur.net/conjur-appliance:4.10.0.0
     hostname: conjur
     volumes:
       - ./:/src:z
@@ -78,7 +78,7 @@ services:
     build: ./build/ldap
     restart: always
     volumes:
-      - ./ldap/ldap-bootstrap.ldif:/ldap-bootstrap.ldif
+      - .:/src
 
 # Splunk enterprise server for Splunk monitoring demonstration.
 # This requires the Conjur and Nginx logs be exported from the Conjur container.

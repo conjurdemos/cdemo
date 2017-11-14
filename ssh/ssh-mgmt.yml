@@ -1,16 +1,28 @@
 ---
 - !policy
-  id: prod
+  id: prod_vm_access
   body:
-    - !layer prod_rack
-
-    - !grant
-      role: !layer prod_rack
-      members: 
+    - !permit
+      roles:
+        - !group /devops
+        - !group /developers
+      privileges: [ read, execute ]
+      resources:
         - !host /cdemo_vm_1
 
     - !permit
       role: !group /devops
-      privileges: [ read, execute ]
+      privileges: [ update ]
       resources:
         - !host /cdemo_vm_1
+
+- !policy
+  id: dev_vm_access
+  body:
+    - !permit
+      roles: 
+        - !group /devops
+        - !group /developers
+      privileges: [ read, execute, update ]
+      resources:
+        - !host /cdemo_vm_2
