@@ -71,8 +71,8 @@ Build directories - all image builds are triggered via docker-compose.yml (i.e. 
   - build/splunk
     - Dockerfile - builds a Splunk Enterprise container
   - build/vm:
-    - Dockerfile - builds a rack of "VM" containers for SSH key management demo
-    - configure-ssh.sh - script to startup services on rack VMs after configuration
+    - Dockerfile - builds a "rack VM" image for SSH key management demo
+    - configure-ssh.sh - script to startup services on rack VM after configuration
   - build/webapp:
     - Dockerfile - builds webapp image based on Alpine w/ bash and curl installed
     - webapp1.sh - script loaded into image as entry point when container is started. It is resilient to API key rotation.

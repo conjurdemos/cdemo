@@ -6,9 +6,9 @@ CONJUR_MASTER_ORGACCOUNT=dev
 CONJUR_MASTER_PASSWORD=Cyberark1
 
 main() {
-#  all_down				# bring down anything still running
+  all_down				# bring down anything still running
 
-#  conjur_up
+  conjur_up
   cli_up
   docker-compose up -d scope		# weave scope
 
