@@ -1,10 +1,6 @@
 # cdemo - a tour of Conjur using containers
 
-Goal: A self-contained implementation of a simple Conjur application for demonstration in docker-compose and serve as a reference model for best practices.
-
-NOTE: This demo uses a single identity for all instances of the application. This is best practice as it is scalable to potentially thousands of instances, whereas use of the Host Factory token does not.
-
-Scenario: Spin up a bunch of minimal containers, each of which fetches a secret every few seconds in a continuous loop. Change the secret, deny access, rotate the API key and watch effects.
+This is self-contained implementation of a basic Conjur implementation to demonstrate all key capabilities and to serve as a foundation for POCs and implementations.
 
 Dependencies:
   - docker & docker-compose - can be installed w/ ./etc/install-dependencies.sh
@@ -27,6 +23,8 @@ Demo root directory (.../cdemo):
   - apikey_rotator.sh - rotates the API key once.
 
 Basic demo scenario:
+  Spin up a bunch of minimal containers, each of which fetches a secret every few seconds in a continuous loop. Change the secret, deny access, rotate the API key and watch effects.
+
   - run 0-startup-conjur.sh. REQUIRES INTERNET ACCESS FOR FIRST RUN ONLY. When complete demo environment is ready.
   - run 1-setup_containers.sh w/ 2 args - REQUIRES INTERNET ACCESS FOR FIRST RUN ONLY:
     - number of containers to create
