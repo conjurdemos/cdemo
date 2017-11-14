@@ -1,0 +1,26 @@
+---
+- !group devops
+- !user bob
+
+- !grant
+  role: !group devops
+  member: !user bob
+
+- !policy
+  id: webapp1
+  owner: !group devops
+  body:
+  - &variables
+    - !variable database_password
+    - !variable api_key
+
+  - !layer &tomcat_hosts tomcat_hosts
+  - !host-factory
+    id: tomcat_factory
+    layers: [ *tomcat_hosts ]
+
+  - !permit
+    role: *tomcat_hosts 
+    privileges: [ read, execute ]
+    resource: *variables
+

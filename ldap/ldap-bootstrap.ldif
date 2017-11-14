@@ -1,0 +1,819 @@
+dn: cn=hr-admin,dc=example,dc=org
+cn: hr-admin
+gidNumber: 10000
+objectClass: posixGroup
+objectClass: top
+memberUid: kyle.wheeler
+memberUid: marin.dubois
+
+dn: cn=hr,dc=example,dc=org
+cn: hr
+gidNumber: 10002
+objectClass: posixGroup
+objectClass: top
+memberUid: carol.rodriquez
+memberUid: karen.wood
+memberUid: caroline.mccoy
+
+dn: cn=devops,dc=example,dc=org
+cn: devops
+gidNumber: 10003
+objectClass: posixGroup
+objectClass: top
+memberUid: bob
+memberUid: wayne.walker
+memberUid: constance.bourgeois
+memberUid: noelie.garnier
+
+dn: cn=developers,dc=example,dc=org
+cn: developers
+gidNumber: 10004
+objectClass: posixGroup
+objectClass: top
+memberUid: faiz.rooker
+memberUid: soledad.reyes
+memberUid: sofia.tikkanen
+memberUid: alfredo.coleman
+memberUid: gabin.dupont
+memberUid: belen.cano
+memberUid: emmi.korpela
+memberUid: annie.diaz
+memberUid: ted.holland
+memberUid: jimmy.knight
+memberUid: alberto.morgan
+memberUid: benjamin.garnier
+memberUid: lotta.aho
+memberUid: carol
+memberUid: ted
+memberUid: alice
+
+
+dn: cn=researchers-admin,dc=example,dc=org
+cn: researchers-admin
+gidNumber: 10005
+objectClass: posixGroup
+objectClass: top
+memberUid: amber.fitzgerald
+memberUid: frederick.curtis
+memberUid: brian.scott
+
+
+dn: cn=researchers,dc=example,dc=org
+cn: researchers
+gidNumber: 10006
+objectClass: posixGroup
+objectClass: top
+memberUid: paula.guerrero
+memberUid: jalila.eerland
+memberUid: alicia.montgomery
+memberUid: renatus.broersma
+memberUid: elsa.takala
+memberUid: elena.montero
+memberUid: vicky.johnson
+memberUid: adele.dupuis
+memberUid: maria.pastor
+memberUid: dustin.bailey
+
+
+dn: cn=qa-admin,dc=example,dc=org
+cn: qa-admin
+gidNumber: 10007
+objectClass: posixGroup
+objectClass: top
+memberUid: steve.peterson
+memberUid: rosie.pearson
+
+
+dn: cn=qa,dc=example,dc=org
+cn: qa
+gidNumber: 10008
+objectClass: posixGroup
+objectClass: top
+memberUid: emilia.calvo
+memberUid: rafael.pena
+memberUid: mia.caldwell
+memberUid: encarnacion.lorenzo
+memberUid: konsta.lampi
+memberUid: jamie.martin
+memberUid: manuel.flores
+memberUid: alex.mills
+
+dn: cn=operations-admin,dc=example,dc=org
+cn: operations-admin
+gidNumber: 10009
+objectClass: posixGroup
+objectClass: top
+memberUid: meline.lopez
+memberUid: hector.jackson
+memberUid: anton.honkala
+
+
+dn: cn=operations,dc=example,dc=org
+cn: operations
+gidNumber: 10010
+objectClass: posixGroup
+objectClass: top
+memberUid: isabel.hidalgo
+memberUid: alvin.bennett
+memberUid: calvin.castillo
+memberUid: aada.heikkila
+memberUid: sam.davies
+memberUid: caitlin.nichols
+memberUid: sara.tucker
+memberUid: travis.owens
+memberUid: lis.houwer
+memberUid: mike.thomas
+memberUid: raquel.caballero
+memberUid: ricky.martin
+
+
+dn: uid=kyle.wheeler,dc=example,dc=org
+cn: kyle.wheeler
+uidNumber: 10211
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10000
+sn: wheeler
+homeDirectory: /home/kyle.wheeler
+
+dn: uid=marin.dubois,dc=example,dc=org
+cn: marin.dubois
+uidNumber: 10212
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10000
+sn: dubois
+homeDirectory: /home/marin.dubois
+
+
+dn: uid=carol.rodriquez,dc=example,dc=org
+cn: carol.rodriquez
+uidNumber: 10213
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10002
+sn: rodriquez
+homeDirectory: /home/carol.rodriquez
+
+
+dn: uid=karen.wood,dc=example,dc=org
+cn: karen.wood
+uidNumber: 10214
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10002
+sn: wood
+homeDirectory: /home/karen.wood
+
+
+dn: uid=caroline.mccoy,dc=example,dc=org
+cn: caroline.mccoy
+uidNumber: 10215
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10002
+sn: mccoy
+homeDirectory: /home/caroline.mccoy
+
+
+dn: uid=wayne.walker,dc=example,dc=org
+cn: wayne.walker
+uidNumber: 10216
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10003
+sn: walker
+homeDirectory: /home/wayne.walker
+
+
+dn: uid=constance.bourgeois,dc=example,dc=org
+cn: constance.bourgeois
+uidNumber: 10217
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10003
+sn: bourgeois
+homeDirectory: /home/constance.bourgeois
+
+
+dn: uid=noelie.garnier,dc=example,dc=org
+cn: noelie.garnier
+uidNumber: 10218
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10003
+sn: garnier
+homeDirectory: /home/noelie.garnier
+
+
+dn: uid=faiz.rooker,dc=example,dc=org
+cn: faiz.rooker
+uidNumber: 10219
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10004
+sn: rooker
+homeDirectory: /home/faiz.rooker
+
+
+dn: uid=soledad.reyes,dc=example,dc=org
+cn: soledad.reyes
+uidNumber: 10220
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10004
+sn: reyes
+homeDirectory: /home/soledad.reyes
+
+
+dn: uid=sofia.tikkanen,dc=example,dc=org
+cn: sofia.tikkanen
+uidNumber: 10221
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10004
+sn: tikkanen
+homeDirectory: /home/sofia.tikkanen
+
+
+dn: uid=alfredo.coleman,dc=example,dc=org
+cn: alfredo.coleman
+uidNumber: 10222
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10004
+sn: coleman
+homeDirectory: /home/alfredo.coleman
+
+
+dn: uid=gabin.dupont,dc=example,dc=org
+cn: gabin.dupont
+uidNumber: 10223
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10004
+sn: dupont
+homeDirectory: /home/gabin.dupont
+
+
+dn: uid=belen.cano,dc=example,dc=org
+cn: belen.cano
+uidNumber: 10224
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10004
+sn: cano
+homeDirectory: /home/belen.cano
+
+
+dn: uid=emmi.korpela,dc=example,dc=org
+cn: emmi.korpela
+uidNumber: 10225
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10004
+sn: korpela
+homeDirectory: /home/emmi.korpela
+
+
+dn: uid=annie.diaz,dc=example,dc=org
+cn: annie.diaz
+uidNumber: 10226
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10004
+sn: diaz
+homeDirectory: /home/annie.diaz
+
+
+dn: uid=ted.holland,dc=example,dc=org
+cn: ted.holland
+uidNumber: 10227
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10004
+sn: holland
+homeDirectory: /home/ted.holland
+
+
+dn: uid=jimmy.knight,dc=example,dc=org
+cn: jimmy.knight
+uidNumber: 10228
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10004
+sn: knight
+homeDirectory: /home/jimmy.knight
+
+
+dn: uid=alberto.morgan,dc=example,dc=org
+cn: alberto.morgan
+uidNumber: 10229
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10004
+sn: morgan
+homeDirectory: /home/alberto.morgan
+
+
+dn: uid=benjamin.garnier,dc=example,dc=org
+cn: benjamin.garnier
+uidNumber: 10230
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10004
+sn: garnier
+homeDirectory: /home/benjamin.garnier
+
+
+dn: uid=lotta.aho,dc=example,dc=org
+cn: lotta.aho
+uidNumber: 10231
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10004
+sn: aho
+homeDirectory: /home/lotta.aho
+
+
+dn: uid=amber.fitzgerald,dc=example,dc=org
+cn: amber.fitzgerald
+uidNumber: 10232
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10005
+sn: fitzgerald
+homeDirectory: /home/amber.fitzgerald
+
+
+dn: uid=frederick.curtis,dc=example,dc=org
+cn: frederick.curtis
+uidNumber: 10233
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10005
+sn: curtis
+homeDirectory: /home/frederick.curtis
+
+
+dn: uid=brian.scott,dc=example,dc=org
+cn: brian.scott
+uidNumber: 10234
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10005
+sn: scott
+homeDirectory: /home/brian.scott
+
+
+dn: uid=paula.guerrero,dc=example,dc=org
+cn: paula.guerrero
+uidNumber: 10235
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10006
+sn: guerrero
+homeDirectory: /home/paula.guerrero
+
+
+dn: uid=jalila.eerland,dc=example,dc=org
+cn: jalila.eerland
+uidNumber: 10236
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10006
+sn: eerland
+homeDirectory: /home/jalila.eerland
+
+
+dn: uid=alicia.montgomery,dc=example,dc=org
+cn: alicia.montgomery
+uidNumber: 10237
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10006
+sn: montgomery
+homeDirectory: /home/alicia.montgomery
+
+
+dn: uid=renatus.broersma,dc=example,dc=org
+cn: renatus.broersma
+uidNumber: 10238
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10006
+sn: broersma
+homeDirectory: /home/renatus.broersma
+
+
+dn: uid=elsa.takala,dc=example,dc=org
+cn: elsa.takala
+uidNumber: 10239
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10006
+sn: takala
+homeDirectory: /home/elsa.takala
+
+
+dn: uid=elena.montero,dc=example,dc=org
+cn: elena.montero
+uidNumber: 10240
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10006
+sn: montero
+homeDirectory: /home/elena.montero
+
+
+dn: uid=vicky.johnson,dc=example,dc=org
+cn: vicky.johnson
+uidNumber: 10241
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10006
+sn: johnson
+homeDirectory: /home/vicky.johnson
+
+
+dn: uid=adele.dupuis,dc=example,dc=org
+cn: adele.dupuis
+uidNumber: 10242
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10006
+sn: dupuis
+homeDirectory: /home/adele.dupuis
+
+
+dn: uid=maria.pastor,dc=example,dc=org
+cn: maria.pastor
+uidNumber: 10243
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10006
+sn: pastor
+homeDirectory: /home/maria.pastor
+
+
+dn: uid=dustin.bailey,dc=example,dc=org
+cn: dustin.bailey
+uidNumber: 10244
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10006
+sn: bailey
+homeDirectory: /home/dustin.bailey
+
+
+dn: uid=steve.peterson,dc=example,dc=org
+cn: steve.peterson
+uidNumber: 10245
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10007
+sn: peterson
+homeDirectory: /home/steve.peterson
+
+
+dn: uid=rosie.pearson,dc=example,dc=org
+cn: rosie.pearson
+uidNumber: 10246
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10007
+sn: pearson
+homeDirectory: /home/rosie.pearson
+
+
+dn: uid=emilia.calvo,dc=example,dc=org
+cn: emilia.calvo
+uidNumber: 10247
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10008
+sn: calvo
+homeDirectory: /home/emilia.calvo
+
+
+dn: uid=rafael.pena,dc=example,dc=org
+cn: rafael.pena
+uidNumber: 10248
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10008
+sn: peña
+homeDirectory: /home/rafael.pena
+
+
+dn: uid=mia.caldwell,dc=example,dc=org
+cn: mia.caldwell
+uidNumber: 10249
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10008
+sn: caldwell
+homeDirectory: /home/mia.caldwell
+
+
+dn: uid=encarnacion.lorenzo,dc=example,dc=org
+cn: encarnacion.lorenzo
+uidNumber: 10250
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10008
+sn: lorenzo
+homeDirectory: /home/encarnacion.lorenzo
+
+
+dn: uid=konsta.lampi,dc=example,dc=org
+cn: konsta.lampi
+uidNumber: 10251
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10008
+sn: lampi
+homeDirectory: /home/konsta.lampi
+
+
+dn: uid=jamie.martin,dc=example,dc=org
+cn: jamie.martin
+uidNumber: 10252
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10008
+sn: martin
+homeDirectory: /home/jamie.martin
+
+
+dn: uid=manuel.flores,dc=example,dc=org
+cn: manuel.flores
+uidNumber: 10253
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10008
+sn: flores
+homeDirectory: /home/manuel.flores
+
+
+dn: uid=alex.mills,dc=example,dc=org
+cn: alex.mills
+uidNumber: 10254
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10008
+sn: mills
+homeDirectory: /home/alex.mills
+
+
+dn: uid=meline.lopez,dc=example,dc=org
+cn: meline.lopez
+uidNumber: 10255
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10009
+sn: lopez
+homeDirectory: /home/meline.lopez
+
+
+dn: uid=hector.jackson,dc=example,dc=org
+cn: hector.jackson
+uidNumber: 10256
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10009
+sn: jackson
+homeDirectory: /home/hector.jackson
+
+
+dn: uid=anton.honkala,dc=example,dc=org
+cn: anton.honkala
+uidNumber: 10257
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10009
+sn: honkala
+homeDirectory: /home/anton.honkala
+
+
+dn: uid=isabel.hidalgo,dc=example,dc=org
+cn: isabel.hidalgo
+uidNumber: 10258
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10010
+sn: hidalgo
+homeDirectory: /home/isabel.hidalgo
+
+
+dn: uid=alvin.bennett,dc=example,dc=org
+cn: alvin.bennett
+uidNumber: 10259
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10010
+sn: bennett
+homeDirectory: /home/alvin.bennett
+
+
+dn: uid=calvin.castillo,dc=example,dc=org
+cn: calvin.castillo
+uidNumber: 10260
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10010
+sn: castillo
+homeDirectory: /home/calvin.castillo
+
+
+dn: uid=aada.heikkila,dc=example,dc=org
+cn: aada.heikkila
+uidNumber: 10261
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10010
+sn: heikkila
+homeDirectory: /home/aada.heikkila
+
+
+dn: uid=sam.davies,dc=example,dc=org
+cn: sam.davies
+uidNumber: 10262
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10010
+sn: davies
+homeDirectory: /home/sam.davies
+
+
+dn: uid=caitlin.nichols,dc=example,dc=org
+cn: caitlin.nichols
+uidNumber: 10263
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10010
+sn: nichols
+homeDirectory: /home/caitlin.nichols
+
+
+dn: uid=sara.tucker,dc=example,dc=org
+cn: sara.tucker
+uidNumber: 10264
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10010
+sn: tucker
+homeDirectory: /home/sara.tucker
+
+
+dn: uid=travis.owens,dc=example,dc=org
+cn: travis.owens
+uidNumber: 10265
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10010
+sn: owens
+homeDirectory: /home/travis.owens
+
+
+dn: uid=lis.houwer,dc=example,dc=org
+cn: lis.houwer
+uidNumber: 10266
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10010
+sn: houwer
+homeDirectory: /home/lis.houwer
+
+
+dn: uid=mike.thomas,dc=example,dc=org
+cn: mike.thomas
+uidNumber: 10267
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10010
+sn: thomas
+homeDirectory: /home/mike.thomas
+
+
+dn: uid=raquel.caballero,dc=example,dc=org
+cn: raquel.caballero
+uidNumber: 10268
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10010
+sn: caballero
+homeDirectory: /home/raquel.caballero
+
+dn: uid=ricky.martin,dc=example,dc=org
+cn: ricky.martin
+uidNumber: 10269
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10010
+sn: martin
+homeDirectory: /home/ricky.martin
+memberOf: cn=operations,dc=example,dc=org
+
+dn: uid=bob,dc=example,dc=org
+cn: bob
+uidNumber: 9999
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10003
+sn: bob
+homeDirectory: /home/bob
+memberOf: cn=devops,dc=example,dc=org
+
+dn: uid=carol,dc=example,dc=org
+cn: carol
+uidNumber: 9998
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10004
+sn: carol
+homeDirectory: /home/carol
+memberOf: cn=developers,dc=example,dc=org
+
+dn: uid=ted,dc=example,dc=org
+cn: ted 
+uidNumber: 9997
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10004
+sn: ted
+homeDirectory: /home/ted
+memberOf: cn=developers,dc=example,dc=org
+
+dn: uid=alice,dc=example,dc=org
+cn: alice
+uidNumber: 9996
+objectClass: top
+objectClass: person
+objectClass: posixAccount
+gidNumber: 10004
+sn: alice
+homeDirectory: /home/alice
+memberOf: cn=developers,dc=example,dc=org
