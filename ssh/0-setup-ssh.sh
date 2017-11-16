@@ -6,6 +6,7 @@ CONJUR_MASTER_URL=https://conjur/api
 RACK_SERVICE_NAME=vm
 RACK_POLICY_NAME=rack
 RACK_POLICY_FILE=$RACK_POLICY_NAME.yml
+ACCESS_POLICY_FILE=ssh-mgmt.yml
 
 ################  MAIN   ################
 # $1 = number of rack machine containers to create
@@ -17,6 +18,7 @@ main() {
 
 	printf "\n-----\nBringing down old, then up all rack vm containers...\n"
         local NUM_CONTS=$1; shift
+	NUM_CONTS=$(( 2 > $NUM_CONTS ? 2 : $NUM_CONTS ))	# you have to have at least two VMs
 	docker-compose rm -svf $RACK_SERVICE_NAME
 	docker-compose up -d --scale $RACK_SERVICE_NAME=$NUM_CONTS $RACK_SERVICE_NAME
 
@@ -28,6 +30,7 @@ main() {
 	done
 	docker-compose exec -T cli conjur authn login -u admin -p Cyberark1
 	docker-compose exec -T cli conjur policy load --as-group=security_admin /src/ssh/$RACK_POLICY_FILE
+	docker-compose exec -T cli conjur policy load --as-group=security_admin /src/ssh/$ACCESS_POLICY_FILE
 
 
 	printf "\n-----\nCreating host identity files and copying into containers...\n"
@@ -38,14 +41,6 @@ main() {
 			# just after conjur service is brought up. 
 		docker cp ../etc/conjur.conf $cname:/etc
 		docker cp ../etc/conjur-dev.pem $cname:/etc
-
-			# replace hostname (container name) and api-key in template file
-		api_key=$(docker-compose exec -T cli conjur host rotate_api_key --host $cname)
-		cat ../etc/template.identity | sed s={{NAME}}=host/$cname= | sed s/{{PWD}}/$api_key/ > $cname.identity
-
-			# copy host identity file to container
-		docker cp $cname.identity $cname:/etc/conjur.identity
-		rm $cname.identity
 
 			# run chef recipe to configure vm for ssh access
 		docker exec \

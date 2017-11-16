@@ -7,12 +7,12 @@ services:
 # package installation on the host machine. This makes managing multi-version Conjur
 # environments easier.
   conjur:
-    image: registry2.itci.conjur.net/conjur-appliance:4.10.0.0
+    image: conjur-appliance:latest
     hostname: conjur
     volumes:
       - ./:/src:z
-      - ./log:/var/log/conjur   # exported conjur audit log
-      - ./log:/var/log/nginx    # exported nginx audit log
+      - ~/log:/var/log/conjur   # exported conjur audit log
+      - ~/log:/var/log/nginx    # exported nginx audit log
     security_opt:
       - seccomp:unconfined
     ports:
@@ -93,7 +93,7 @@ services:
       SPLUNK_ENABLE_LISTEN: 9997
       SPLUNK_ADD: tcp 1514
     volumes:
-      - .:/src
+      - ~/log:/log
       - opt-splunk-etc:/opt/splunk/etc
       - opt-splunk-var:/opt/splunk/var
     ports:

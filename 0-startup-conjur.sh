@@ -1,30 +1,44 @@
 #!/bin/bash -e
 set -o pipefail
 
+CONJUR_CONTAINER_TARFILE=
+
+
 CONJUR_MASTER_HOSTNAME=cyberark.local
 CONJUR_MASTER_ORGACCOUNT=dev
 CONJUR_MASTER_PASSWORD=Cyberark1
 
 main() {
+
+  echo "Bringing down all running containers and restarting - proceed?"
+  select yn in "Yes" "No"; do
+    case $yn in
+        Yes ) break;;
+        No ) exit;;
+    esac
+  done
+
   all_down				# bring down anything still running
 
   conjur_up
   cli_up
   docker-compose up -d scope		# weave scope
 
-  docker-compose build ldap		# trigger image pull
-  docker-compose build splunk		# trigger image pull
+  docker-compose build ldap
+  docker-compose build splunk
+  docker-compose build vm
+  docker-compose build webapp
 
 					# initialize "scalability" demo
   docker-compose exec cli "/src/etc/_demo-init.sh"
 
-  clear
   echo
   echo "Demo environment ready!"
   echo "The Conjur service is running as hostname: $CONJUR_HOSTNAME"
   echo
 }
 
+############################
 all_down() {
   echo "-----"
   echo "Bringng down all running services & deleting dangling volumes"
@@ -35,8 +49,20 @@ all_down() {
   fi
 }
 
+############################
 conjur_up() {
   echo "-----"
+  if [[ "$CONJUR_CONTAINER_TARFILE" == "" ]]; then
+	printf "\n\nEdit this script to set CONJUR_CONTAINER_TARFILE to the location of the Conjur appliance tarfile to load.\n\n"
+	exit -1
+  fi
+
+  if [[ "$(docker images --format {{.Repository}} | grep conjur-appliance)" == "" ]]; then
+	echo "Loading image from tarfile..."
+	LOAD_MSG=$(docker load -q -i $CONJUR_CONTAINER_TARFILE)
+	IMAGE_ID=$(cut -d " " -f 3 <<< "$LOAD_MSG")		# parse image name as 3rd field in "Loaded image: xx" message
+        sudo docker tag $IMAGE_ID conjur-appliance:latest
+  fi
   echo "Bringing up Conjur"
   docker-compose up -d conjur
 
@@ -59,6 +85,7 @@ conjur_up() {
   sudo mv /tmp/foo /etc/hosts
 }
 
+############################
 cli_up() {
   echo "-----"
   echo "Bring up CLI client"
@@ -74,16 +101,6 @@ cli_up() {
   docker-compose exec cli conjur bootstrap -q
 }
 
-updatehostsfile() {
-  local containername="$1"
-  local tmpfile=/tmp/${1}.tmp
-
-  conthostname=$(docker inspect --format '{{ .Config.Hostname }}' $containername)
-  echo "---- Update hosts file for $conthostname"
-  grep -v $conthostname /etc/hosts > $tmpfile
-  echo -e 127.0.0.1 '\t' $conthostname >> $tmpfile
-  sudo mv $tmpfile /etc/hosts
-}
 
 main "$@"
 

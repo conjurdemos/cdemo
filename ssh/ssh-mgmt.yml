@@ -1,11 +1,13 @@
 ---
+# Default policy is that only DevOps has access to Prod servers
+
 - !policy
   id: prod_vm_access
   body:
     - !permit
       roles:
         - !group /devops
-        - !group /developers
+#        - !group /developers
       privileges: [ read, execute ]
       resources:
         - !host /cdemo_vm_1
@@ -16,6 +18,7 @@
       resources:
         - !host /cdemo_vm_1
 
+# DevOps and Developers have full access to Dev servers
 - !policy
   id: dev_vm_access
   body:

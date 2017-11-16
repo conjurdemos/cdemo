@@ -1,5 +1,9 @@
 ---
 - !user bob
+- !user carol
+- !user ted
+- !user alice
+
 - !group devops
 - !group developers
 
@@ -9,7 +13,7 @@
     !user bob
 
 - !grant
-  role: !group devops 
+  role: !group developers
   members: 
     - !user carol
     - !user ted
