@@ -1,4 +1,0 @@
-machine https://conjur/api/authn
-        login host/host/cdemo_vm_2
-        password 18p6seq166h29q3g0kpt532qey8h3jvn35562v1rf1xb9v6386j995
-

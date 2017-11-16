@@ -33,7 +33,7 @@ main() {
 	docker-compose exec -T cli conjur policy load --as-group=security_admin /src/ssh/$ACCESS_POLICY_FILE
 
 
-	printf "\n-----\nCreating host identity files and copying into containers...\n"
+	printf "\n-----\nConfiguring hosts for SSH & identities ...\n"
 	CLI_CONT_ID=$(docker-compose ps -q cli)
 	for cname in $rack_cont_names; do
 			# note: conjur.conf and conjur-<orgacct>.pem are 
