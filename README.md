@@ -26,10 +26,10 @@ Basic demo scenario:
   Spin up a bunch of minimal containers, each of which fetches a secret every few seconds in a continuous loop. Change the secret, deny access, rotate the API key and watch effects.
 
   - run 0-startup-conjur.sh. REQUIRES INTERNET ACCESS FOR FIRST RUN ONLY. When complete demo environment is ready.
-  - run 1-setup_containers.sh w/ 2 args - REQUIRES INTERNET ACCESS FOR FIRST RUN ONLY:
+  - run 1-setup_containers.sh w/ 2 args:
     - number of containers to create
     - number seconds for each container client to sleep betwixt secrets fetches
-]  - run watch_container_log.sh on one of the containers (containers named cont-1 to cont-n)
+  - run watch_container_log.sh on one of the containers (containers named cont-1 to cont-n)
     - OR run weave scope (https://www.weave.works/oss/scope/), click into a container and 'tail -f cc.log'
   - change secret in UI - watch it change in watched log
   - audit_policy to show how we can see if current state is compliant with policy doc, change "permit" to "deny" for tomcat_hosts permissions, re-run audit_policy to show how to detect non-compliance
@@ -60,7 +60,7 @@ Basic demo scenario:
 ./etc directory:
   - _conjur_init.sh - Conjur initialization script run from CLI container.
   - _demo_init.sh - demo initialization script run from CLI container.
-  - conjur*, template.identity - configuration files for client connections
+  - conjur.conf, conjur-xxx.pem - configuration files for conjurization
   - install-dependencies.sh - installs docker and docker-compose
 
 Build directories - all image builds are triggered via docker-compose.yml (i.e. no build scripts):
