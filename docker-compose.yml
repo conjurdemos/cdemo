@@ -20,6 +20,24 @@ services:
       - 636:636
     restart: always
 
+  standby:
+    image: conjur-appliance:latest
+    hostname: conjur
+    volumes:
+      - ./:/src:z
+    security_opt:
+      - seccomp:unconfined
+    restart: always
+
+  follower:
+    image: conjur-appliance:latest
+    hostname: conjur
+    volumes:
+      - ./:/src:z
+    security_opt:
+      - seccomp:unconfined
+    restart: always
+
   cli:
     environment:
       CONJUR_ACCOUNT: dev
