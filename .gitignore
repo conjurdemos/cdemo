@@ -1,3 +1,4 @@
+etc/conjur*
 log/*
 ldap/ldap-sync.yml
 ssh/id*
