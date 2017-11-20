@@ -42,6 +42,8 @@ main() {
 		docker cp ../etc/conjur.conf $cname:/etc
 		docker cp ../etc/conjur-dev.pem $cname:/etc
 
+        	api_key=$(docker-compose exec -T cli conjur host rotate_api_key --host $cname)
+
 			# run chef recipe to configure vm for ssh access
 		docker exec \
        		        -e CONJURRC=/etc/conjur.conf \

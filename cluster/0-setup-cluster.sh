@@ -1,4 +1,4 @@
-#!/usr/bin/env bash  -x
+#!/bin/bash  -x
 set -eo pipefail
 
 CONJUR_MASTER_CNAME=cdemo_conjur_1

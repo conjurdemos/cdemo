@@ -1,7 +1,7 @@
 #!/bin/bash -e
 set -o pipefail
 
-CONJUR_CONTAINER_TARFILE=""
+CONJUR_CONTAINER_TARFILE=
 
 
 CONJUR_MASTER_HOSTNAME=cdemo_conjur_1
