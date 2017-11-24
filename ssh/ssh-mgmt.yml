@@ -1,5 +1,6 @@
 ---
 # Default policy is that only DevOps has access to Prod servers
+# Un-comment "- !group /developers" and reload policy to give developers non-sudo access to Prod
 
 - !policy
   id: prod_vm_access

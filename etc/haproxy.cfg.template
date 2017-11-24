@@ -1,0 +1,23 @@
+global
+	maxconn 256
+	external-check
+
+defaults
+	timeout connect 5000ms
+	timeout client 50000ms
+	timeout server 50000ms
+
+frontend f_conjur_master_http
+	mode tcp
+	bind *:443
+	default_backend b_conjur_master_http
+
+frontend f_conjur_master_pg
+	mode tcp
+	bind *:5432
+	default_backend b_conjur_master_pg
+
+frontend f_conjur_master_ldap
+	mode tcp
+	bind *:636
+	default_backend b_conjur_master_ldap

@@ -1,6 +1,7 @@
 #!/bin/bash -e
 
 main() {
+	yum install -y etcd
 	install_docker
 	install_docker_compose
 	install_jq
