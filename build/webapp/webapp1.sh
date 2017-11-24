@@ -8,6 +8,7 @@ printf "\n\n\nExecuting within the container...\n\n"
 # SLEEP_TIME - environment variable name to fetch
 
 CONJUR_HOST=conjur
+#CONJUR_HOST=cdemo_follower_1
 declare ENDPOINT=https://$CONJUR_HOST/api
 declare LOGFILE=cc.log
 declare INPUT_FILE=/data/foo
