@@ -4,7 +4,7 @@ set -eo pipefail
 CONJUR_MASTER_CNAME=""
 CONJUR_INGRESS_NAME=conjur
 NUM_STATEFUL_NODES=3			# 1 master + n standbys
-NUM_FOLLOWERS=0	
+NUM_FOLLOWERS=1	
 CLUSTER_NAME=dev
 CLUSTER_MANAGER_CONT_NAME=cdemo_etcd_1
 CLUSTER_POLICY_FILE=cluster.yml
@@ -65,7 +65,7 @@ setup_followers() {
 	docker-compose up -d --no-recreate --scale "follower=$NUM_FOLLOWERS" follower
 
 					# configure each uninitialized node as a standby
-	cont_list=$(docker ps -f "label=role=conjur_node" --format {{.Names}})
+	cont_list=$(docker ps -f "label=role=conjur_follower" --format {{.Names}})
         for cname in $cont_list; do
                 crole=$(docker exec $cname sh -c "evoke role")
                 if [[ "$crole" == blank ]]; then
