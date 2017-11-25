@@ -1,7 +1,7 @@
 #!/bin/bash -e
 set -o pipefail
 
-CONJUR_CONTAINER_TARFILE=~/conjur-install-images/conjur-appliance-4.10.0.0.tar
+CONJUR_CONTAINER_TARFILE=""
 
 CONJUR_INGRESS_NAME=conjur
 CONJUR_MASTER_HOSTNAME=haproxy

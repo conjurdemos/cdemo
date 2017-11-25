@@ -28,6 +28,7 @@ main() {
 
 #############################
 setup_standbys() {
+	printf "\n-----\nConfiguring standby nodes...\n"
 					# generate seed file 
 	docker exec -it $CONJUR_MASTER_CNAME bash -c "evoke seed standby conjur-standby > /tmp/standby-seed.tar"
 					# copy to local /tmp
@@ -47,6 +48,7 @@ setup_standbys() {
         done
 	rm /tmp/standby-seed.tar
 
+	printf "\n-----\nWaiting for cluster state to settle...\n"
 	sleep 10			# give cluster state time to settle, then start synchronous replication
 	docker exec $CONJUR_MASTER_CNAME bash -c "evoke replication sync"
 
@@ -57,6 +59,7 @@ setup_standbys() {
 
 #############################
 setup_followers() {
+	printf "\n-----\nConfiguring follower nodes...\n"
 					# generate seed file that references haproxy 
 					# and copy to local /tmp
 	docker exec -it $CONJUR_MASTER_CNAME bash -c "evoke seed follower $CONJUR_INGRESS_NAME > /tmp/follower-seed.tar"
@@ -94,6 +97,7 @@ setup_node() {
 
 #############################
 setup_etcd() {
+	printf "\n-----\nConfiguring cluster policy...\n"
 					# startup etcd cluster manager
 	docker-compose up -d etcd
 					# build cluster policy file
@@ -103,6 +107,7 @@ setup_etcd() {
         docker-compose exec cli conjur authn login -u admin -p Cyberark1
 	docker-compose exec cli conjur policy load --as-group=security_admin /src/cluster/$CLUSTER_POLICY_FILE
 
+	printf "\n-----\nEnrolling Conjur nodes with cluster manager...\n"
 					# enroll each stateful node in cluster
 	for cont_name in $cont_list; do
 		cont_ip=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $cont_name)
