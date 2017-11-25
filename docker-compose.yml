@@ -12,8 +12,8 @@ services:
       role: "conjur_node"
     volumes:
       - ./:/src:z
-      - ~/log:/var/log/conjur   # exported conjur audit log
-      - ~/log:/var/log/nginx    # exported nginx audit log
+      - ./log:/var/log/conjur   # exported conjur audit log
+      - ./log:/var/log/nginx    # exported nginx audit log
     security_opt:
       - seccomp:unconfined
     restart: always
@@ -134,7 +134,7 @@ services:
       SPLUNK_ENABLE_LISTEN: 9997
       SPLUNK_ADD: tcp 1514
     volumes:
-      - ~/log:/log
+      - ./log:/log
       - opt-splunk-etc:/opt/splunk/etc
       - opt-splunk-var:/opt/splunk/var
     ports:

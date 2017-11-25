@@ -10,6 +10,7 @@ Dependencies:
 
 Demo root directory (.../cdemo):
   - 0-startup-conjur.sh - takes no arguments - initializes demo environment:
+    - EDIT SCRIPT WITH PATH TO CONJUR TARFILE BEFORE RUNNING.
     - triggers builds of ALL demo images - this can take a really long time - prepare accordingly!
     - startups up Conjur, Conjur client CLI and Weave Scope containers
     - Loads users-policy.yml and sets all user passwords to “foo”
