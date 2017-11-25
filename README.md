@@ -5,6 +5,7 @@ This is self-contained implementation of a basic Conjur implementation to demons
 Dependencies:
   - docker & docker-compose - can be installed w/ ./etc/install-dependencies.sh
   - internet access required for initial builds, can run standalone after that
+  - Conjur 4.9.10 or greater required for auto-failover
 
 Demo root directory (.../cdemo):
   - 0-startup-conjur.sh - takes no arguments - initializes demo environment:
@@ -56,6 +57,18 @@ Basic demo scenario:
   - ssh-mgmt.yml - defines access policies for Dev and Prod VM access
 
 ./simple_hf_example - very basic Host Factory demo:
+  - 1_set_hf_token.sh - one argument: output file, creats HF token, hostname and variable to retrieve
+  - 2_get_secret_restapi.sh - one argument: outfile from above, redeems HF token, retrieves variable w/ REST API
+  - 2_get_secret_summon.sh - one argument: outfile from above, redeems HF token, retrieves variable w/ Summon
+  - 3_cleanup.sh - deletes old HF tokens
+  - EDIT.ME - connection info for Conjur
+  - policy.yml - webapp policy to create variable for retrieval
+  - setup_summon.sh - installs summon
+  - tomcat.xml.erb - example template for secrets injection via Summon
+
+./cluster - adds standbys and a follower to cluster:
+  - 0-setup-cluster.sh - brings cluster to default state of 1-master/2-standbys/1-follower
+  - 1-cluster-failover.sh - removes current master to trigger auto-failover, adds replacement standy
 
 ./etc directory:
   - _conjur_init.sh - Conjur initialization script run from CLI container.
@@ -66,6 +79,8 @@ Basic demo scenario:
 Build directories - all image builds are triggered via docker-compose.yml (i.e. no build scripts):
   - build/conjurcli:
     - Dockerfile - builds a rich Conjur CLI client container
+  - build/etcd:
+    - Dockerfile - builds a container to run etcd cluster
   - build/ldap:
     - Dockerfile - builds a OpenLDAP server container
   - build/splunk
