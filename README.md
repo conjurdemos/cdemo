@@ -3,9 +3,10 @@
 This is self-contained implementation of a basic Conjur implementation to demonstrate all key capabilities and to serve as a foundation for POCs and implementations.
 
 Dependencies:
+  - locally available conjur docker image tarfile - v4.9.10 or greater required for auto-failover
+    - request download image via https://www.cyberark.com/get-conjur-enterprise/
   - docker & docker-compose - can be installed w/ ./etc/install-dependencies.sh
   - internet access required for initial builds, can run standalone after that
-  - Conjur 4.9.10 or greater required for auto-failover
 
 Demo root directory (.../cdemo):
   - 0-startup-conjur.sh - takes no arguments - initializes demo environment:
