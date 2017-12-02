@@ -1,7 +1,8 @@
 #!/bin/bash
 set -eo pipefail
 
-CONJUR_CONTAINER_TARFILE=~/conjur-install-images/conjur-appliance-4.10.0.0.tar
+		# EDIT TO POINT TO YOUR LOCAL CONJUR IMAGE TARFILE
+CONJUR_CONTAINER_TARFILE=""
 
 CONJUR_MASTER_INGRESS=conjur_master
 CONJUR_FOLLOWER_INGRESS=conjur_follower
@@ -12,6 +13,9 @@ CONJUR_MASTER_PASSWORD=Cyberark1
 main() {
 
   all_down				# bring down anything still running
+
+  docker-compose build haproxy
+  docker-compose build cli
 
   conjur_master_up
   haproxy_up
