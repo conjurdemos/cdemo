@@ -22,6 +22,8 @@ services:
     image: haproxy:conjur
     hostname: conjur
     build: ./build/haproxy
+    labels:
+      role: "conjur_proxy"
     volumes:
       - ./:/src:z
     ports:
@@ -30,11 +32,9 @@ services:
     entrypoint: /start.sh
 
   etcd: 
-    hostname: etcd
     image: quay.io/coreos/etcd
+    hostname: etcd
     build: ./build/etcd
-    ports:
-      - 2379:2379
     command:
       - etcd
       - -debug
@@ -64,7 +64,7 @@ services:
   cli:
     environment:
       CONJUR_ACCOUNT: dev
-      CONJUR_APPLIANCE_URL: https://conjur/api
+      CONJUR_APPLIANCE_URL: https://conjur_master/api
     hostname: conjurcli
     image: my-conjurcli:5.4.0
     build: ./build/conjurcli
@@ -97,8 +97,8 @@ services:
       - data:/data
     entrypoint: /root/webapp1.sh
     environment:
-      - APP_HOSTNAME              # values for these variables are in .env file
-      - VAR_ID                    # written by 1-setup-containers.sh
+      - APP_HOSTNAME         # values for these variables are in .env file
+      - VAR_ID               # written by 1-setup-containers.sh
       - SLEEP_TIME
 
 # VM containers for SSH management demonstration.

@@ -5,9 +5,9 @@
     - !layer
 
     - &hosts
-      - !host cdemo_conjur_node_3
-      - !host cdemo_conjur_node_2
-      - !host cdemo_conjur_node_1
+      - !host cdemo_conjur_node_8
+      - !host cdemo_conjur_node_7
+      - !host cdemo_conjur_node_6
     - !grant
       role: !layer
       member: *hosts

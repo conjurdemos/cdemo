@@ -20,6 +20,7 @@ Demo root directory (.../cdemo):
   - docker-compose.yml - file that drives all container builds and configurations.
   - .env - file of environment variables for client application containers, referenced from docker-compose.yml, dynamically created by 1-setup-containers.sh
   - load_policy.sh - loads a supplied policy file
+  - master-control.sh - inspect, pause/unpause, or kill Conjur master.
   - audit_policy.sh - compares a supplied policy file against current Conjur state, reports any deviations.
   - watch_container_log.sh - takes no arguments - runs tail on container #1 script logfile to monitor fetch activity
   - dbpassword_rotator.sh - sets the database password to a random hex value every 5 seconds
