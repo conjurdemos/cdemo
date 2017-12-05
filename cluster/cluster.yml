@@ -1,0 +1,13 @@
+---
+- !policy
+  id: conjur/cluster/dev
+  body:
+    - !layer
+
+    - &hosts
+      - !host cdemo_conjur_node_5
+      - !host cdemo_conjur_node_4
+      - !host cdemo_conjur_node_3
+    - !grant
+      role: !layer
+      member: *hosts

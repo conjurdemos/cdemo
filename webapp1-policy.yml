@@ -10,7 +10,7 @@
 
   - !layer &tomcat_hosts tomcat_hosts
 
-  - !permit
+  - !deny
     role: *tomcat_hosts
     privileges: [ read, execute ]
     resource: *variables

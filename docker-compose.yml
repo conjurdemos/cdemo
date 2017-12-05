@@ -6,32 +6,55 @@ services:
 # The CLI container is used to execute Conjur commands in lieu of requiring the CLI
 # package installation on the host machine. This makes managing multi-version Conjur
 # environments easier.
-  conjur:
+  conjur_node:
     image: conjur-appliance:latest
-    hostname: conjur
+    labels:
+      role: "conjur_node"
     volumes:
       - ./:/src:z
-      - ~/log:/var/log/conjur   # exported conjur audit log
-      - ~/log:/var/log/nginx    # exported nginx audit log
+      - ./log:/var/log/conjur   # exported conjur audit log
+      - ./log:/var/log/nginx    # exported nginx audit log
     security_opt:
       - seccomp:unconfined
-    ports:
-      - 443:443
-      - 636:636
     restart: always
 
-  standby:
-    image: conjur-appliance:latest
+  haproxy:
+    image: haproxy:conjur
     hostname: conjur
+    build: ./build/haproxy
+    labels:
+      role: "conjur_proxy"
     volumes:
       - ./:/src:z
-    security_opt:
-      - seccomp:unconfined
+    ports:
+      - 443:443
     restart: always
+    entrypoint: /start.sh
+
+  etcd: 
+    image: quay.io/coreos/etcd
+    hostname: etcd
+    build: ./build/etcd
+    command:
+      - etcd
+      - -debug
+      - -name
+      - etcd
+      - -advertise-client-urls
+      - http://etcd:2379
+      - -listen-client-urls
+      - http://0.0.0.0:2379
+      - -initial-advertise-peer-urls
+      - http://etcd:2380
+      - -listen-peer-urls
+      - http://0.0.0.0:2380
+      - -initial-cluster
+      - etcd=http://etcd:2380
 
   follower:
     image: conjur-appliance:latest
-    hostname: conjur
+    labels:
+      role: "conjur_follower"
     volumes:
       - ./:/src:z
     security_opt:
@@ -41,7 +64,8 @@ services:
   cli:
     environment:
       CONJUR_ACCOUNT: dev
-      CONJUR_APPLIANCE_URL: https://conjur/api
+      CONJUR_APPLIANCE_URL: https://conjur_master/api
+    hostname: conjurcli
     image: my-conjurcli:5.4.0
     build: ./build/conjurcli
     volumes:
@@ -49,7 +73,6 @@ services:
       - ./:/src:z
       - "/var/run/docker.sock:/var/run/docker.sock:rw"  # enable docker commands from in container
       - "/usr/bin/docker:/usr/bin/docker:z"
-    hostname: conjurcli
     entrypoint: sleep
     command: infinity
 
@@ -74,8 +97,8 @@ services:
       - data:/data
     entrypoint: /root/webapp1.sh
     environment:
-      - APP_HOSTNAME              # values for these variables are in .env file
-      - VAR_ID                    # written by 1-setup-containers.sh
+      - APP_HOSTNAME         # values for these variables are in .env file
+      - VAR_ID               # written by 1-setup-containers.sh
       - SLEEP_TIME
 
 # VM containers for SSH management demonstration.
@@ -111,7 +134,7 @@ services:
       SPLUNK_ENABLE_LISTEN: 9997
       SPLUNK_ADD: tcp 1514
     volumes:
-      - ~/log:/log
+      - ./log:/log
       - opt-splunk-etc:/opt/splunk/etc
       - opt-splunk-var:/opt/splunk/var
     ports:

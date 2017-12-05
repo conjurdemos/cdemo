@@ -2,7 +2,7 @@
 set -o pipefail
 
 CONJUR_MASTER_ORGACCOUNT=dev
-CONJUR_MASTER_URL=https://conjur/api
+CONJUR_MASTER_URL=https://conjur_master/api
 RACK_SERVICE_NAME=vm
 RACK_POLICY_NAME=rack
 RACK_POLICY_FILE=$RACK_POLICY_NAME.yml

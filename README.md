@@ -3,12 +3,15 @@
 This is self-contained implementation of a basic Conjur implementation to demonstrate all key capabilities and to serve as a foundation for POCs and implementations.
 
 Dependencies:
+  - locally available conjur docker image tarfile - v4.9.10 or greater required for auto-failover
+    - request download image via https://www.cyberark.com/get-conjur-enterprise/
   - docker & docker-compose - can be installed w/ ./etc/install-dependencies.sh
   - internet access required for initial builds, can run standalone after that
 
 Demo root directory (.../cdemo):
   - 0-startup-conjur.sh - takes no arguments - initializes demo environment:
-    - triggers builds of ALL demo images - this can take a really long time - prepare accordingly!
+    - EDIT SCRIPT WITH PATH TO CONJUR TARFILE BEFORE RUNNING.
+    - triggers builds of ALL demo images - this can take 30 minutes or more - prepare accordingly!
     - startups up Conjur, Conjur client CLI and Weave Scope containers
     - Loads users-policy.yml and sets all user passwords to “foo”
     - loads demo policies and sets secret values to the secret name prefixed with “ThisIsThe"
@@ -17,6 +20,7 @@ Demo root directory (.../cdemo):
   - docker-compose.yml - file that drives all container builds and configurations.
   - .env - file of environment variables for client application containers, referenced from docker-compose.yml, dynamically created by 1-setup-containers.sh
   - load_policy.sh - loads a supplied policy file
+  - master-control.sh - inspect, pause/unpause, or kill Conjur master.
   - audit_policy.sh - compares a supplied policy file against current Conjur state, reports any deviations.
   - watch_container_log.sh - takes no arguments - runs tail on container #1 script logfile to monitor fetch activity
   - dbpassword_rotator.sh - sets the database password to a random hex value every 5 seconds
@@ -56,6 +60,18 @@ Basic demo scenario:
   - ssh-mgmt.yml - defines access policies for Dev and Prod VM access
 
 ./simple_hf_example - very basic Host Factory demo:
+  - 1_set_hf_token.sh - one argument: output file, creats HF token, hostname and variable to retrieve
+  - 2_get_secret_restapi.sh - one argument: outfile from above, redeems HF token, retrieves variable w/ REST API
+  - 2_get_secret_summon.sh - one argument: outfile from above, redeems HF token, retrieves variable w/ Summon
+  - 3_cleanup.sh - deletes old HF tokens
+  - EDIT.ME - connection info for Conjur
+  - policy.yml - webapp policy to create variable for retrieval
+  - setup_summon.sh - installs summon
+  - tomcat.xml.erb - example template for secrets injection via Summon
+
+./cluster - adds standbys and a follower to cluster:
+  - 0-setup-cluster.sh - brings cluster to default state of 1-master/2-standbys/1-follower
+  - 1-cluster-failover.sh - removes current master to trigger auto-failover, adds replacement standy
 
 ./etc directory:
   - _conjur_init.sh - Conjur initialization script run from CLI container.
@@ -66,6 +82,8 @@ Basic demo scenario:
 Build directories - all image builds are triggered via docker-compose.yml (i.e. no build scripts):
   - build/conjurcli:
     - Dockerfile - builds a rich Conjur CLI client container
+  - build/etcd:
+    - Dockerfile - builds a container to run etcd cluster
   - build/ldap:
     - Dockerfile - builds a OpenLDAP server container
   - build/splunk
