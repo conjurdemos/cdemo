@@ -70,7 +70,7 @@ conjur_master_up() {
 
   if [[ "$(docker images --format {{.Repository}} | grep conjur-appliance)" == "" ]]; then
 	echo "Loading image from tarfile..."
-	LOAD_MSG=$(docker load -q -i $CONJUR_CONTAINER_TARFILE)
+	LOAD_MSG=$(docker load -i $CONJUR_CONTAINER_TARFILE)
 	IMAGE_ID=$(cut -d " " -f 3 <<< "$LOAD_MSG")		# parse image name as 3rd field in "Loaded image: xx" message
         sudo docker tag $IMAGE_ID conjur-appliance:latest
   fi
