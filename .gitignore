@@ -2,3 +2,4 @@ etc/conjur*.pem
 log/*
 ldap/ldap-sync.yml
 ssh/id*
+build/hsm/*

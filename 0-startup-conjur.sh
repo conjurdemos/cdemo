@@ -2,7 +2,7 @@
 set -eo pipefail
 
 		# EDIT TO POINT TO YOUR LOCAL CONJUR IMAGE TARFILE
-CONJUR_CONTAINER_TARFILE=""
+CONJUR_CONTAINER_TARFILE=~/conjur-install-images/conjur-appliance-4.10.0.0.tar
 
 CONJUR_MASTER_INGRESS=conjur_master
 CONJUR_FOLLOWER_INGRESS=conjur_follower

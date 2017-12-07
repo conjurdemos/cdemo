@@ -51,6 +51,10 @@ services:
       - -initial-cluster
       - etcd=http://etcd:2380
 
+  hsm:
+    image: softhsm:latest
+    build: ./build/hsm
+
   follower:
     image: conjur-appliance:latest
     labels:
