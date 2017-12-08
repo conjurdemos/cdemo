@@ -42,11 +42,6 @@ Basic demo scenario:
   - 2-shutdown-containers.sh - brings down all webapp containers.
   - docker-compose down - brings down all containers incl. conjur, cli & scope.
 
-./etc directory:
-  - _conjur_init.sh - Conjur initialization script run from CLI container.
-  - _demo_init.sh - demo initialization script run from CLI container.
-  - conjur.conf, conjur-xxx.pem - configuration files for conjurization
-
 Demo directories:
  - ./cluster - adds standbys to cluster and shows failover
  - ./ldap - shows LDAP synchronization w/ an OpenLDAP server
@@ -54,3 +49,8 @@ Demo directories:
  - ./splunk - brings up Splunk to monitor audit messages and NGINX logs
  - ./ssh - shows how to use policies to control SSH and sudo on hosts
  - ./simple_hf_example - a very basic Host Factory demo
+
+./etc directory:
+  - _conjur_init.sh - Conjur initialization script run from CLI container.
+  - _demo_init.sh - demo initialization script run from CLI container.
+  - conjur.conf, conjur-xxx.pem - configuration files for conjurization

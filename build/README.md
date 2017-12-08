@@ -4,7 +4,13 @@ All image builds are triggered via docker-compose.yml (i.e. no build scripts):
   - build/conjurcli:
     - Dockerfile - builds a rich Conjur CLI client container
   - build/etcd:
-    - Dockerfile - builds a container to run etcd cluster
+    - Dockerfile - builds a container to run etcd cluster manager
+  - build/haproxy:
+    - Dockerfile - builds HAproxy health checking load balancer
+    - conjur-health-check.sh - script HA proxy runs to route request to healthy master
+    - start.sh - entrypoint for container
+  - build/hsm:
+    - work in progress - not ready to show yet.
   - build/ldap:
     - Dockerfile - builds a OpenLDAP server container
   - build/splunk
