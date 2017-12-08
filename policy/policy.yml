@@ -1,11 +1,22 @@
 # Top-level policy file
 
-# Define "staging" namespace, owned by the "developers" team
+# Developers own the Development environment
+- !policy
+  id: development
+  owner: !group developers
+  body:
+    - !include webapp.yml
+
+# DevOps owns the Staging environment
 - !policy
   id: staging
-  owner: !group developers
+  owner: !group devops
+  body:
+    - !include webapp.yml
 
-# Define "production" namespace, owned by the "security_ops" team
+# SecOps owns the Production environment
 - !policy
   id: production
-  owner: !group security_ops
+  owner: !group sec_ops
+  body:
+    - !include webapp.yml

@@ -1,0 +1,42 @@
+---
+- !policy
+  id: webapp1
+  body:
+  - &variables
+    - !variable 
+      id: database_password
+      annotations:
+        description: Application database password
+
+  - !layer
+
+  - !host tomcat_host
+
+  - !grant
+    role: !layer
+    member: !host tomcat_host
+
+  - !group secrets-users
+  - !group secrets-managers
+
+# secrets-managers are also secrets-users
+  - !grant
+    role: !group secrets-users
+    member: !group secrets-managers
+
+# secrets-users can discover and fetch
+  - !permit
+    resource: *variables
+    privileges: [ read, execute ]
+    role: !group secrets-users
+
+# secrets-managers can update (and discover and fetch, via role grant)
+  - !permit
+    resource: *variables
+    privileges: [ update ]
+    role: !group secrets-managers
+
+# Application layer is a secrets-user
+  - !grant
+    role: !group secrets-users
+    member: !layer

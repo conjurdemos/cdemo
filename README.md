@@ -3,9 +3,9 @@
 This is self-contained implementation of a basic Conjur implementation to demonstrate all key capabilities and to serve as a foundation for POCs and implementations.
 
 Dependencies:
+  - TO INSTALL DOCKER, DOCKER-COMPOSE, JQ, ETC - run _install-dependencies.sh
   - locally available conjur docker image tarfile - v4.9.10 or greater required for auto-failover
     - request download image via https://www.cyberark.com/get-conjur-enterprise/
-  - docker & docker-compose - can be installed w/ ./etc/install-dependencies.sh
   - internet access required for initial builds, can run standalone after that
 
 Demo root directory (.../cdemo):
@@ -25,6 +25,7 @@ Demo root directory (.../cdemo):
   - watch_container_log.sh - takes no arguments - runs tail on container #1 script logfile to monitor fetch activity
   - dbpassword_rotator.sh - sets the database password to a random hex value every 5 seconds
   - apikey_rotator.sh - rotates the API key once.
+  - inspect-cluster.sh
 
 Basic demo scenario:
   Spin up a bunch of minimal containers, each of which fetches a secret every few seconds in a continuous loop. Change the secret, deny access, rotate the API key and watch effects.
