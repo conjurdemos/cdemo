@@ -1,0 +1,47 @@
+
+- !policy
+  id: myapp
+  body:
+  - &variables
+    - !variable
+      id: database/username
+      annotations:
+        description: Application database username
+    - !variable
+      id: database/password
+      annotations:
+        description: Application database password
+    - !variable
+      id: stripe/private_key
+      annotations:
+        description: Stripe API key
+
+  - !layer
+
+  - !host-factory
+    layer: [ !layer ]
+
+  - !group secrets-users
+  - !group secrets-managers
+
+  # secrets-managers has role secrets-users
+  - !grant
+    role: !group secrets-users
+    member: !group secrets-managers
+
+  # secrets-users can read and execute
+  - !permit
+    resource: *variables
+    privileges: [ read, execute ]
+    role: !group secrets-users
+
+  # secrets-managers can update (and read and execute, via role grant)
+  - !permit
+    resource: *variables
+    privileges: [ update ]
+    role: !group secrets-managers
+
+  # Application layer has the secrets-users role
+  - !grant
+    role: !group secrets-users
+    member: !layer

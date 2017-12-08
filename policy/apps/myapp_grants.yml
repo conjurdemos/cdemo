@@ -1,0 +1,12 @@
+
+# Grant the team_leads group permission to read+write the "myapp" variables in staging
+- !grant
+  role: !group staging/myapp/secrets-managers
+  members:
+  - !group team_leads
+
+# Grant the security_ops group permission to read+write the "myapp" variables in production
+- !grant
+  role: !group production/myapp/secrets-managers
+  members:
+  - !group security_ops
