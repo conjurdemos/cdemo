@@ -51,6 +51,9 @@ configure_env() {
 	sudo echo PATH=\$PATH:/usr/local/bin >> /etc/bashrc
 	sudo chmod go-w /etc/bashrc
 	. ~/.bashrc
+		# bounce IP forwarding to reset route through any proxy
+	sudo sysctl -w net.ipv4.ip_forward=0
+	sudo sysctl -w net.ipv4.ip_forward=1 
 }
 
 main $@

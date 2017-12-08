@@ -1,0 +1,9 @@
+# Top-level policy file
+
+# Environment policies
+- !include dev-policy.yml
+- !include test-policy.yml
+- !include prod-policy.yml
+
+# Policies to bind users to application roles
+- !include apps/webapp_role_bindings.yml

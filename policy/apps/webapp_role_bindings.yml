@@ -1,0 +1,33 @@
+
+######################################
+# Dev environment role bindings
+
+# developers can fetch & update secrets for webapp in development
+- !grant
+  role: !group dev/webapp1/secrets-managers
+  members:
+  - !group developers
+
+######################################
+# Test environment role bindings for webapp1
+
+# devops can fetch & update secrets for webapp in Test
+- !grant
+  role: !group test/webapp1/secrets-managers
+  members:
+  - !group devops
+
+######################################
+# Production environment role bindings for webapp1
+
+# sec_ops can fetch & update secrets for webapp in Prod
+- !grant
+  role: !group prod/webapp1/secrets-managers
+  members:
+  - !group sec_ops
+
+# devops can fetch (but not update) secrets for webapp1 in Prod
+- !grant
+  role: !group prod/webapp1/secrets-users
+  members:
+  - !group devops

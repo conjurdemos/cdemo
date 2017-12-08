@@ -4,9 +4,9 @@
 - !user bob     # devops
 - !user alice   # sec_ops
 
-- !group sec_ops
-- !group devops
 - !group developers
+- !group devops
+- !group sec_ops
 
 # Grant the less-powerful groups to the more-powerful groups
 - !grant
