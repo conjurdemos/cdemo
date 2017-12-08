@@ -25,7 +25,7 @@ Demo root directory (.../cdemo):
   - watch_container_log.sh - takes no arguments - runs tail on container #1 script logfile to monitor fetch activity
   - dbpassword_rotator.sh - sets the database password to a random hex value every 5 seconds
   - apikey_rotator.sh - rotates the API key once.
-  - inspect-cluster.sh
+  - inspect-cluster.sh - echos current state of cluster.
 
 Basic demo scenario:
   Spin up a bunch of minimal containers, each of which fetches a secret every few seconds in a continuous loop. Change the secret, deny access, rotate the API key and watch effects.
@@ -54,11 +54,7 @@ Basic demo scenario:
   - 1_create_key_for_user.sh - takes 1 argument (user name) - creates SSH key for given user and stored pub key in Conjur
   - 2_test_fetch_userkey_from_host.sh - takes 2 arguments (user, container name) - tests if container can fetch user's pub key
   - 3_ssh_user_to_host.sh - takes 2 arguments (user, container) - attempts to ssh as user to container/host
-  - 4_roles_with_resource_permissions.sh - takes 2 arguments (host:container, privilege) - shows all roles holding privilege on resource
-  - 5_review_activity_on_resource.sh - takes 1 argument (host:container) - displays audit records for resource
-  - rack.yml - policy file created and loaded by 0-setup-ssh.sh
-  - load_policy.sh - utility for loading ssh-mgmt.yml during demo to effect access changes
-  - ssh-mgmt.yml - defines access policies for Dev and Prod VM access
+  - 4_roles_with_resource_permissions.sh - takes 2 arguments (host:container, privilege) - shows all roles holding privilege on resource - 5_review_activity_on_resource.sh - takes 1 argument (host:container) - displays audit records for resource - rack.yml - policy file created and loaded by 0-setup-ssh.sh - load_policy.sh - utility for loading ssh-mgmt.yml during demo to effect access changes - ssh-mgmt.yml - defines access policies for Dev and Prod VM access
 
 ./simple_hf_example - very basic Host Factory demo:
   - 1_set_hf_token.sh - one argument: output file, creats HF token, hostname and variable to retrieve
@@ -78,7 +74,6 @@ Basic demo scenario:
   - _conjur_init.sh - Conjur initialization script run from CLI container.
   - _demo_init.sh - demo initialization script run from CLI container.
   - conjur.conf, conjur-xxx.pem - configuration files for conjurization
-  - install-dependencies.sh - installs docker and docker-compose
 
 Build directories - all image builds are triggered via docker-compose.yml (i.e. no build scripts):
   - build/conjurcli:
