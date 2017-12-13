@@ -6,15 +6,15 @@
   - &variables
     - !variable database_password
 
-  - !host &tomcat_host tomcat_host
+  - !layer
 
-  - !layer &tomcat_hosts tomcat_hosts
-
-  - !permit
-    role: *tomcat_hosts
-    privileges: [ read, execute ]
-    resource: *variables
+  - !host tomcat_host
 
   - !grant
-    role: *tomcat_hosts
-    member: *tomcat_host
+    role: !layer
+    member: !host tomcat_host
+
+  - !permit
+    role: !layer
+    privileges: [ read, execute ]
+    resource: *variables

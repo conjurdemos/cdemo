@@ -16,7 +16,7 @@ main() {
         local NUM_CONTS=$1; shift
         local SLEEP_TIME=$1; shift
 	
-	rm .env
+	rm -f .env
 				# login in cli container as devops admin
 	docker-compose exec -T cli conjur authn login -u bob -p foo
 

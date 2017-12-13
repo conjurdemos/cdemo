@@ -1,0 +1,8 @@
+# Development environment policy
+
+# Developers own the Dev environment
+- !policy
+  id: dev
+  owner: !group developers
+  body:
+    - !include apps/webapp.yml
