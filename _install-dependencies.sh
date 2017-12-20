@@ -1,6 +1,7 @@
 #!/bin/bash -e
 
 main() {
+	sudo yum makecache fast
 	sudo yum install -y etcd
 	install_docker
 	install_docker_compose
@@ -46,14 +47,17 @@ install_conjur_cli() {
 }
 
 configure_env() {
-	echo "Configuring environment..."
-	sudo chmod a+w /etc/bashrc
-	sudo echo PATH=\$PATH:/usr/local/bin >> /etc/bashrc
-	sudo chmod go-w /etc/bashrc
-	. ~/.bashrc
-		# bounce IP forwarding to reset route through any proxy
-	sudo sysctl -w net.ipv4.ip_forward=0
-	sudo sysctl -w net.ipv4.ip_forward=1 
+ 	echo "Configuring environment..."
+        SHELL_INIT_FILE=/etc/profile.d/cdemo.sh
+        sudo rm -f $SHELL_INIT_FILE
+
+        sudo touch $SHELL_INIT_FILE
+        sudo chmod a+w $SHELL_INIT_FILE
+        sudo echo PATH=\$PATH:/usr/local/bin >> $SHELL_INIT_FILE
+                # ensure internet connectivity on shell startup
+        sudo echo "sudo sysctl -w net.ipv4.ip_forward=1" >> $SHELL_INIT_FILE
+        sudo echo "sudo dhclient -v" >> $SHELL_INIT_FILE
+        sudo chmod go-w $SHELL_INIT_FILE
 }
 
 main $@

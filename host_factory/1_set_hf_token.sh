@@ -5,7 +5,7 @@
 # Usage: admin_process <host-factory-name> <host-name> <variable-to-fetch>
 
 #####
-# HARD CODED VALUES from ../policy.yml in parent directory
+# HARD CODED VALUES from ../webapp1-policy.yml in parent directory
 declare HOST_FACTORY_NAME=webapp1/tomcat_factory
 declare HOST_NAME=tomcat1
 declare VAR_ID=webapp1/database_password 
