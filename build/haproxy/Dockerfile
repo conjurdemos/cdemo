@@ -9,4 +9,3 @@ RUN apt-get install -y \
 COPY haproxy.cfg /usr/local/etc/haproxy/
 COPY conjur-health-check.sh /root/
 COPY start.sh /
-
