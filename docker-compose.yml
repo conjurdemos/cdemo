@@ -20,7 +20,8 @@ services:
 
   haproxy:
     image: haproxy:conjur
-    hostname: conjur
+    hostname: conjur_proxy
+    container_name: conjur_master
     build: ./build/haproxy
     labels:
       role: "conjur_proxy"
@@ -119,6 +120,7 @@ services:
 # Open LDAP server for ldap sync demonstration.
 # This service is brought up by the ./ldap/0-setup-ldap.sh script.
   ldap:
+    container_name: ldap_server
     image: osixia/openldap:1.1.7
     build: ./build/ldap
     restart: always
@@ -130,6 +132,7 @@ services:
 # See volumes: specification for the Conjur service above.
 # This service is brought up by the ./splunk/0-setup-splunk.sh script.
   splunk:
+    container_name: splunk
     hostname: splunkenterprise
     image: splunk/splunk:7.0.0
     build: ./build/splunk
@@ -146,6 +149,17 @@ services:
       - "9997:9997"
       - "8088:8088"
       - "1514:1514"
+
+  ansible:
+    container_name: ansible
+    image: "ansible:centos7"
+    build: build/ansible
+    environment:
+      ANSIBLE_HOST_KEY_CHECKING: "false"
+    volumes:
+      - ./:/src:rw
+      - ./ssh_ansible/ansible_hosts:/etc/ansible/hosts:rw
+    entrypoint: "sleep infinity"
 
 volumes:
   data:

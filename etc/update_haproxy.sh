@@ -28,16 +28,15 @@ update_http_servers() {
 backend b_conjur_master_http
 	mode tcp
 	balance static-rr
-	option external-check
 	default-server inter 5s fall 3 rise 2
-	external-check path "/usr/bin:/usr/local/bin"
-	external-check command "/root/conjur-health-check.sh"
+	option httpchk GET /health
+	http-check expect status 200
 CONFIG
 
 	cont_list=$(docker ps -f "label=role=conjur_node" --format {{.Names}})
 	for cont_name in $cont_list; do
 		cont_ip=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $cont_name)
-		echo -e '\t' server $cont_name $cont_ip:443 check >> $destination_file
+		echo -e '\t' server $cont_name $cont_name:443 check port 443 check-ssl verify none >> $destination_file
 	done
 }
 
@@ -50,16 +49,15 @@ update_pg_servers() {
 backend b_conjur_master_pg
 	mode tcp
 	balance static-rr
-	option external-check
-	default-server inter 5s fall 3 rise 2
-	external-check path "/usr/bin:/usr/local/bin"
-	external-check command "/root/conjur-health-check.sh"
+        default-server inter 5s fall 3 rise 2
+	option httpchk GET /health
+	http-check expect status 200
 CONFIG
 
 	cont_list=$(docker ps -f "label=role=conjur_node" --format {{.Names}})
 	for cont_name in $cont_list; do
        		cont_ip=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $cont_name)
-	        echo -e '\t' server $cont_name $cont_ip:5432 check >> $destination_file
+		echo -e '\t' server $cont_name $cont_name:5432 check port 443 check-ssl verify none >> $destination_file
 	done
 }
 
@@ -72,17 +70,15 @@ update_ldap_servers() {
 backend b_conjur_master_ldap
 	mode tcp
 	balance static-rr
-	option external-check
-	default-server inter 30s fall 3 rise 2
-	external-check path "/usr/bin:/usr/local/bin"
-	external-check command "/root/conjur-health-check.sh"
+        default-server inter 5s fall 3 rise 2
+        option ldap-check
 CONFIG
 
 	cont_list=$(docker ps -f "label=role=conjur_node" --format {{.Names}})
 	for cont_name in $cont_list; do
 		cont_ip=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $cont_name)
-		echo -e '\t' server $cont_name $cont_ip:636 check >> $destination_file
+		echo -e '\t' server $cont_name $cont_name:636 check check-ssl verify none >> $destination_file
 	done
 }
 
-main "$@"
+main $@

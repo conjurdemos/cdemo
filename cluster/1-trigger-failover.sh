@@ -1,5 +1,5 @@
-#!/bin/bash -e
-set -o pipefail
+#!/bin/bash 
+set -eo pipefail
 
 CLUSTER_NAME=dev
 CLUSTER_MANAGER_CONT_NAME=""
@@ -27,9 +27,9 @@ check_conjur_version() {
 	conjur_minor=$(echo $conjur_version | awk -F "." '{ print $2 }')
 	conjur_point=$(echo $conjur_version | awk -F "." '{ print $3 }')
 
-	if [[ ($conjur_major -ne 4) || (($conjur_minor -lt 10) && ($conjur_point -lt 10)) ]]; then
+	if [[ ($conjur_major -ne 4) || (($conjur_minor -lt 10) && ($conjur_point -ne 10)) ]]; then
 		printf "\nConjur version %i.%i.%i is running.\n" $conjur_major $conjur_minor $conjur_point
-		printf "Failover is only supported in Conjur version 4.9.10 or greater.\n\n" 
+		printf "This script only supports failover in Conjur version 4.9.10.\n\n" 
 		exit -1
 	fi
 }
@@ -109,7 +109,6 @@ construct_cluster_policy() {
   id: conjur/cluster/$CLUSTER_NAME
   body:
     - !layer
-
     - &hosts
 POLICY_HEADER
 					# for each stateful node, add hosts entries to policy file

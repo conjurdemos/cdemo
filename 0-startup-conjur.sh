@@ -2,7 +2,7 @@
 set -eo pipefail
 
 		# EDIT TO POINT TO YOUR LOCAL CONJUR IMAGE TARFILE
-CONJUR_CONTAINER_TARFILE=""
+CONJUR_CONTAINER_TARFILE=~/conjur-install-images/conjur-appliance-4.9.11.0.tar
 
 CONJUR_MASTER_INGRESS=conjur_master
 CONJUR_FOLLOWER_INGRESS=conjur_follower
@@ -72,7 +72,7 @@ conjur_master_up() {
 	echo "Loading image from tarfile..."
 	LOAD_MSG=$(docker load -i $CONJUR_CONTAINER_TARFILE)
 	IMAGE_ID=$(cut -d " " -f 3 <<< "$LOAD_MSG")		# parse image name as 3rd field in "Loaded image: xx" message
-        sudo docker tag $IMAGE_ID conjur-appliance:latest
+        docker tag $IMAGE_ID conjur-appliance:latest
   fi
 
   echo "Bringing up Conjur"
@@ -101,8 +101,6 @@ conjur_master_up() {
 haproxy_up() {
 					# bring up hproxy, rename as ingress, update & start 
   docker-compose up -d haproxy
-  haproxy_cname=$(docker ps -f "label=role=conjur_proxy" --format {{.Names}})	
-  docker container rename $haproxy_cname $CONJUR_MASTER_INGRESS
   pushd ./etc && ./update_haproxy.sh $CONJUR_MASTER_INGRESS && popd
 }
 
@@ -118,7 +116,7 @@ cli_up() {
   docker cp -L ./etc/conjur.conf $CLI_CONT_ID:/etc
   docker cp -L ./etc/conjur-$CONJUR_MASTER_ORGACCOUNT.pem $CLI_CONT_ID:/etc
   docker-compose exec cli conjur authn login -u admin -p $CONJUR_MASTER_PASSWORD
-  docker-compose exec cli conjur bootstrap -q
+
 }
 
 #############################
@@ -155,4 +153,6 @@ update_etc_hosts() {
 }
 
 ############################
-main "$@"
+
+main $@
+

@@ -5,8 +5,8 @@
     - !layer
 
     - &hosts
-      - !host cdemo_conjur_node_2
       - !host cdemo_conjur_node_3
+      - !host cdemo_conjur_node_2
       - !host cdemo_conjur_node_1
     - !grant
       role: !layer

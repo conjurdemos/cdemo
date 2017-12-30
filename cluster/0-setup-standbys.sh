@@ -12,6 +12,9 @@ main() {
 	start_new_standbys
 	wait_for_healthy_master
 	setup_standbys
+	wait_for_standbys
+					# start synchronous replication
+	docker exec $CONJUR_MASTER_CNAME bash -c "evoke replication sync"
 	update_load_balancer
 	../inspect-cluster.sh
 }
@@ -56,9 +59,6 @@ setup_standbys() {
         done
 	rm /tmp/standby-seed.tar
 
-	wait_for_standbys
-					# start synchronous replication
-	docker exec $CONJUR_MASTER_CNAME bash -c "evoke replication sync"
 }
 
 

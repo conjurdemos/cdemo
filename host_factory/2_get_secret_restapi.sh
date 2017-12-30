@@ -1,11 +1,8 @@
 #!/bin/bash
 
-# get pointers to Conjur api and SSL certificate
-source EDIT.ME
-if [[ "$CONJUR_APPLIANCE_URL" = "" ]] ; then
-	printf "\n\nEdit file EDIT.ME to set your appliance URL and certificate path.\n\n"
-	exit 1
-fi
+# get pointers to Conjur REST API endpoint and SSL certificate
+export CONJUR_APPLIANCE_URL=https://conjur_master/api
+export CONJUR_CERT_FILE=../etc/conjur-dev.pem
 
 # global variables
 declare ADMIN_SESSION_TOKEN
