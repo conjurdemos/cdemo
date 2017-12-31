@@ -2,7 +2,7 @@
 set -eo pipefail
 
 		# EDIT TO POINT TO YOUR LOCAL CONJUR IMAGE TARFILE
-CONJUR_CONTAINER_TARFILE=~/conjur-install-images/conjur-appliance-4.9.11.0.tar
+CONJUR_CONTAINER_TARFILE=
 
 CONJUR_MASTER_INGRESS=conjur_master
 CONJUR_FOLLOWER_INGRESS=conjur_follower
@@ -13,9 +13,6 @@ CONJUR_MASTER_PASSWORD=Cyberark1
 main() {
 
   all_down				# bring down anything still running
-
-  docker-compose build haproxy
-  docker-compose build cli
 
   conjur_master_up
   haproxy_up
@@ -69,7 +66,7 @@ conjur_master_up() {
   fi
 
   if [[ "$(docker images --format {{.Repository}} | grep conjur-appliance)" == "" ]]; then
-	echo "Loading image from tarfile..."
+	echo "Loading image from tarfile. This takes about a minute..."
 	LOAD_MSG=$(docker load -i $CONJUR_CONTAINER_TARFILE)
 	IMAGE_ID=$(cut -d " " -f 3 <<< "$LOAD_MSG")		# parse image name as 3rd field in "Loaded image: xx" message
         docker tag $IMAGE_ID conjur-appliance:latest
