@@ -13,4 +13,4 @@ if [[ "$(uname -s)" == "Linux" ]]; then
 else
 	open https://conjur_master/ui/settings/ldap-sync/
 fi
-
+echo

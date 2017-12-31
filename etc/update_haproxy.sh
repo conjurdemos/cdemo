@@ -16,7 +16,7 @@ main() {
 	update_ldap_servers
 
 	docker cp haproxy.cfg $haproxy_cname:/usr/local/etc/haproxy/haproxy.cfg
-	docker-compose exec haproxy /start.sh
+	docker restart $haproxy_cname
 }
 
 			# Appends Conjur HTTP server info in HAProxy format to haproxy.cfg.

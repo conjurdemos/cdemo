@@ -4,8 +4,8 @@ global
 
 defaults
 	timeout connect 5s
-	timeout client 5s
-	timeout server 5s
+	timeout client 50s
+	timeout server 50s
 
 frontend f_conjur_master_http
 	mode tcp
