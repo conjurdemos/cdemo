@@ -3,11 +3,10 @@
   id: conjur/cluster/dev
   body:
     - !layer
-
     - &hosts
-      - !host cdemo_conjur_node_2
-      - !host cdemo_conjur_node_3
-      - !host cdemo_conjur_node_1
+      - !host conjur3
+      - !host conjur2
+      - !host conjur1
     - !grant
       role: !layer
       member: *hosts

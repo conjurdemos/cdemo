@@ -1,11 +1,8 @@
 #!/bin/bash
 
 # get pointers to Conjur api and SSL certificate
-source EDIT.ME
-if [[ "$CONJUR_APPLIANCE_URL" = "" ]] ; then
-	printf "\n\nEdit file EDIT.ME to set your appliance URL and certificate path.\n\n"
-	exit 1
-fi
+export CONJUR_APPLIANCE_URL=https://conjur_master/api
+export CONJUR_CERT_FILE=../etc/conjur-dev.pem
 
 ### HARD CODED VALUES ###
 declare HOST_FACTORY_NAME=webapp1/tomcat_factory
@@ -99,7 +96,7 @@ main() {
 
 	for tkn in $TOKENS; do
 		printf "Revoking token: %s\n" $tkn
-	#	hf_token_revoke $tkn
+		hf_token_revoke $tkn
 	done
 
 }

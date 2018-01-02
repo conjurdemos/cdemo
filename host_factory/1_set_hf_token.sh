@@ -4,10 +4,14 @@
 #
 # Usage: admin_process <host-factory-name> <host-name> <variable-to-fetch>
 
+# get pointers to Conjur REST API endpoint and SSL certificate
+export CONJUR_APPLIANCE_URL=https://conjur_master/api
+export CONJUR_CERT_FILE=../etc/conjur-dev.pem
+
 #####
-# HARD CODED VALUES from ../policy.yml in parent directory
+# HARD CODED VALUES from ../webapp1-policy.yml in parent directory
 declare HOST_FACTORY_NAME=webapp1/tomcat_factory
-declare HOST_NAME=tomcat1
+declare HOST_NAME=tomcat_host_from_hf_token
 declare VAR_ID=webapp1/database_password 
 ######
 
@@ -17,13 +21,6 @@ readonly LINUX_DATE='date --iso-8601=seconds --date="$dur_time_secs seconds"'
 DATE_SPEC=$MAC_DATE
 if [[ "$(uname -s)" == "Linux" ]]; then
         DATE_SPEC=$LINUX_DATE
-fi
-
-# get pointers to Conjur REST API endpoint and SSL certificate
-source EDIT.ME
-if [[ "$CONJUR_APPLIANCE_URL" = "" ]] ; then
-	printf "\n\nEdit file EDIT.ME to set your appliance URL and certificate path.\n\n"
-	exit 1
 fi
 
 #declare DEBUG_BREAKPT=""

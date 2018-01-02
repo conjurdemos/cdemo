@@ -1,12 +1,10 @@
 ---
 - !policy
   id: webapp1
+  owner: !group devops
   body:
   - &variables
-    - !variable 
-      id: database_password
-      annotations:
-        description: Application database password
+    - !variable database_password
 
   - !layer
 
@@ -16,6 +14,16 @@
     role: !layer
     member: !host tomcat_host
 
+  - !permit
+    role: !layer
+    privileges: [ read, execute ]
+    resource: *variables
+
+  - !host-factory
+    id: tomcat_factory
+    layers: [ !layer ] 
+
+# groups & permissions below are hooks for per-env role bindings
   - !group secrets-users
   - !group secrets-managers
 
@@ -24,19 +32,15 @@
     role: !group secrets-users
     member: !group secrets-managers
 
-# secrets-users can discover and fetch
+# secrets-users can discover (read) and fetch (execute)
   - !permit
     resource: *variables
     privileges: [ read, execute ]
     role: !group secrets-users
 
-# secrets-managers can update (and discover and fetch, via role grant)
+# secrets-managers can also update
   - !permit
     resource: *variables
     privileges: [ update ]
     role: !group secrets-managers
 
-# Application layer is a secrets-user
-  - !grant
-    role: !group secrets-users
-    member: !layer

@@ -24,7 +24,8 @@ while : ; do
 	if [[ "$APP_API_KEY" != "$OLD_APP_API_KEY" ]]; then
 	   break
 	else
-	   sleep 2
+	   echo "Waiting for new API key." >> $LOGFILE
+	   sleep $SLEEP_TIME
 	fi
     done
     echo "New API key is:" $APP_API_KEY >> $LOGFILE

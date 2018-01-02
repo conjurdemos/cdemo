@@ -5,4 +5,4 @@ if [[ -z $1 ]] ; then
 fi
 POLICY_FILE=$1
 docker-compose exec cli conjur authn login -u admin -p Cyberark1
-docker-compose exec -T cli conjur policy load --as-group security_admin /src/ssh/$POLICY_FILE
+docker-compose exec -T cli conjur policy load --as-group security_admin /src/ssh_ansible/$POLICY_FILE

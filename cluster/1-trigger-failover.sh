@@ -1,18 +1,22 @@
-#!/bin/bash -e
-set -o pipefail
+#!/bin/bash 
+set -eo pipefail
 
 CLUSTER_NAME=dev
-CLUSTER_MANAGER_CONT_NAME=""
-CLUSTER_POLICY_FILE=cluster.yml
+CONJUR_MASTER_CNAME=""			# name of newly promoted master
+CONJUR_MASTER_IP=""			# IP of newly promoted master
+CONTAINER_TO_RECYCLE=""			# old master container to repurpose as standby
+CONJUR_VERSION=""
+CONJUR_MAJOR=""
+CONJUR_MINOR=""
+CONJUR_POINT=""
 
 main() {
 	START_TIME=$(date)
-	check_conjur_version
-	setup_etcd
+	check_CONJUR_VERSION
 	kill_master
 	wait_for_new_master
 	wait_for_healthy_master
-	./0-setup-standbys.sh
+	recycle_old_master
 	END_TIME=$(date)
 	printf "\nFailover complete. Cluster back in operational state.\n"
 	printf "  Started: %s\n" "$START_TIME"
@@ -20,16 +24,16 @@ main() {
 }
 
 ###########################
-check_conjur_version() {
+check_CONJUR_VERSION() {
 	printf "\n-----\nChecking if Conjur version supports failover...\n"
-	conjur_version=$(docker-compose exec cli conjur version | awk -F " " '/Conjur appliance version:/ { print $4 }')
-	conjur_major=$(echo $conjur_version | awk -F "." '{ print $1 }')
-	conjur_minor=$(echo $conjur_version | awk -F "." '{ print $2 }')
-	conjur_point=$(echo $conjur_version | awk -F "." '{ print $3 }')
+	CONJUR_VERSION=$(docker-compose exec cli conjur version | awk -F " " '/Conjur appliance version:/ { print $4 }')
+	CONJUR_MAJOR=$(echo $CONJUR_VERSION | awk -F "." '{ print $1 }')
+	CONJUR_MINOR=$(echo $CONJUR_VERSION | awk -F "." '{ print $2 }')
+	CONJUR_POINT=$(echo $CONJUR_VERSION | awk -F "." '{ print $3 }')
 
-	if [[ ($conjur_major -ne 4) || (($conjur_minor -lt 10) && ($conjur_point -lt 10)) ]]; then
-		printf "\nConjur version %i.%i.%i is running.\n" $conjur_major $conjur_minor $conjur_point
-		printf "Failover is only supported in Conjur version 4.9.10 or greater.\n\n" 
+	if [[ ($CONJUR_MINOR -lt 10) && ($CONJUR_POINT -lt 10) ]]; then
+		printf "\nConjur version %i.%i.%i is running.\n" $CONJUR_MAJOR $CONJUR_MINOR $CONJUR_POINT
+		printf "This script only supports failover in Conjur version 4.9.10.\n\n" 
 		exit -1
 	fi
 }
@@ -41,6 +45,7 @@ kill_master() {
         for cname in $cont_list; do
 		crole=$(docker exec $cname sh -c "evoke role")
 		if [[ $crole == master ]]; then
+			CONTAINER_TO_RECYCLE=$cname
 			printf "Stopping: "
 			docker stop $cname 
 			printf "Removing: "
@@ -59,9 +64,12 @@ wait_for_new_master() {
 			crole=$(docker exec $cname sh -c "evoke role")
 			if [[ $crole == master ]]; then
 				MASTER_FOUND=true
+				CONJUR_MASTER_CNAME=$cname
+				CONJUR_MASTER_IP="$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $cname)"
 			fi
 		done
         done
+	printf "New master is: %s/%s\n" $CONJUR_MASTER_CNAME $CONJUR_MASTER_IP
 }
 
 #############################
@@ -81,50 +89,28 @@ wait_for_healthy_master() {
 }
 
 #############################
-setup_etcd() {
-	printf "\n-----\nConfiguring etcd cluster manager and cluster policy...\n"
-					# startup etcd cluster manager
-	docker-compose up -d etcd
-					# build cluster policy file
-	construct_cluster_policy
+recycle_old_master() {
+        printf "\n-----\nConfiguring standby node...\n"
+	docker-compose up -d $CONTAINER_TO_RECYCLE
 
-					# load policy describing cluster
-        docker-compose exec cli conjur authn login -u admin -p Cyberark1
-	docker-compose exec cli conjur policy load --as-group=security_admin /src/cluster/$CLUSTER_POLICY_FILE
+                                        # generate seed file & copy to local tmp
+        docker exec -it $CONJUR_MASTER_CNAME bash -c "evoke seed standby conjur-standby > /tmp/standby-seed.tar"
+        docker cp $CONJUR_MASTER_CNAME:/tmp/standby-seed.tar /tmp/
+       					# copy seed to container & configure 
+        docker cp /tmp/standby-seed.tar $CONTAINER_TO_RECYCLE:/tmp/seed
+        docker exec $CONTAINER_TO_RECYCLE bash -c "evoke unpack seed /tmp/seed && evoke configure standby -j /src/etc/conjur.json -i $CONJUR_MASTER_IP"
 
-	printf "\n-----\nEnrolling Conjur nodes with cluster manager...\n"
-					# enroll each stateful node in cluster
-	for cname in $cont_list; do
-		cont_ip=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $cname)
-		docker exec $cname evoke cluster enroll -a $cont_ip -n $cname $CLUSTER_NAME
-	done
+        rm /tmp/standby-seed.tar
+
+	wait_for_healthy_master
+
+        printf "\n-----\nRe-enrolling standby node in cluster...\n"
+        if [[ $CONJUR_POINT == 10 ]]; then
+           cont_ip=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $CONTAINER_TO_RECYCLE)
+           docker exec $CONTAINER_TO_RECYCLE evoke cluster enroll -a $cont_ip -n $CONTAINER_TO_RECYCLE $CLUSTER_NAME
+        else
+           docker exec $CONTAINER_TO_RECYCLE evoke cluster enroll -n $CONTAINER_TO_RECYCLE $CLUSTER_NAME
+        fi
 }
 
-#############################
-construct_cluster_policy() {
-					# create policy file header
-	cat <<POLICY_HEADER > $CLUSTER_POLICY_FILE
----
-- !policy
-  id: conjur/cluster/$CLUSTER_NAME
-  body:
-    - !layer
-
-    - &hosts
-POLICY_HEADER
-					# for each stateful node, add hosts entries to policy file
-	cont_list=$(docker ps -f "label=role=conjur_node" --format {{.Names}})
-	for cname in $cont_list; do
-		cont_ip=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $cname)
-		printf "      - !host %s\n" $cname >> $CLUSTER_POLICY_FILE
-	done
-					# add footer to policy file
-	cat <<POLICY_FOOTER >> $CLUSTER_POLICY_FILE
-    - !grant
-      role: !layer
-      member: *hosts
-POLICY_FOOTER
-
-}
-
-main "$@"
+main $@

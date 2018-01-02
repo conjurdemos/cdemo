@@ -18,3 +18,7 @@
     role: !layer
     privileges: [ read, execute ]
     resource: *variables
+
+  - !host-factory
+    id: tomcat_factory
+    layers: [ !layer ] 

@@ -2,26 +2,24 @@
 set -eo pipefail
 
 		# EDIT TO POINT TO YOUR LOCAL CONJUR IMAGE TARFILE
-CONJUR_CONTAINER_TARFILE=~/conjur-install-images/conjur-appliance-4.10.0.0.tar
+CONJUR_CONTAINER_TARFILE=
 
 CONJUR_MASTER_INGRESS=conjur_master
 CONJUR_FOLLOWER_INGRESS=conjur_follower
 CONJUR_MASTER_HOSTNAME=conjur_master
 CONJUR_MASTER_ORGACCOUNT=dev
 CONJUR_MASTER_PASSWORD=Cyberark1
+CONJUR_MASTER_CONT_ID=conjur1
 
 main() {
 
   all_down				# bring down anything still running
 
-  docker-compose build haproxy
-  docker-compose build cli
-
   conjur_master_up
   haproxy_up
+  update_etc_hosts
   cli_up
   conjur_follower_up
-  update_etc_hosts
 
   docker-compose up -d scope		# bring up webscope
   docker-compose build webapp		# force build of demo app
@@ -36,7 +34,7 @@ main() {
 
   echo
   echo "Demo environment ready!"
-  echo "The Conjur service is running as hostname: $CONJUR_MASTER_INGRESS"
+  echo "The Conjur master endpoint is at hostname: $CONJUR_MASTER_INGRESS"
   echo
 }
 
@@ -68,17 +66,15 @@ conjur_master_up() {
 	exit -1
   fi
 
-  if [[ "$(docker images --format {{.Repository}} | grep conjur-appliance)" == "" ]]; then
-	echo "Loading image from tarfile..."
+  if [[ "$(docker images conjur-appliance | grep conjur-appliance)" == "" ]]; then
+	echo "Loading image from tarfile. This takes about a minute..."
 	LOAD_MSG=$(docker load -i $CONJUR_CONTAINER_TARFILE)
 	IMAGE_ID=$(cut -d " " -f 3 <<< "$LOAD_MSG")		# parse image name as 3rd field in "Loaded image: xx" message
-        sudo docker tag $IMAGE_ID conjur-appliance:latest
+        docker tag $IMAGE_ID conjur-appliance:latest
   fi
 
   echo "Bringing up Conjur"
-  docker-compose up -d conjur_node
-  CONJUR_MASTER_CONT_ID=$(docker ps -f "label=role=conjur_node" --format {{.Names}})	
-
+  docker-compose up -d conjur1
 
   echo "-----"
   echo "Initializing Conjur Master"
@@ -99,11 +95,7 @@ conjur_master_up() {
 
 ############################
 haproxy_up() {
-					# bring up hproxy, rename as ingress, update & start 
   docker-compose up -d haproxy
-  haproxy_cname=$(docker ps -f "label=role=conjur_proxy" --format {{.Names}})	
-  docker container rename $haproxy_cname $CONJUR_MASTER_INGRESS
-  pushd ./etc && ./update_haproxy.sh $CONJUR_MASTER_INGRESS && popd
 }
 
 ############################
@@ -118,7 +110,6 @@ cli_up() {
   docker cp -L ./etc/conjur.conf $CLI_CONT_ID:/etc
   docker cp -L ./etc/conjur-$CONJUR_MASTER_ORGACCOUNT.pem $CLI_CONT_ID:/etc
   docker-compose exec cli conjur authn login -u admin -p $CONJUR_MASTER_PASSWORD
-  docker-compose exec cli conjur bootstrap -q
 }
 
 #############################
@@ -137,8 +128,9 @@ conjur_follower_up() {
 	docker rename $conjur_follower_cname $CONJUR_FOLLOWER_INGRESS
 
 	docker cp /tmp/follower-seed.tar $CONJUR_FOLLOWER_INGRESS:/tmp/seed
-	docker exec $CONJUR_FOLLOWER_INGRESS bash -c "evoke unpack seed /tmp/seed && evoke configure follower -j /src/etc/conjur.json" 
+	docker exec $CONJUR_FOLLOWER_INGRESS bash -c "evoke unpack seed /tmp/seed"
 	rm /tmp/follower-seed.tar
+	docker exec $CONJUR_FOLLOWER_INGRESS bash -c "evoke configure follower -j /src/etc/conjur.json" 
 }
 
 ############################
@@ -154,5 +146,23 @@ update_etc_hosts() {
   fi
 }
 
+#############################
+wait_for_healthy_master() {
+        printf "\n-----\nWaiting for master to report healthy...\n"
+        set +e
+        while : ; do
+                printf "..."
+                sleep 2
+                healthy=$(curl -sk https://conjur_master/health | jq -r '.ok')
+                if [[ $healthy == true ]]; then
+                        break
+                fi
+        done
+        printf "\n"
+        set -e
+}
+
 ############################
-main "$@"
+
+main $@
+
