@@ -1,17 +1,13 @@
 # Bastion Tutorial
 
-* Bring up 3 machines: `vm0: conjur`, `vm1: bastion`, `vm2: inventory`.
-* **bastion** This is the bastion server. It is reachable from any IP, and all users have user-level access to it. The `operations` group has root-level acess to it.
-* **inventory** This is the `inventory` application server. It is only reachable from the bastion IP. The `developers` group has root-level access to it. 
-* Run the script `./1_policy.sh` to load the base policies.
-* Run `./2_setup_ssh.sh` to Conjurize the bastion and inventory servers.
-    - Host identities are created with host factory tokens.
-    - HF tokens can be managed through the UI.
-* Observe the following:
-    - `otto` can SSH to the bastion or to the inventory server, with `sudo` access.
-    - `donna` can SSH to the bastion, without `sudo`. `donna` can SSH to the inventory server through the bastion, with `sudo` access to the inventory server.
-    - Both users will jump through the bastion to the `inventory` host.
+- 0-setup-bastion.sh - Brings up 3 machines:
+  - outside_vm - ubuntu container on separate network from all others - can only reach the bastion_server
+  - bastion_server - proxy for access to designated VMs in network. All users have SSH access to it. The sec_ops group has sudo access to it.
+  - protected_vm - VM accessible via SSH through bastion_server. All users have SSH and sudo access to it.
+- 1-exec-to-outside-vm.sh - execs into outside_vm, where you can "su -" to one of the users
+  - "su - carol", ping bastion_server to show connectivity, then ping conjur_master, conjur_follower etc.
+  - ssh protected_vm - will ssh through bastion_server to protected_vm
+  - exit, then "su - ted", show how ted can't access either the bastion_server or protected_vm
+  - all access is governed by Conjur policy with no need to distribute SSH keys
+  - Users' SSH configuration is standard .ssh
 
-# TODO
-
-* The `inventory` machine needs a firewall rule (iptables?) which makes it unreachable except through the bastion.
