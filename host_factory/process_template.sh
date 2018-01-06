@@ -13,6 +13,7 @@ main() {
         printf "\n\nContents of processed template:\n"
         cat $"temp.out"
         printf "\n\n"
+	rm temp.out
 }
 
 main $@

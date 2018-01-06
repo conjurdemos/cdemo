@@ -21,6 +21,8 @@ install_docker() {
 	sudo yum install -y docker-ce
 		# add user to docker group to run docker w/o sudo
 	sudo usermod -aG docker $USER
+		# default overlay storage driver causes probs
+	sudo echo '{ "storage-driver": "devicemapper" }' > /etc/docker/daemon.json
 	sudo systemctl start docker
 }
 

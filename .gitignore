@@ -4,3 +4,4 @@ ldap/ldap-sync.yml
 ssh/id*
 build/hsm/*
 *.swp
+*.new

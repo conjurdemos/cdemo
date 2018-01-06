@@ -1,0 +1,19 @@
+- !policy
+  id: protected
+  body:
+
+  - !layer
+
+  - !host vm
+
+  - !grant
+    role: !layer
+    member: !host vm
+
+# Give developers ssh & sudo rights on VMs in layer
+
+  - !grant
+    role: !automatic-role
+      record: !layer
+      role_name: admin_host
+    member: !group /developers

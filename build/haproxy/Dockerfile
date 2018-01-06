@@ -6,5 +6,5 @@ RUN apt-get install -y \
     curl \
     vim 
 
-COPY haproxy.cfg /usr/local/etc/haproxy/
+COPY haproxy.cfg.master-only /usr/local/etc/haproxy/haproxy.cfg
 COPY start.sh /

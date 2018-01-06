@@ -1,0 +1,13 @@
+- !policy
+  id: root-key-rotators
+  body:
+  - !policy
+    id: bastion
+    body:
+     - !variable host
+     - !variable login
+     - !variable
+       id: private-key
+       annotations:
+         rotation/rotator: ssh/key_pair
+         rotation/ttl: P1D  # rotate every day
