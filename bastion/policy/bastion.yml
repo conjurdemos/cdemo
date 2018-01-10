@@ -1,0 +1,28 @@
+---
+- !policy
+  id: bastion
+  body:
+
+  - !layer
+
+  - !host server
+
+  - !grant
+    role: !layer
+    member: !host server
+
+# Give developers user access (ssh) to VMs in layer
+
+  - !grant
+    role: !automatic-role
+      record: !layer
+      role_name: use_host
+    member: !group /developers
+
+# Give sec_ops admin access (ssh & sudo) to VMs in layer
+
+  - !grant
+    role: !automatic-role
+      record: !layer
+      role_name: admin_host
+    member: !group /sec_ops

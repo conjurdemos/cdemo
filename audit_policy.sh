@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash -ex
 if [[ -z $1 ]] ; then
 	printf "\n\tUsage: %s <policy-file-name>\n\n" $0
 	exit 1

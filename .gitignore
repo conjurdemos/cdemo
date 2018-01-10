@@ -1,6 +1,7 @@
 etc/conjur*.pem
 log/*
 ldap/ldap-sync.yml
-ssh/id*
+ssh_ansible/id*
 build/hsm/*
 *.swp
+*.new

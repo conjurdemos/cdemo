@@ -6,10 +6,10 @@ CONJUR_CONTAINER_TARFILE=
 
 CONJUR_MASTER_INGRESS=conjur_master
 CONJUR_FOLLOWER_INGRESS=conjur_follower
-CONJUR_MASTER_HOSTNAME=conjur_master
 CONJUR_MASTER_ORGACCOUNT=dev
 CONJUR_MASTER_PASSWORD=Cyberark1
-CONJUR_MASTER_CONT_ID=conjur1
+CONJUR_MASTER_CONT_NAME=conjur1
+CLI_CONT_NAME=conjur_cli
 
 main() {
 
@@ -27,7 +27,6 @@ main() {
   docker-compose exec cli "/src/etc/_demo-init.sh"
 
 					# force builds of images for demo modules
-  docker-compose build etcd
   docker-compose build ldap
   docker-compose build vm
   docker-compose build splunk
@@ -61,27 +60,29 @@ all_down() {
 ############################
 conjur_master_up() {
   echo "-----"
-  if [[ "$CONJUR_CONTAINER_TARFILE" == "" ]]; then
-	printf "\n\nEdit this script to set CONJUR_CONTAINER_TARFILE to the location of the Conjur appliance tarfile to load.\n\n"
-	exit -1
-  fi
+  if [[ "$(docker images conjur-appliance:latest | grep conjur-appliance)" == "" ]]; then
+  	if [[ "$CONJUR_CONTAINER_TARFILE" == "" ]]; then
+		printf "\n\nEdit this script to set CONJUR_CONTAINER_TARFILE to the location of the Conjur appliance tarfile to load.\n\n"
+		exit -1
+	fi
 
-  if [[ "$(docker images conjur-appliance | grep conjur-appliance)" == "" ]]; then
 	echo "Loading image from tarfile. This takes about a minute..."
 	LOAD_MSG=$(docker load -i $CONJUR_CONTAINER_TARFILE)
 	IMAGE_ID=$(cut -d " " -f 3 <<< "$LOAD_MSG")		# parse image name as 3rd field in "Loaded image: xx" message
         docker tag $IMAGE_ID conjur-appliance:latest
   fi
 
-  echo "Bringing up Conjur"
-  docker-compose up -d conjur1
+  image_tag=$(docker images | grep $(docker images conjur-appliance:latest --format "{{.ID}}") | awk '!/latest/ {print $2}')
+  printf "Bringing up Conjur using image tagged as version %s...\n" $image_tag
+exit
+  docker-compose up -d $CONJUR_MASTER_CONT_NAME
 
   echo "-----"
   echo "Initializing Conjur Master"
-  docker exec $CONJUR_MASTER_CONT_ID \
+  docker exec $CONJUR_MASTER_CONT_NAME \
 		evoke configure master     \
 		-j /src/etc/conjur.json	   \
-		-h $CONJUR_MASTER_HOSTNAME \
+		-h $CONJUR_MASTER_INGRESS \
 		-p $CONJUR_MASTER_PASSWORD \
 		$CONJUR_MASTER_ORGACCOUNT
 
@@ -89,7 +90,7 @@ conjur_master_up() {
   echo "Get certificate from Conjur"
   rm -f ./etc/conjur-$CONJUR_MASTER_ORGACCOUNT.pem
 					# cache cert for copying to other containers
-  docker cp -L $CONJUR_MASTER_CONT_ID:/opt/conjur/etc/ssl/conjur.pem ./etc/conjur-$CONJUR_MASTER_ORGACCOUNT.pem
+  docker cp -L $CONJUR_MASTER_CONT_NAME:/opt/conjur/etc/ssl/conjur.pem ./etc/conjur-$CONJUR_MASTER_ORGACCOUNT.pem
 
 }
 
@@ -103,12 +104,11 @@ cli_up() {
   printf "\n-----\nBring up CLI client...\n"
   docker-compose up -d cli
  
-  CLI_CONT_ID=$(docker-compose ps -q cli)
 
   echo "-----"
   echo "Copy Conjur config and certificate to CLI"
-  docker cp -L ./etc/conjur.conf $CLI_CONT_ID:/etc
-  docker cp -L ./etc/conjur-$CONJUR_MASTER_ORGACCOUNT.pem $CLI_CONT_ID:/etc
+  docker cp -L ./etc/conjur_master.conf $CLI_CONT_NAME:/etc/conjur.conf
+  docker cp -L ./etc/conjur-$CONJUR_MASTER_ORGACCOUNT.pem $CLI_CONT_NAME:/etc
   docker-compose exec cli conjur authn login -u admin -p $CONJUR_MASTER_PASSWORD
 }
 
@@ -116,21 +116,13 @@ cli_up() {
 conjur_follower_up() {
 	printf "\n-----\nConfiguring follower node...\n"
 
-					# get container name of conjur master
-	conjur_master_cname=$(docker ps -f "label=role=conjur_node" --format {{.Names}})	
-					# generate seed file that references haproxy 
-	docker exec -it $conjur_master_cname bash -c "evoke seed follower $CONJUR_MASTER_INGRESS > /tmp/follower-seed.tar"
-					# and copy to local /tmp
-	docker cp $conjur_master_cname:/tmp/follower-seed.tar /tmp/
 	docker-compose up -d follower
-					# only one follower
-	conjur_follower_cname=$(docker ps -f "label=role=conjur_follower" --format {{.Names}})	
-	docker rename $conjur_follower_cname $CONJUR_FOLLOWER_INGRESS
-
-	docker cp /tmp/follower-seed.tar $CONJUR_FOLLOWER_INGRESS:/tmp/seed
-	docker exec $CONJUR_FOLLOWER_INGRESS bash -c "evoke unpack seed /tmp/seed"
-	rm /tmp/follower-seed.tar
-	docker exec $CONJUR_FOLLOWER_INGRESS bash -c "evoke configure follower -j /src/etc/conjur.json" 
+					# generate seed file & pipe to follower
+	docker exec conjur1 evoke seed follower $CONJUR_FOLLOWER_INGRESS \
+		| docker exec -i $CONJUR_FOLLOWER_INGRESS evoke unpack seed -
+	docker exec $CONJUR_FOLLOWER_INGRESS evoke configure follower -j /src/etc/conjur.json
+	rm -f ./etc/conjur_follower.pem
+	docker cp $CONJUR_FOLLOWER_INGRESS:/opt/conjur/etc/ssl/conjur_follower.pem ./etc
 }
 
 ############################

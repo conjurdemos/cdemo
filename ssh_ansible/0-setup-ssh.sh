@@ -1,8 +1,10 @@
-#!/bin/bash -e
-set -o pipefail
+#!/bin/bash 
+set -eo pipefail
 
 CONJUR_MASTER_ORGACCOUNT=dev
-CONJUR_MASTER_URL=https://conjur_master/api
+CONJUR_APPLIANCE_URL=https://conjur_follower/api
+CONJUR_CONF_FILE=../etc/conjur_follower.conf
+CONJUR_CERT_FILE=../etc/conjur_follower.pem
 RACK_SERVICE_NAME=vm
 RACK_POLICY_NAME=rack
 RACK_POLICY_FILE=$RACK_POLICY_NAME.yml
@@ -44,7 +46,7 @@ refresh_vms() {
 construct_host_policy() {
 	printf "\n-----\nConstructing & loading rack host policy...\n"
 	echo "---" > $RACK_POLICY_FILE
-	RACK_CONT_NAMES=$(docker ps --format "{{.Names}}" | grep $RACK_SERVICE_NAME)
+	RACK_CONT_NAMES=$(docker ps --format "{{.Names}}" -f "label=role=rack-vm")
 	for cname in $RACK_CONT_NAMES; do
 		echo "- !host" $cname >> $RACK_POLICY_FILE
 	done
@@ -59,11 +61,11 @@ conjurize_vms() {
 	printf "\n-----\nConfiguring hosts for SSH & identities ...\n"
 	CLI_CONT_ID=$(docker-compose ps -q cli)
 	for cname in $RACK_CONT_NAMES; do
-			# note: conjur.conf and conjur-<orgacct>.pem are 
-			# copied from conjur container to shared volume 
+			# note: conjur.conf and .pem files are 
+			# copied from conjur follower container
 			# just after conjur service is brought up. 
-		docker cp ../etc/conjur.conf $cname:/etc
-		docker cp ../etc/conjur-dev.pem $cname:/etc
+		docker cp $CONJUR_CONF_FILE $cname:/etc/conjur.conf
+		docker cp $CONJUR_CERT_FILE $cname:/etc
 
         	api_key=$(docker-compose exec -T cli conjur host rotate_api_key --host $cname)
 
@@ -71,7 +73,7 @@ conjurize_vms() {
 		docker exec \
        		        -e CONJURRC=/etc/conjur.conf \
                 	-e CONJUR_ACCOUNT=$CONJUR_MASTER_ORGACCOUNT \
-	                -e CONJUR_APPLIANCE_URL=$CONJUR_MASTER_URL \
+	                -e CONJUR_APPLIANCE_URL=$CONJUR_APPLIANCE_URL \
        	        	-e CONJUR_AUTHN_LOGIN="host/$cname" \
        		        -e CONJUR_AUTHN_API_KEY=$api_key \
 			$cname chef-solo -o conjur::configure

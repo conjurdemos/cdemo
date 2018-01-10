@@ -1,0 +1,22 @@
+# users & groups
+- !user
+  id: donna
+  public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDNOpajDmA/Ld8w9BALKGQesYnQ1jL/O7jCrjc+DDXDemmS8Ky8muvSoBdoipGweRRwvmF1CCZky8fITRTcmWIKDa/vIE+CmHo8MfFKWmz93stoBuMo8jgrRvl00SEyaExh9S0gQCbH4LmM8khE1jE6ZKrptkGB5xmWN0MBHLwO/zdSzNDklwfZyT9J1/ITy6M3zVScgTFp9GMxVFngCJDXmGigZ5cj187MVf80irktZkAawxWvrwFXvvDDwMBjs9+/2CWvbUho7UOKmgyMN+8xCHXANQH8euhYp8fKdVaxuWYweCljF2jGOYZ7/z2r7XNRd9yz4Pg8SccUYahrUei3 donna-bastion-tutorial
+
+- !user
+  id: otto
+  public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDyxERgaUnB3VIsMfh+5cBoIHeFj7bBY/APv/tAUwsZMUDFfxMvycsYoZ9SDMBtPCuLoFn6NC213JwfYCvTidSk+0rwKmenVqw6S/4BhsKLACXEF8DQMqwImZbO9joS5p6V3jda3E6qqPuieyRqVt4BBrK6kwGygaSqGxW8gavZeCLa6/EPiJWqiIy0kKDOYMvPcqfRYgIwoFxlTubaCfeT8D7qQ8wyr0rBSCv9FIE4ziIkG9LDduiYkV07Kj/vHaCr9y94+pkjtSuHh5xYB71S0byrudiGxSSPmxGLFSsnfZWLD+d1HEViErziTzgAbOuCPchHjD0KskJVghtNClVJ otto-bastion-tutorial
+
+- !group operations
+- !group developers
+
+- !grant
+  role: !group developers
+  members:
+  - !user donna
+  - !group operations
+
+- !grant
+  role: !group operations
+  members:
+  - !user otto

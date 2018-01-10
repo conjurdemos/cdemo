@@ -71,38 +71,10 @@ services:
     networks:
       - ntwk
 
-  etcd: 
-    image: quay.io/coreos/etcd
-    hostname: etcd
-    build: ./build/etcd
-    command:
-      - etcd
-      - -debug
-      - -name
-      - etcd
-      - -advertise-client-urls
-      - http://etcd:2379
-      - -listen-client-urls
-      - http://0.0.0.0:2379
-      - -initial-advertise-peer-urls
-      - http://etcd:2380
-      - -listen-peer-urls
-      - http://0.0.0.0:2380
-      - -initial-cluster
-      - etcd=http://etcd:2380
-    networks:
-      - ntwk
-
-  hsm:
-    image: softhsm:latest
-    build: ./build/hsm
-    networks:
-      - ntwk
-
   follower:
     image: conjur-appliance:latest
-    labels:
-      role: "conjur_follower"
+    hostname: conjur_follower
+    container_name: conjur_follower
     volumes:
       - ./:/src:z
     security_opt:
@@ -115,7 +87,8 @@ services:
     environment:
       CONJUR_ACCOUNT: dev
       CONJUR_APPLIANCE_URL: https://conjur_master/api
-    hostname: conjurcli
+    container_name: conjur_cli
+    hostname: conjur_cli
     image: my-conjurcli:5.4.0
     build: ./build/conjurcli
     volumes:
@@ -158,9 +131,12 @@ services:
       - ntwk
 
 # VM containers for SSH management demonstration.
+
 # This service is brought up by the ./ssh/0-setup-ssh.sh script.
   vm:
     image: rack-vm:1.0
+    labels:
+      - "role=rack-vm"
     build: ./build/vm
     volumes:
       - .:/src
@@ -169,6 +145,37 @@ services:
     command: infinity
     networks:
       - ntwk
+
+# bastion server and outside vm are part of the ssh_bastion demo
+  protected:
+    image: rack-vm:1.0
+    container_name: protected_vm
+    hostname: protected_vm
+    entrypoint: sleep
+    command: infinity
+    networks:
+      - ntwk
+
+  bastion:
+    image: rack-vm:1.0
+    container_name: bastion_server
+    hostname: bastion_server
+    entrypoint: sleep
+    command: infinity
+    networks:
+      - ntwk
+      - ntwkx
+
+  outside:
+    image: rack-vm:1.0
+    container_name: outside_vm
+    hostname: outside_vm
+    volumes:
+      - .:/src
+    entrypoint: sleep
+    command: infinity
+    networks:
+      - ntwkx
 
 # Open LDAP server for ldap sync demonstration.
 # This service is brought up by the ./ldap/0-setup-ldap.sh script.
@@ -232,3 +239,9 @@ networks:
      config:
        - subnet: 10.5.0.0/16
          gateway: 10.5.0.1
+  ntwkx:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 10.6.0.0/16
+         gateway: 10.6.0.1
