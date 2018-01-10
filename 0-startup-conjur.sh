@@ -74,7 +74,7 @@ conjur_master_up() {
 
   image_tag=$(docker images | grep $(docker images conjur-appliance:latest --format "{{.ID}}") | awk '!/latest/ {print $2}')
   printf "Bringing up Conjur using image tagged as version %s...\n" $image_tag
-exit
+
   docker-compose up -d $CONJUR_MASTER_CONT_NAME
 
   echo "-----"
