@@ -5,3 +5,4 @@ ssh_ansible/id*
 build/hsm/*
 *.swp
 *.new
+get-secret.sh

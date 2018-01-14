@@ -20,7 +20,7 @@ services:
       - seccomp:unconfined
     restart: always
     networks:
-      ntwk:
+      mnetwk:
         ipv4_address: "10.5.0.2"
 
   conjur2:
@@ -36,8 +36,8 @@ services:
       - seccomp:unconfined
     restart: always
     networks:
-      ntwk:
-        ipv4_address: "10.5.0.13"      # upper range of addresses, hopefully unused when created
+      mnetwk:
+        ipv4_address: "10.5.0.3"
 
   conjur3:
     image: conjur-appliance:latest
@@ -52,8 +52,8 @@ services:
       - seccomp:unconfined
     restart: always
     networks:
-      ntwk:
-        ipv4_address: "10.5.0.14"      # upper range of addresses, hopefully unused when created
+      mnetwk:
+        ipv4_address: "10.5.0.4"
 
   haproxy:
     image: haproxy:conjur
@@ -69,19 +69,8 @@ services:
     restart: always
     entrypoint: "/start.sh"
     networks:
-      - ntwk
-
-  follower:
-    image: conjur-appliance:latest
-    hostname: conjur_follower
-    container_name: conjur_follower
-    volumes:
-      - ./:/src:z
-    security_opt:
-      - seccomp:unconfined
-    restart: always
-    networks:
-      - ntwk
+      - mnetwk
+      - fnetwk
 
   cli:
     environment:
@@ -99,7 +88,8 @@ services:
     entrypoint: sleep
     command: infinity
     networks:
-      - ntwk
+      - mnetwk
+      - fnetwk
 
   scope:
     image: weaveworks/scope:1.6.5
@@ -113,7 +103,19 @@ services:
     command:
       - "--probe.docker=true"
     networks:
-      - ntwk
+      - mnetwk
+
+  follower:
+    image: conjur-appliance:latest
+    hostname: conjur_follower
+    container_name: conjur_follower
+    volumes:
+      - ./:/src:z
+    security_opt:
+      - seccomp:unconfined
+    restart: always
+    networks:
+      - fnetwk
 
 # The webapp service is just a simple script running in a container - not really a web app.
 # This service is brought up by the 1-setup-containers.sh script.
@@ -128,11 +130,11 @@ services:
       - VAR_ID               # written by 1-setup-containers.sh
       - SLEEP_TIME
     networks:
-      - ntwk
+      - fnetwk
 
-# VM containers for SSH management demonstration.
+# VM containers for SSH management demonstrations.
 
-# This service is brought up by the ./ssh/0-setup-ssh.sh script.
+# ssh access control and Ansible execution governed via Conjur policy
   vm:
     image: rack-vm:1.0
     labels:
@@ -144,9 +146,22 @@ services:
     entrypoint: sleep
     command: infinity
     networks:
-      - ntwk
+      - fnetwk
 
-# bastion server and outside vm are part of the ssh_bastion demo
+  ansible:
+    container_name: ansible
+    image: "ansible:centos7"
+    build: build/ansible
+    environment:
+      ANSIBLE_HOST_KEY_CHECKING: "false"
+    volumes:
+      - ./:/src:rw
+      - ./ssh_ansible/ansible_hosts:/etc/ansible/hosts:rw
+    entrypoint: "sleep infinity"
+    networks:
+      - fnetwk
+
+# ssh from outside_vm to protected_vm through bastion_server, governed by Conjur policy
   protected:
     image: rack-vm:1.0
     container_name: protected_vm
@@ -154,7 +169,7 @@ services:
     entrypoint: sleep
     command: infinity
     networks:
-      - ntwk
+      - fnetwk
 
   bastion:
     image: rack-vm:1.0
@@ -163,8 +178,8 @@ services:
     entrypoint: sleep
     command: infinity
     networks:
-      - ntwk
-      - ntwkx
+      - xnetwk
+      - fnetwk
 
   outside:
     image: rack-vm:1.0
@@ -175,7 +190,7 @@ services:
     entrypoint: sleep
     command: infinity
     networks:
-      - ntwkx
+      - xnetwk        # all alone on "external" network
 
 # Open LDAP server for ldap sync demonstration.
 # This service is brought up by the ./ldap/0-setup-ldap.sh script.
@@ -187,7 +202,7 @@ services:
     volumes:
       - .:/src
     networks:
-      - ntwk
+      - mnetwk
 
 # Splunk enterprise server for Splunk monitoring demonstration.
 # This requires the Conjur and Nginx logs be exported from the Conjur container.
@@ -212,20 +227,7 @@ services:
       - "8088:8088"
       - "1514:1514"
     networks:
-      - ntwk
-
-  ansible:
-    container_name: ansible
-    image: "ansible:centos7"
-    build: build/ansible
-    environment:
-      ANSIBLE_HOST_KEY_CHECKING: "false"
-    volumes:
-      - ./:/src:rw
-      - ./ssh_ansible/ansible_hosts:/etc/ansible/hosts:rw
-    entrypoint: "sleep infinity"
-    networks:
-      - ntwk
+      - mnetwk
 
 volumes:
   data:
@@ -233,15 +235,21 @@ volumes:
   opt-splunk-var:
 
 networks:
-  ntwk:
+  mnetwk:
     driver: bridge
     ipam:
      config:
        - subnet: 10.5.0.0/16
          gateway: 10.5.0.1
-  ntwkx:
+  fnetwk:
     driver: bridge
     ipam:
      config:
        - subnet: 10.6.0.0/16
          gateway: 10.6.0.1
+  xnetwk:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 10.7.0.0/16
+         gateway: 10.7.0.1

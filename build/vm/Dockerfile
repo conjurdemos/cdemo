@@ -10,7 +10,9 @@ COPY configure-ssh.sh /root
 # Install Chef, download Conjur cookbook and run the Conjur installation recipe
 RUN cd /tmp \
     && curl -L https://www.opscode.com/chef/install.sh | bash \
-    && chef-solo --recipe-url https://github.com/conjur-cookbooks/conjur/releases/download/v0.4.3/conjur-v0.4.3.tar.gz -o conjur::install
+    && chef-solo --recipe-url https://github.com/conjur-cookbooks/conjur/releases/download/v0.4.3/conjur-v0.4.3.tar.gz -o conjur::install \
+    && curl -sSL https://raw.githubusercontent.com/cyberark/summon/master/install.sh | bash \
+    && curl -sSL https://raw.githubusercontent.com/cyberark/summon-conjur/master/install.sh | bash
 
 # Cleanup
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

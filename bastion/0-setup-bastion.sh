@@ -21,7 +21,8 @@ main() {
 ######################
 load_policy() {
 	printf "\n-----\nLoading bastion server access policy...\n"
-	docker-compose exec cli conjur policy load --as-group=security_admin /src/bastion/$ACCESS_POLICY_FILE
+	docker exec conjur_cli conjur authn login -u admin -p Cyberark1
+	docker exec conjur_cli conjur policy load --as-group=security_admin /src/bastion/$ACCESS_POLICY_FILE
 }
 
 ######################
@@ -35,22 +36,27 @@ bring_up_vms() {
 ######################
 conjurize_vms() {
 	printf "\n-----\nConfiguring hosts for SSH & identities ...\n"
+       
+	api_key=$(docker exec conjur_cli conjur host rotate_api_key --host bastion/server)
+	conjurize_container_as_host bastion_server bastion/server $api_key
 
-	conjurize_container_as_host bastion_server bastion/server
-	conjurize_container_as_host protected_vm protected/vm
+	hf_token=$(docker exec conjur_cli conjur hostfactory tokens create --duration-minutes=1 protected | jq -r .[].token) 
+        api_key=$(docker exec conjur_cli conjur hostfactory hosts create $hf_token protected/vm | jq -r .api_key)
+	conjurize_container_as_host protected_vm protected/vm $api_key
+
 }
 
 ######################
 conjurize_container_as_host(){
 	cname=$1; shift
 	hname=$1; shift
+	api_key=$1; shift
 			# note: conjur.conf and conjur-<orgacct>.pem are 
 			# copied from conjur container to shared volume 
 			# just after conjur service is brought up. 
 	docker cp $CONJUR_CONF_FILE $cname:/etc/conjur.conf
 	docker cp $CONJUR_CERT_FILE $cname:/etc
 
-        api_key=$(docker-compose exec -T cli conjur host rotate_api_key --host $hname)
 			# run chef recipe to configure vm for ssh access
 	docker exec \
        		        -e CONJURRC=/etc/conjur.conf \

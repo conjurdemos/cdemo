@@ -3,26 +3,27 @@
   id: bastion
   body:
 
-  - !layer
+  - !layer bastion
 
   - !host server
 
   - !grant
-    role: !layer
+    role: !layer bastion
     member: !host server
 
 # Give developers user access (ssh) to VMs in layer
+# managed role is used for staticly created hosts
 
   - !grant
-    role: !automatic-role
-      record: !layer
+    role: !managed_role
+      record: !layer bastion
       role_name: use_host
     member: !group /developers
 
 # Give sec_ops admin access (ssh & sudo) to VMs in layer
 
   - !grant
-    role: !automatic-role
-      record: !layer
+    role: !managed_role
+      record: !layer bastion
       role_name: admin_host
-    member: !group /sec_ops
+    members: !group /sec_ops

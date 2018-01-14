@@ -49,6 +49,8 @@ install_conjur_cli() {
 
 configure_env() {
  	echo "Configuring environment..."
+				# the shell init file works around some 
+				# networking anomalies
         SHELL_INIT_FILE=/etc/profile.d/cdemo.sh
         sudo rm -f $SHELL_INIT_FILE
 

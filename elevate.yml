@@ -1,0 +1,7 @@
+---
+- !policy
+  id: elevate
+  body:
+    - !grant
+:q!
+

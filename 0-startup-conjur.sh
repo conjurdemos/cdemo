@@ -12,7 +12,7 @@ CONJUR_MASTER_CONT_NAME=conjur1
 CLI_CONT_NAME=conjur_cli
 
 main() {
-
+  check_dir_name
   all_down				# bring down anything still running
 
   conjur_master_up
@@ -26,7 +26,7 @@ main() {
 					# initialize "scalability" demo
   docker-compose exec cli "/src/etc/_demo-init.sh"
 
-					# force builds of images for demo modules
+				# force image builds for demo modules
   docker-compose build ldap
   docker-compose build vm
   docker-compose build splunk
@@ -35,6 +35,15 @@ main() {
   echo "Demo environment ready!"
   echo "The Conjur master endpoint is at hostname: $CONJUR_MASTER_INGRESS"
   echo
+}
+
+############################
+check_dir_name() {
+	curr_dir_name=$(pwd | awk -F/ '{print $NF}')
+	if [ "$curr_dir_name" != "cdemo" ]; then
+		printf "\nRenaming directory from %s to cdemo.\n" $curr_dir_name
+		cd ..; mv $curr_dir_name cdemo; cd cdemo
+	fi
 }
 
 ############################
@@ -74,7 +83,6 @@ conjur_master_up() {
 
   image_tag=$(docker images | grep $(docker images conjur-appliance:latest --format "{{.ID}}") | awk '!/latest/ {print $2}')
   printf "Bringing up Conjur using image tagged as version %s...\n" $image_tag
-exit
   docker-compose up -d $CONJUR_MASTER_CONT_NAME
 
   echo "-----"
