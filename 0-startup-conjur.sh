@@ -47,8 +47,10 @@ check_env() {
 	fi
 				# forward IP packets and ensure dhcp clien stays up
 	if [[ "$(uname -s)" == "Linux" ]]; then
+		set +x
 		sudo sysctl -w net.ipv4.ip_forward=1
         	sudo dhclient -v
+		set -x
 	fi
 }
 
