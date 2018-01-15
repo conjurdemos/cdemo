@@ -18,8 +18,7 @@ services:
       - seccomp:unconfined
     restart: always
     networks:
-      mnetwk:
-        ipv4_address: "10.5.0.2"
+      - mnetwk
 
   conjur2:
     image: conjur-appliance:latest
@@ -34,8 +33,7 @@ services:
       - seccomp:unconfined
     restart: always
     networks:
-      mnetwk:
-        ipv4_address: "10.5.0.3"
+      - mnetwk
 
   conjur3:
     image: conjur-appliance:latest
@@ -50,8 +48,7 @@ services:
       - seccomp:unconfined
     restart: always
     networks:
-      mnetwk:
-        ipv4_address: "10.5.0.4"
+      - mnetwk
 
   haproxy:
     image: haproxy:conjur
