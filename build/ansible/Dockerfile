@@ -1,4 +1,4 @@
-from williamyeh/ansible:centos7-onbuild
+from williamyeh/ansible:alpine3
 
 # ==> Specify requirements filename;  default = "requirements.yml"
 #ENV REQUIREMENTS  requirements.yml
@@ -10,4 +10,6 @@ from williamyeh/ansible:centos7-onbuild
 #ENV INVENTORY     inventory.ini
 
 # ==> Executing Ansible (with a simple wrapper)...
-RUN ansible-playbook-wrapper
+#RUN ansible-playbook-wrapper
+
+ENTRYPOINT sh -c 'while sleep 3600; do :; done'

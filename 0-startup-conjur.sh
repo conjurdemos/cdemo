@@ -12,7 +12,7 @@ CONJUR_MASTER_CONT_NAME=conjur1
 CLI_CONT_NAME=conjur_cli
 
 main() {
-  check_dir_name
+  check_env
   all_down				# bring down anything still running
 
   conjur_master_up
@@ -30,6 +30,7 @@ main() {
   docker-compose build ldap
   docker-compose build vm
   docker-compose build splunk
+  docker-compose build ansible
 
   echo
   echo "Demo environment ready!"
@@ -38,11 +39,16 @@ main() {
 }
 
 ############################
-check_dir_name() {
+check_env() {
 	curr_dir_name=$(pwd | awk -F/ '{print $NF}')
 	if [ "$curr_dir_name" != "cdemo" ]; then
 		printf "\nRenaming directory from %s to cdemo.\n" $curr_dir_name
 		cd ..; mv $curr_dir_name cdemo; cd cdemo
+	fi
+				# forward IP packets and ensure dhcp clien stays up
+	if [[ "$(uname -s)" == "Linux" ]]; then
+		sudo sysctl -w net.ipv4.ip_forward=1
+        	sudo dhclient -v
 	fi
 }
 

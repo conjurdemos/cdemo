@@ -1,11 +1,9 @@
 version: '2'
 services:
 
-# NOTE: static IP addresses are currently only supported in docker-compose v2
-
-# The CLI container is used to execute Conjur commands in lieu of requiring the CLI
-# package installation on the host machine. This makes managing multi-version Conjur
-# environments easier.
+# The CLI container is used to execute Conjur commands. As the CLI is the
+# admin UI for Conjur, this affords a way to protect access to it.
+# It also makes managing multi-version Conjur environments easier.
 
   conjur1:
     image: conjur-appliance:latest
@@ -150,14 +148,13 @@ services:
 
   ansible:
     container_name: ansible
-    image: "ansible:centos7"
+    image: "ansible:alpine3"
     build: build/ansible
     environment:
       ANSIBLE_HOST_KEY_CHECKING: "false"
     volumes:
       - ./:/src:rw
       - ./ssh_ansible/ansible_hosts:/etc/ansible/hosts:rw
-    entrypoint: "sleep infinity"
     networks:
       - fnetwk
 
@@ -178,7 +175,7 @@ services:
     entrypoint: sleep
     command: infinity
     networks:
-      - xnetwk
+      - default
       - fnetwk
 
   outside:
@@ -190,7 +187,7 @@ services:
     entrypoint: sleep
     command: infinity
     networks:
-      - xnetwk        # all alone on "external" network
+      - default           # all alone on "external" network
 
 # Open LDAP server for ldap sync demonstration.
 # This service is brought up by the ./ldap/0-setup-ldap.sh script.
@@ -247,9 +244,3 @@ networks:
      config:
        - subnet: 10.6.0.0/16
          gateway: 10.6.0.1
-  xnetwk:
-    driver: bridge
-    ipam:
-     config:
-       - subnet: 10.7.0.0/16
-         gateway: 10.7.0.1

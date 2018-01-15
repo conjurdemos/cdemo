@@ -8,7 +8,7 @@
     - !permit
       roles:
         - !group /devops
-        - !group /developers
+#        - !group /developers
       privileges: [ read, execute ]
       resources:
         - !host /cdemo_vm_1
