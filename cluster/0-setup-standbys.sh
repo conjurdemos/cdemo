@@ -104,7 +104,7 @@ update_load_balancer() {
 setup_cluster_mgr() {
 	failover_supported=false
 	check_conjur_version
-	if [ failover_supported ]; then
+	if $failover_supported ; then
 		setup_cluster_state
 	fi
 }
