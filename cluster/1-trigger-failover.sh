@@ -31,9 +31,9 @@ check_CONJUR_VERSION() {
 	CONJUR_MINOR=$(echo $CONJUR_VERSION | awk -F "." '{ print $2 }')
 	CONJUR_POINT=$(echo $CONJUR_VERSION | awk -F "." '{ print $3 }')
 
-	if [[ ($CONJUR_MINOR -lt 10) && ($CONJUR_POINT -lt 10) ]]; then
+	if [[ ($CONJUR_MINOR -lt 10) && ($CONJUR_POINT -lt 12) ]]; then
 		printf "\nConjur version %i.%i.%i is running.\n" $CONJUR_MAJOR $CONJUR_MINOR $CONJUR_POINT
-		printf "This script only supports failover in Conjur version 4.9.10.\n\n" 
+		printf "This script supports failover in Conjur version 4.9.12 and above.\n\n" 
 		exit -1
 	fi
 }
