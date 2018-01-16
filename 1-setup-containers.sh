@@ -1,8 +1,7 @@
 #!/bin/bash -e
 set -o pipefail
 
-APP_HOSTNAME="webapp1/tomcat_host"
-VAR_ID="webapp1/database_password"
+. ./_loadcfg.sh
 
 ################  MAIN   ################
 # $1 = number of containers to create

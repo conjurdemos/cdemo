@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eo pipefail
 
-APP_HOSTNAME=webapp1/tomcat_host
+. ./_loadcfg.sh
 
 		# rotate api key for host
 api_key=$(docker exec conjur_cli \

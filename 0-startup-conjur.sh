@@ -1,15 +1,7 @@
 #!/bin/bash
 set -eo pipefail
 
-		# EDIT TO POINT TO YOUR LOCAL CONJUR IMAGE TARFILE
-CONJUR_CONTAINER_TARFILE=
-
-CONJUR_MASTER_INGRESS=conjur_master
-CONJUR_FOLLOWER_INGRESS=conjur_follower
-CONJUR_MASTER_ORGACCOUNT=dev
-CONJUR_MASTER_PASSWORD=Cyberark1
-CONJUR_MASTER_CONT_NAME=conjur1
-CLI_CONT_NAME=conjur_cli
+. ./_loadcfg.sh
 
 main() {
   check_env
