@@ -1,11 +1,9 @@
 version: '2'
 services:
 
-# NOTE: static IP addresses are currently only supported in docker-compose v2
-
-# The CLI container is used to execute Conjur commands in lieu of requiring the CLI
-# package installation on the host machine. This makes managing multi-version Conjur
-# environments easier.
+# The CLI container is used to execute Conjur commands. As the CLI is the
+# admin UI for Conjur, this affords a way to protect access to it.
+# It also makes managing multi-version Conjur environments easier.
 
   conjur1:
     image: conjur-appliance:latest
@@ -20,8 +18,7 @@ services:
       - seccomp:unconfined
     restart: always
     networks:
-      ntwk:
-        ipv4_address: "10.5.0.2"
+      - mnetwk
 
   conjur2:
     image: conjur-appliance:latest
@@ -36,8 +33,7 @@ services:
       - seccomp:unconfined
     restart: always
     networks:
-      ntwk:
-        ipv4_address: "10.5.0.13"      # upper range of addresses, hopefully unused when created
+      - mnetwk
 
   conjur3:
     image: conjur-appliance:latest
@@ -52,8 +48,7 @@ services:
       - seccomp:unconfined
     restart: always
     networks:
-      ntwk:
-        ipv4_address: "10.5.0.14"      # upper range of addresses, hopefully unused when created
+      - mnetwk
 
   haproxy:
     image: haproxy:conjur
@@ -69,53 +64,15 @@ services:
     restart: always
     entrypoint: "/start.sh"
     networks:
-      - ntwk
-
-  etcd: 
-    image: quay.io/coreos/etcd
-    hostname: etcd
-    build: ./build/etcd
-    command:
-      - etcd
-      - -debug
-      - -name
-      - etcd
-      - -advertise-client-urls
-      - http://etcd:2379
-      - -listen-client-urls
-      - http://0.0.0.0:2379
-      - -initial-advertise-peer-urls
-      - http://etcd:2380
-      - -listen-peer-urls
-      - http://0.0.0.0:2380
-      - -initial-cluster
-      - etcd=http://etcd:2380
-    networks:
-      - ntwk
-
-  hsm:
-    image: softhsm:latest
-    build: ./build/hsm
-    networks:
-      - ntwk
-
-  follower:
-    image: conjur-appliance:latest
-    labels:
-      role: "conjur_follower"
-    volumes:
-      - ./:/src:z
-    security_opt:
-      - seccomp:unconfined
-    restart: always
-    networks:
-      - ntwk
+      - mnetwk
+      - fnetwk
 
   cli:
     environment:
       CONJUR_ACCOUNT: dev
       CONJUR_APPLIANCE_URL: https://conjur_master/api
-    hostname: conjurcli
+    container_name: conjur_cli
+    hostname: conjur_cli
     image: my-conjurcli:5.4.0
     build: ./build/conjurcli
     volumes:
@@ -126,7 +83,8 @@ services:
     entrypoint: sleep
     command: infinity
     networks:
-      - ntwk
+      - mnetwk
+      - fnetwk
 
   scope:
     image: weaveworks/scope:1.6.5
@@ -140,7 +98,19 @@ services:
     command:
       - "--probe.docker=true"
     networks:
-      - ntwk
+      - mnetwk
+
+  follower:
+    image: conjur-appliance:latest
+    hostname: conjur_follower
+    container_name: conjur_follower
+    volumes:
+      - ./:/src:z
+    security_opt:
+      - seccomp:unconfined
+    restart: always
+    networks:
+      - fnetwk
 
 # The webapp service is just a simple script running in a container - not really a web app.
 # This service is brought up by the 1-setup-containers.sh script.
@@ -155,12 +125,15 @@ services:
       - VAR_ID               # written by 1-setup-containers.sh
       - SLEEP_TIME
     networks:
-      - ntwk
+      - fnetwk
 
-# VM containers for SSH management demonstration.
-# This service is brought up by the ./ssh/0-setup-ssh.sh script.
+# VM containers for SSH management demonstrations.
+
+# ssh access control and Ansible execution governed via Conjur policy
   vm:
     image: rack-vm:1.0
+    labels:
+      - "role=rack-vm"
     build: ./build/vm
     volumes:
       - .:/src
@@ -168,7 +141,50 @@ services:
     entrypoint: sleep
     command: infinity
     networks:
-      - ntwk
+      - fnetwk
+
+  ansible:
+    container_name: ansible
+    image: "ansible:alpine3"
+    build: build/ansible
+    environment:
+      ANSIBLE_HOST_KEY_CHECKING: "false"
+    volumes:
+      - ./:/src:rw
+      - ./ssh_ansible/ansible_hosts:/etc/ansible/hosts:rw
+    networks:
+      - fnetwk
+
+# ssh from outside_vm to protected_vm through bastion_server, governed by Conjur policy
+  protected:
+    image: rack-vm:1.0
+    container_name: protected_vm
+    hostname: protected_vm
+    entrypoint: sleep
+    command: infinity
+    networks:
+      - fnetwk
+
+  bastion:
+    image: rack-vm:1.0
+    container_name: bastion_server
+    hostname: bastion_server
+    entrypoint: sleep
+    command: infinity
+    networks:
+      - default
+      - fnetwk
+
+  outside:
+    image: rack-vm:1.0
+    container_name: outside_vm
+    hostname: outside_vm
+    volumes:
+      - .:/src
+    entrypoint: sleep
+    command: infinity
+    networks:
+      - default           # all alone on "external" network
 
 # Open LDAP server for ldap sync demonstration.
 # This service is brought up by the ./ldap/0-setup-ldap.sh script.
@@ -180,7 +196,7 @@ services:
     volumes:
       - .:/src
     networks:
-      - ntwk
+      - mnetwk
 
 # Splunk enterprise server for Splunk monitoring demonstration.
 # This requires the Conjur and Nginx logs be exported from the Conjur container.
@@ -205,20 +221,7 @@ services:
       - "8088:8088"
       - "1514:1514"
     networks:
-      - ntwk
-
-  ansible:
-    container_name: ansible
-    image: "ansible:centos7"
-    build: build/ansible
-    environment:
-      ANSIBLE_HOST_KEY_CHECKING: "false"
-    volumes:
-      - ./:/src:rw
-      - ./ssh_ansible/ansible_hosts:/etc/ansible/hosts:rw
-    entrypoint: "sleep infinity"
-    networks:
-      - ntwk
+      - mnetwk
 
 volumes:
   data:
@@ -226,9 +229,15 @@ volumes:
   opt-splunk-var:
 
 networks:
-  ntwk:
+  mnetwk:
     driver: bridge
     ipam:
      config:
        - subnet: 10.5.0.0/16
          gateway: 10.5.0.1
+  fnetwk:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 10.6.0.0/16
+         gateway: 10.6.0.1

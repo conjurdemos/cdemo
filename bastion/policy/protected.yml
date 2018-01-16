@@ -1,0 +1,18 @@
+---
+- !policy
+  id: protected
+  body:
+
+  - !layer 
+
+  - !host-factory
+    layer: !layer
+
+# Give developers user (ssh) and admin (sudo) access to VMs in layer
+# automatic role is used for dynamically created hosts (i.e. w/ host factory)
+
+  - !grant
+    role: !automatic_role
+      record: !layer
+      role_name: admin_host
+    member: !group /developers

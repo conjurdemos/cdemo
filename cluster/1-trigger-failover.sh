@@ -31,9 +31,9 @@ check_CONJUR_VERSION() {
 	CONJUR_MINOR=$(echo $CONJUR_VERSION | awk -F "." '{ print $2 }')
 	CONJUR_POINT=$(echo $CONJUR_VERSION | awk -F "." '{ print $3 }')
 
-	if [[ ($CONJUR_MINOR -lt 10) && ($CONJUR_POINT -lt 10) ]]; then
+	if [[ ($CONJUR_MINOR -lt 10) && ($CONJUR_POINT -lt 12) ]]; then
 		printf "\nConjur version %i.%i.%i is running.\n" $CONJUR_MAJOR $CONJUR_MINOR $CONJUR_POINT
-		printf "This script only supports failover in Conjur version 4.9.10.\n\n" 
+		printf "This script supports failover in Conjur version 4.9.12 and above.\n\n" 
 		exit -1
 	fi
 }
@@ -92,15 +92,10 @@ wait_for_healthy_master() {
 recycle_old_master() {
         printf "\n-----\nConfiguring standby node...\n"
 	docker-compose up -d $CONTAINER_TO_RECYCLE
-
-                                        # generate seed file & copy to local tmp
-        docker exec -it $CONJUR_MASTER_CNAME bash -c "evoke seed standby conjur-standby > /tmp/standby-seed.tar"
-        docker cp $CONJUR_MASTER_CNAME:/tmp/standby-seed.tar /tmp/
-       					# copy seed to container & configure 
-        docker cp /tmp/standby-seed.tar $CONTAINER_TO_RECYCLE:/tmp/seed
-        docker exec $CONTAINER_TO_RECYCLE bash -c "evoke unpack seed /tmp/seed && evoke configure standby -j /src/etc/conjur.json -i $CONJUR_MASTER_IP"
-
-        rm /tmp/standby-seed.tar
+                                        # generate seed file & pipe to standby
+        docker exec $CONJUR_MASTER_CNAME evoke seed standby conjur-standby \
+        	| docker exec -i $CONTAINER_TO_RECYCLE evoke unpack seed -
+	docker exec $CONTAINER_TO_RECYCLE evoke configure standby -j /src/etc/conjur.json -i $CONJUR_MASTER_IP
 
 	wait_for_healthy_master
 

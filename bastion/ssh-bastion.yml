@@ -1,0 +1,2 @@
+- !include policy/bastion.yml
+- !include policy/protected.yml

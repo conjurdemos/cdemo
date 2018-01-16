@@ -2,7 +2,6 @@
 
 main() {
         printf "\n\nValue for %s is: %s\n\n" "DB_PWD" $DB_PWD
-        read -n 1 -s -p "Press any key to continue"
 
         TEMPLATE=tomcat.xml.erb
         printf -v SED_STRING "s=@database_password=%s=g" $DB_PWD
@@ -13,6 +12,7 @@ main() {
         printf "\n\nContents of processed template:\n"
         cat $"temp.out"
         printf "\n\n"
+	rm temp.out
 }
 
 main $@

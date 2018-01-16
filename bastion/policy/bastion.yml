@@ -1,0 +1,29 @@
+---
+- !policy
+  id: bastion
+  body:
+
+  - !layer bastion
+
+  - !host server
+
+  - !grant
+    role: !layer bastion
+    member: !host server
+
+# Give developers user access (ssh) to VMs in layer
+# managed role is used for staticly created hosts
+
+  - !grant
+    role: !managed_role
+      record: !layer bastion
+      role_name: use_host
+    member: !group /developers
+
+# Give sec_ops admin access (ssh & sudo) to VMs in layer
+
+  - !grant
+    role: !managed_role
+      record: !layer bastion
+      role_name: admin_host
+    members: !group /sec_ops

@@ -38,16 +38,15 @@ start_new_standbys() {
 #############################
 setup_standbys() {
 	printf "\n-----\nConfiguring standby nodes...\n"
-					# generate seed file 
-	docker exec -it $CONJUR_MASTER_CNAME bash -c "evoke seed standby conjur-node > /tmp/standby-seed.tar"
-					# copy to local /tmp
-	docker cp $CONJUR_MASTER_CNAME:/tmp/standby-seed.tar /tmp/
 
-	docker cp /tmp/standby-seed.tar conjur2:/tmp/seed
-	docker exec conjur2 bash -c "evoke unpack seed /tmp/seed && evoke configure standby -j /src/etc/conjur.json -i $CONJUR_MASTER_IP"
-	docker cp /tmp/standby-seed.tar conjur3:/tmp/seed
-	docker exec conjur3 bash -c "evoke unpack seed /tmp/seed && evoke configure standby -j /src/etc/conjur.json -i $CONJUR_MASTER_IP"
-	rm /tmp/standby-seed.tar
+			# generate seed file & pipe to standby for unpacking
+	docker exec $CONJUR_MASTER_CNAME evoke seed standby \
+		| docker exec -i conjur2 evoke unpack seed -
+	docker exec conjur2 evoke configure standby -j /src/etc/conjur.json -i $CONJUR_MASTER_IP
+
+	docker exec $CONJUR_MASTER_CNAME evoke seed standby \
+		| docker exec -i conjur3 evoke unpack seed -
+	docker exec conjur3 evoke configure standby -j /src/etc/conjur.json -i $CONJUR_MASTER_IP
 }
 
 
@@ -96,16 +95,16 @@ wait_for_standbys() {
 #############################
 update_load_balancer() {
 	printf "\n-----\nUpdating load balancer configuration...\n"
-	pushd ../etc \
-		&& ./update_haproxy.sh $CONJUR_MASTER_INGRESS \
-		&& popd
+	docker cp ../build/haproxy/haproxy.cfg.cluster \
+	   $CONJUR_MASTER_INGRESS:/usr/local/etc/haproxy/haproxy.cfg
+	docker restart $CONJUR_MASTER_INGRESS
 }
 
 #############################
 setup_cluster_mgr() {
 	failover_supported=false
 	check_conjur_version
-	if [ failover_supported ]; then
+	if $failover_supported ; then
 		setup_cluster_state
 	fi
 }
@@ -118,9 +117,9 @@ check_conjur_version() {
         CONJUR_MINOR=$(echo $CONJUR_VERSION | awk -F "." '{ print $2 }')
         CONJUR_POINT=$(echo $CONJUR_VERSION | awk -F "." '{ print $3 }')
 
-        if [[ ($CONJUR_MINOR -lt 10) && ($CONJUR_POINT -lt 10) ]]; then
+        if [[ ($CONJUR_MINOR -lt 10) && ($CONJUR_POINT -lt 12) ]]; then
                 printf "\nConjur version %i.%i.%i is running.\n" $CONJUR_MAJOR $CONJUR_MINOR $CONJUR_POINT
-                printf "This script only supports failover in Conjur versions 4.9.10 and above.\n\n"
+                printf "This script supports failover in Conjur versions 4.9.12 and above.\n\n"
 	else
 		failover_supported=true
         fi
@@ -129,10 +128,7 @@ check_conjur_version() {
 #############################
 setup_cluster_state() {
 	printf "\n-----\nConfiguring etcd cluster manager and cluster policy...\n"
-	if [[ $CONJUR_POINT == 10 ]]; then
-		docker-compose up -d etcd	# external etcd in 4.9.10
-	fi
-			
+
 	CONT_LIST=$(docker ps -f "label=role=conjur_node" --format {{.Names}})
 	construct_cluster_policy	# build cluster policy file
 
@@ -141,12 +137,7 @@ setup_cluster_state() {
 	docker-compose exec cli conjur policy load --as-group=security_admin /src/cluster/$CLUSTER_POLICY_FILE
 
 	for cname in $CONT_LIST; do
-		if [[ $CONJUR_POINT == 10 ]]; then
-			cont_ip=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $cname)
-			docker exec $cname evoke cluster enroll -a $cont_ip -n $cname $CLUSTER_NAME
-		else
-			docker exec $cname evoke cluster enroll -n $cname $CLUSTER_NAME
-		fi
+		docker exec $cname evoke cluster enroll -n $cname $CLUSTER_NAME
 	done
 }
 
