@@ -16,7 +16,8 @@ declare INPUT_FILE=/data/foo
 touch $LOGFILE
 
 write_log_msg() {
-	printf "$1\n" # >> $LOGFILE
+	printf "$1\n"
+	echo "$(date) [$(hostname)] $1" >> $LOGFILE # Left for weave scope demos
 }
 
 OLD_APP_API_KEY=""
