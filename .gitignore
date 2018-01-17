@@ -6,3 +6,5 @@ build/hsm/*
 *.swp
 *.new
 get-secret.sh
+config.cfg
+.env
