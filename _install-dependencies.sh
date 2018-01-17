@@ -21,7 +21,10 @@ install_docker() {
 		# add user to docker group to run docker w/o sudo
 	sudo usermod -aG docker $USER
 		# default overlay storage driver causes probs
-	sudo echo '{ "storage-driver": "devicemapper" }' > /etc/docker/daemon.json
+	if [ ! -d /etc/docker ]; then
+		sudo mkdir /etc/docker
+	fi
+	echo '{ "storage-driver": "devicemapper" }' | sudo tee -a /etc/docker/daemon.json
 	sudo systemctl start docker
 }
 
