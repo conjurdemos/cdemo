@@ -44,6 +44,8 @@ check_env() {
         	sudo dhclient -v
 		set -e
 	fi
+	# Ensure docker daemon is running
+	sudo systemctl start docker.service
 }
 
 ############################
