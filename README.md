@@ -3,7 +3,7 @@
 This is self-contained implementation of a basic Conjur implementation to demonstrate all key capabilities and to serve as a foundation for POCs and implementations.
 
 Dependencies:
-  - TO INSTALL DOCKER, DOCKER-COMPOSE, JQ, ETC - run _install-dependencies.sh
+  - TO INSTALL DOCKER, DOCKER-COMPOSE, JQ, ETC - run `_install-dependencies.sh`
   - locally available conjur docker image tarfile - v4.9.10 or greater required for auto-failover
     - request download image via https://www.cyberark.com/get-conjur-enterprise/
   - internet access required for initial builds, can run standalone after that
