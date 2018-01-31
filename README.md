@@ -4,18 +4,17 @@ This is self-contained implementation of a basic Conjur implementation to demons
 
 ## Getting Started
 
-  - Review the [dependencies section][deps] below and ensure all dependencies are properly installed.
-  - Copy `config.template.cfg` to `config.cfg`. This is your local config file.
-    - Edit config.cfg and update the variables to match your environment. Notably CONJUR_CONTAINER_TARFILE and CONJUR_MASTER_PASSWORD should be updated.
+  - Review the [Dependencies & System Requirements][1] below and ensure all dependencies are properly installed
+  - Copy `config.template.cfg` to `config.cfg`. This is your local config file
+    - Edit config.cfg and update the variables to match your environment. Notably CONJUR_CONTAINER_TARFILE and CONJUR_MASTER_PASSWORD should be updated
   - Run the startup script `./0-startup-conjur.sh`
-    - The first time this is run it will require internet access. After the intial run this does not require internet access.
-  - Review and run through the demo scenarios below, or in the linked subdirectories.
-
+    - The first time this is run it will require internet access. After the intial run this does not require internet access
+  - Review and run through the [demo scenarios][2] below, or in the linked subdirectories
   - Getting Help
-    - Open issues in github. The maintainers of cdemo will be notified of new issues and will do their best to resolve them.
-    - Join the conjurHQ slack #about-cdemo channel and ask questions.
+    - Open issues in github - The maintainers of cdemo will be notified of new issues and will do their best to resolve them
+    - Join the conjurHQ slack #about-cdemo channel and ask questions
 
-## [deps] Dependencies & System Requirements
+## [1]: Dependencies & System Requirements
 
 | Dependency | Min Version | Check Command |
 | ---------- | ----------- | ------------- |
@@ -33,7 +32,7 @@ This is self-contained implementation of a basic Conjur implementation to demons
   - Request download image via https://www.cyberark.com/get-conjur-enterprise/
   - Internet access required for initial builds, can run standalone after that
 
-# Scenarios
+# [2]: Scenarios
 
 Most of the demos have a README in their respective directory with information on how to run the demo and what to highlight. See the links below to use these demos.
 
