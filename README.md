@@ -45,13 +45,13 @@ Basic demo scenario ("Scalability Demo"):
   - 3-shutdwon-all.sh - brings down ALL containers, volumes, networks, etc. - confirms first :)
 
 Demo directories (each demo has its own README):
- - ./bastion - bastion server (AKA jump server) with SSH access controlled by Conjur policy
- - ./cluster - adds standbys to cluster and shows failover
- - ./ldap - shows LDAP synchronization w/ an OpenLDAP server
- - ./policy - shows how to apply application policies w/ different user permissions across multiple environments
- - ./splunk - brings up Splunk to monitor audit messages and NGINX logs
- - ./ssh_ansible - shows how to use policies to control SSH and sudo on hosts, incl. Ansible module/playbooks
- - ./host_factory - a basic Host Factory demo with secrets retrieval using REST API and Summon
+ - [./bastion](/baster) - bastion server (AKA jump server) with SSH access controlled by Conjur policy
+ - [./cluster](/cluster) - adds standbys to cluster and shows failover
+ - [./ldap](./ldap) - shows LDAP synchronization w/ an OpenLDAP server
+ - [./policy](./policy) - shows how to apply application policies w/ different user permissions across multiple environments
+ - [./splunk](./splunk) - brings up Splunk to monitor audit messages and NGINX logs
+ - [./ssh_ansible](./ssh_ansible) - shows how to use policies to control SSH and sudo on hosts, incl. Ansible module/playbooks
+ - [./host_factory](./host_factory) - a basic Host Factory demo with secrets retrieval using REST API and Summon
 
 ./etc directory:
   - _conjur_init.sh - Conjur initialization script run from CLI container.
