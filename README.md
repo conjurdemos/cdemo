@@ -39,14 +39,15 @@ Most of the demos have a README in their respective directory with information o
 
 | Scenario | Description |
 | -------- | ----------- |
-| Scalability | Spin up several minimal containers which fetch secrets continuously. |
-| [Bastion](./bastion) | Bastion server (AKA jump server) with SSH access controlled by Conjur policy |
-| [Cluster](./cluster) | Adds standbys to cluster and shows failover |
-| [LDAP](./ldap) | Shows LDAp synchronization with an OpenLDAP server |
-| [Policy](./policy) | Shows how to apply application policies with different user permissions across multiple environments |
-| [Splunk](./splunk) | Brings up Splunk to monitor audit messages and NGINX logs |
-| [SSH Ansible](./ssh_ansible) | Shows how to use policies to control SSH and sudo on hosts, incl. Ansible modules/playbooks |
-| [Host Factory](./host_factory) | A basic Host Factory demo with secrets retrieval using REST API and Summon |
+| [Scalability](./scenarios/scalability) | Spin up several minimal containers which fetch secrets continuously. |
+| [Bastion](./scenarios/bastion) | Bastion server (AKA jump server) with SSH access controlled by Conjur policy |
+| [Cluster](./scenarios/cluster) | Adds standbys to cluster and shows failover |
+| [LDAP](./scenarios/ldap) | Shows LDAp synchronization with an OpenLDAP server |
+| [Policy](./scenarios/policy) | Shows how to apply application policies with different user permissions across multiple environments |
+| [Splunk](./scenarios/splunk) | Brings up Splunk to monitor audit messages and NGINX logs |
+| [SSH Ansible](./scenarios/ssh_ansible) | Shows how to use policies to control SSH and sudo on hosts, incl. Ansible modules/playbooks |
+| [Host Factory](./scenarios/host_factory) | A basic Host Factory demo with secrets retrieval using REST API and Summon |
+| [Summon](./scenarios/summon) | Demo the use of summon |
 
 ## Demo root directory (.../cdemo):
 
