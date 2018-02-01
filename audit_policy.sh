@@ -5,12 +5,14 @@ if [[ -z $1 ]] ; then
 fi
 POLICY_FILE=$1
 NULL_RESULT="--- []"
-RESULT=$(docker-compose exec -T cli conjur policy load --as-group security_admin --dry-run /src/$POLICY_FILE)
+docker-compose exec -T cli conjur policy load --as-group security_admin --dry-run /src/$POLICY_FILE > ./.audit-out
+read RESULT < ./.audit-out
 if [ "$RESULT" = "$NULL_RESULT" ]; then
 	printf "\nCurrent state IS COMPLIANT with policy in %s.\n\n" $POLICY_FILE
 else
 	printf "\nCurrent state is NOT COMPLIANT with policy in %s.\n" $POLICY_FILE
 	printf "Deviations in policy file from current state are:\n"
-	echo $RESULT
+	cat ./.audit-out
+	rm ./.audit-out
 fi
 
