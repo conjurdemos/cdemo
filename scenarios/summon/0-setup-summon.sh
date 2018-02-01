@@ -3,7 +3,7 @@ set -eo pipefail
 
 CONJUR_MASTER_ORGACCOUNT=dev
 CONJUR_APPLIANCE_URL=https://conjur_follower/api
-CONJUR_CERT_FILE=../etc/conjur_follower.pem
+CONJUR_CERT_FILE=../../etc/conjur_follower.pem
 CONJUR_CERT_FILE_ON_HOST=/etc/conjur_follower.pem
 HOST_IMAGE=rack-vm:1.0
 CNAME=cdemo_vm_1
