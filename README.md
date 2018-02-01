@@ -39,7 +39,7 @@ Most of the demos have a README in their respective directory with information o
 
 | Scenario | Description |
 | -------- | ----------- |
-| [Scalability](./scenarios/scalability) | Spin up several minimal containers which fetch secrets continuously. |
+| Scalability | Basic use case - Spin up several minimal containers which fetch secrets continuously. |
 | [Bastion](./scenarios/bastion) | Bastion server (AKA jump server) with SSH access controlled by Conjur policy |
 | [Cluster](./scenarios/cluster) | Adds standbys to cluster and shows failover |
 | [LDAP](./scenarios/ldap) | Shows LDAp synchronization with an OpenLDAP server |
