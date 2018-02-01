@@ -25,13 +25,20 @@ while : ; do
 
 		# get API key from file in shared volume
     while : ; do
-	read APP_API_KEY < $INPUT_FILE
-	if [[ "$APP_API_KEY" != "$OLD_APP_API_KEY" ]]; then
-	   break
+	if [ -f $INPUT_FILE ]; then
+		read APP_API_KEY < $INPUT_FILE
+		break
+		#if [[ "$APP_API_KEY" != "$OLD_APP_API_KEY" ]]; then
+		   #break 
+		#else
+		   #sleep $SLEEP_TIME
+		#fi
 	else
-	   write_log_msg "Waiting for new API key."
-	   sleep $SLEEP_TIME
+		write_log_msg "Waiting for new API key."
+		sleep $SLEEP_TIME
+		continue
 	fi
+
     done
     write_log_msg "New API key is: $APP_API_KEY"
     while : ; do

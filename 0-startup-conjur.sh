@@ -1,7 +1,11 @@
 #!/bin/bash
 set -eo pipefail
 
-. ./_loadcfg.sh
+. ./etc/_loadcfg.sh
+
+announce_section() {
+  printf "\n========================\n$1\n========================\n"
+}
 
 main() {
   check_env
@@ -16,13 +20,13 @@ main() {
   docker-compose up -d scope		# bring up webscope
   docker-compose build webapp		# force build of demo app
 					# initialize "scalability" demo
-  docker-compose exec cli "/src/etc/_demo-init.sh"
+ docker-compose exec cli "/src/etc/_demo-init.sh"
 
 				# force image builds for demo modules
-  docker-compose build ldap
-  docker-compose build vm
-  docker-compose build splunk
-  docker-compose build ansible
+ docker-compose build ldap
+ docker-compose build vm
+ docker-compose build splunk
+ docker-compose build ansible
 
   echo
   echo "Demo environment ready!"
@@ -41,7 +45,9 @@ check_env() {
 	if [[ "$(uname -s)" == "Linux" ]]; then
 		set +e
 		sudo sysctl -w net.ipv4.ip_forward=1
-        	sudo dhclient -v
+		if [[ "$(pidof dhclient)" == "" ]]; then
+			sudo dhclient -v
+		fi
 		set -e
 	fi
 }
@@ -58,7 +64,7 @@ all_down() {
   done
 
   echo "-----"
-  printf "\n-----\nBringng down all running services & deleting dangling volumes\n"
+  printf "\n-----\nBringing down all running services & deleting dangling volumes\n"
   docker-compose down --remove-orphans
   dangling_vols=$(docker volume ls -qf dangling=true)
   if [[ "$dangling_vols" != "" ]]; then
@@ -85,8 +91,8 @@ conjur_master_up() {
   printf "Bringing up Conjur using image tagged as version %s...\n" $image_tag
   docker-compose up -d $CONJUR_MASTER_CONT_NAME
 
-  echo "-----"
-  echo "Initializing Conjur Master"
+  announce_section "Initializing Conjur Master"
+
   docker exec $CONJUR_MASTER_CONT_NAME \
 		evoke configure master     \
 		-j /src/etc/conjur.json	   \
@@ -94,8 +100,8 @@ conjur_master_up() {
 		-p $CONJUR_MASTER_PASSWORD \
 		$CONJUR_MASTER_ORGACCOUNT
 
-  echo "-----"
-  echo "Get certificate from Conjur"
+  announce_section "Get Certificate from Conjur"
+
   rm -f ./etc/conjur-$CONJUR_MASTER_ORGACCOUNT.pem
 					# cache cert for copying to other containers
   docker cp -L $CONJUR_MASTER_CONT_NAME:/opt/conjur/etc/ssl/conjur.pem ./etc/conjur-$CONJUR_MASTER_ORGACCOUNT.pem
@@ -109,12 +115,11 @@ haproxy_up() {
 
 ############################
 cli_up() {
-  printf "\n-----\nBring up CLI client...\n"
-  docker-compose up -d cli
- 
+  announce_section "Bring up CLI client..."
 
-  echo "-----"
-  echo "Copy Conjur config and certificate to CLI"
+  docker-compose up -d cli
+
+  echo "----- Copy Conjur config and certificate to CLI"
   docker cp -L ./etc/conjur_master.conf $CLI_CONT_NAME:/etc/conjur.conf
   docker cp -L ./etc/conjur-$CONJUR_MASTER_ORGACCOUNT.pem $CLI_CONT_NAME:/etc
   docker-compose exec cli conjur authn login -u admin -p $CONJUR_MASTER_PASSWORD
@@ -122,7 +127,7 @@ cli_up() {
 
 #############################
 conjur_follower_up() {
-	printf "\n-----\nConfiguring follower node...\n"
+	announce_section "Configuring follower node..."
 
 	docker-compose up -d follower
 					# generate seed file & pipe to follower
@@ -148,7 +153,7 @@ update_etc_hosts() {
 
 #############################
 wait_for_healthy_master() {
-        printf "\n-----\nWaiting for master to report healthy...\n"
+	announce_section "Waiting for master to report healthy..."
         set +e
         while : ; do
                 printf "..."

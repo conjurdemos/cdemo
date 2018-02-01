@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. ./_loadcfg.sh
+. ./etc/_loadcfg.sh
 
 while [[ 1 == 1 ]]; do
 	new_value=$(openssl rand -hex 12)

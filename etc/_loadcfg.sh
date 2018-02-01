@@ -1,9 +1,10 @@
 # Internal script used to check and load config files
 
-if [ ! -f ./config.cfg ]; then
+cfg_loc="${BASH_SOURCE%%etc/_loadcfg.sh}config.cfg"
+if [ ! -f "$cfg_loc" ]; then
   echo "  Please copy config.template.cfg to config.cfg and edit as needed."
   exit 1
 else
-  . ./config.cfg
+  . $cfg_loc
 fi 
 
