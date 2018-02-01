@@ -1,7 +1,6 @@
 ---
 - !policy
   id: webapp1
-  owner: !group devops
   body:
   - &variables
     - !variable database_password
