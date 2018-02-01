@@ -63,7 +63,8 @@ while : ; do
          -H "Authorization: Token token=\"$CONT_SESSION_TOKEN\"" \
          $ENDPOINT/variables/{$VAR_ID}/value)
 
-  	write_log_msg "The DB Password is: $DB_PASSWORD"
+	DBPASSOUT=$(echo $DB_PASSWORD | sed 's/\r\n//g' -)
+  	write_log_msg "The DB Password is: $DBPASSOUT"
 	sleep $SLEEP_TIME 
     done
 done
