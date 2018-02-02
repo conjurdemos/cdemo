@@ -3,10 +3,6 @@ set -eo pipefail
 
 . ./etc/_loadcfg.sh
 
-announce_section() {
-  printf "\n========================\n$1\n========================\n"
-}
-
 main() {
   check_env
   all_down				# bring down anything still running

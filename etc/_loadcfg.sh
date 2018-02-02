@@ -8,3 +8,8 @@ else
   . $cfg_loc
 fi 
 
+announce_section() {
+  printf "\n========================\n$1\n========================\n"
+}
+
+
