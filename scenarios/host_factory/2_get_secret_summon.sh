@@ -14,7 +14,7 @@ set -eo pipefail
 
 # get pointers to Conjur api and SSL certificate
 export CONJUR_APPLIANCE_URL=https://conjur_master/api
-export CONJUR_CERT_FILE=../etc/conjur-dev.pem
+export CONJUR_CERT_FILE=../../etc/conjur-dev.pem
 
 # other env vars needed by summon/summon-conjur
 export CONJUR_MAJOR_VERSION=4

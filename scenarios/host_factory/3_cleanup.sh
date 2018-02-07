@@ -2,7 +2,7 @@
 
 # get pointers to Conjur api and SSL certificate
 export CONJUR_APPLIANCE_URL=https://conjur_master/api
-export CONJUR_CERT_FILE=../etc/conjur-dev.pem
+export CONJUR_CERT_FILE=../../etc/conjur-dev.pem
 
 ### HARD CODED VALUES ###
 declare HOST_FACTORY_NAME=webapp1/tomcat_factory

@@ -6,7 +6,7 @@
 
 # get pointers to Conjur REST API endpoint and SSL certificate
 export CONJUR_APPLIANCE_URL=https://conjur_master/api
-export CONJUR_CERT_FILE=../etc/conjur-dev.pem
+export CONJUR_CERT_FILE=../../etc/conjur-dev.pem
 
 #####
 # HARD CODED VALUES from ../webapp1-policy.yml in parent directory
