@@ -3,6 +3,6 @@
 # DevOps owns the Test environment
 - !policy
   id: test
-  owner: !group devops
+#  owner: !group devops
   body:
     - !include apps/webapp.yml
