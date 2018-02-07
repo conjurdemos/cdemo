@@ -73,7 +73,7 @@ conjur_master_up() {
   echo "-----"
   if [[ "$(docker images conjur-appliance:latest | grep conjur-appliance)" == "" ]]; then
   	if [[ "$CONJUR_CONTAINER_TARFILE" == "" ]]; then
-		printf "\n\nEdit this script to set CONJUR_CONTAINER_TARFILE to the location of the Conjur appliance tarfile to load.\n\n"
+		printf "\n\nEdit config.cfg and set CONJUR_CONTAINER_TARFILE to the location of the Conjur appliance tarfile to load.\n\n"
 		exit -1
 	fi
 
