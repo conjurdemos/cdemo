@@ -151,7 +151,7 @@ services:
       ANSIBLE_HOST_KEY_CHECKING: "false"
     volumes:
       - ./:/src:rw
-      - ./ssh_ansible/ansible_hosts:/etc/ansible/hosts:rw
+      - ./scenarios/ssh_ansible/ansible_hosts:/etc/ansible/hosts:rw
     networks:
       - fnetwk
 

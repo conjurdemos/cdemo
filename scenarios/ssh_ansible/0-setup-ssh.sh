@@ -1,10 +1,11 @@
 #!/bin/bash 
 set -eo pipefail
 
-CONJUR_MASTER_ORGACCOUNT=dev
-CONJUR_APPLIANCE_URL=https://conjur_follower/api
-CONJUR_CONF_FILE=../etc/conjur_follower.conf
-CONJUR_CERT_FILE=../etc/conjur_follower.pem
+. ../../etc/_loadcfg.sh
+
+CONJUR_APPLIANCE_URL=https://$CONJUR_FOLLOWER_INGRESS/api
+CONJUR_CONF_FILE=../../etc/conjur_follower.conf
+CONJUR_CERT_FILE=../../etc/conjur_follower.pem
 RACK_SERVICE_NAME=vm
 RACK_POLICY_NAME=rack
 RACK_POLICY_FILE=$RACK_POLICY_NAME.yml
@@ -30,35 +31,35 @@ setup_rack_vms() {
 	construct_host_policy
 	conjurize_vms
 
-	printf "\n\nRack host identities now in Conjur:\n"
+	announce_section "Rack host identities now in Conjur:\n$RACK_CONT_NAMES"
 	echo $RACK_CONT_NAMES
 }
 
 ######################
 refresh_vms() {
-	printf "\n-----\nBringing down old, then up all rack vm containers...\n"
+	announce_section "Bringing down old, then up all rack vm containers..."
 	NUM_CONTS=$(( 2 > $NUM_CONTS ? 2 : $NUM_CONTS ))	# you have to have at least two VMs
 	docker-compose rm -svf $RACK_SERVICE_NAME
-	docker-compose up -d --scale $RACK_SERVICE_NAME=$NUM_CONTS $RACK_SERVICE_NAME
+	docker-compose -f ../../docker-compose.yml up -d --scale $RACK_SERVICE_NAME=$NUM_CONTS $RACK_SERVICE_NAME
 }
 
 ######################
 construct_host_policy() {
-	printf "\n-----\nConstructing & loading rack host policy...\n"
+	announce_section "Constructing & loading rack host policy..."
 	echo "---" > $RACK_POLICY_FILE
 	RACK_CONT_NAMES=$(docker ps --format "{{.Names}}" -f "label=role=rack-vm")
 	for cname in $RACK_CONT_NAMES; do
 		echo "- !host" $cname >> $RACK_POLICY_FILE
 	done
-	docker-compose exec -T cli conjur authn login -u admin -p Cyberark1
-	docker-compose exec -T cli conjur policy load --as-group=security_admin /src/ssh_ansible/$RACK_POLICY_FILE
-	docker-compose exec -T cli conjur policy load --as-group=security_admin /src/ssh_ansible/$ACCESS_POLICY_FILE
+	docker-compose -f ../../docker-compose.yml exec -T cli conjur authn login -u admin -p $CONJUR_MASTER_PASSWORD
+	docker-compose -f ../../docker-compose.yml exec -T cli conjur policy load --as-group=security_admin /src/scenarios/ssh_ansible/$RACK_POLICY_FILE
+	docker-compose -f ../../docker-compose.yml exec -T cli conjur policy load --as-group=security_admin /src/scenarios/ssh_ansible/$ACCESS_POLICY_FILE
 }
 
 
 ######################
 conjurize_vms() {
-	printf "\n-----\nConfiguring hosts for SSH & identities ...\n"
+	announce_section "Configuring hosts for SSH & identities ..."
 	CLI_CONT_ID=$(docker-compose ps -q cli)
 	for cname in $RACK_CONT_NAMES; do
 			# note: conjur.conf and .pem files are 
@@ -67,7 +68,7 @@ conjurize_vms() {
 		docker cp $CONJUR_CONF_FILE $cname:/etc/conjur.conf
 		docker cp $CONJUR_CERT_FILE $cname:/etc
 
-        	api_key=$(docker-compose exec -T cli conjur host rotate_api_key --host $cname)
+        	api_key=$(docker-compose -f ../../docker-compose.yml exec -T cli conjur host rotate_api_key --host $cname)
 
 			# run chef recipe to configure vm for ssh access
 		docker exec \
@@ -85,7 +86,7 @@ conjurize_vms() {
 
 ######################
 setup_ansible() {
-	docker-compose up -d ansible
+	docker-compose -f ../../docker-compose.yml up -d ansible
 }
 
 

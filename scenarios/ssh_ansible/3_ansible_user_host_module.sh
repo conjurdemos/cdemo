@@ -7,4 +7,4 @@ fi
 USER=$1
 CNAME=$2
 MNAME=$3
-docker-compose exec ansible ansible -m $MNAME $CNAME --private-key=/src/ssh_ansible/id_$USER -u $USER
+docker-compose -f ../../docker-compose.yml exec ansible ansible -m $MNAME $CNAME --private-key=/src/scenarios/ssh_ansible/id_$USER -u $USER

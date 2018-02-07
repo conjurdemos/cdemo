@@ -6,4 +6,4 @@ fi
 RESOURCE=$1
 PERMISSION=$2
 printf "\nAll roles having %s permission on %s:\n\n" $PERMISSION $RESOURCE
-docker-compose exec cli conjur resource permitted_roles $RESOURCE $PERMISSION
+docker-compose -f ../../docker-compose.yml exec cli conjur resource permitted_roles $RESOURCE $PERMISSION

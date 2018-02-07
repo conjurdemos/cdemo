@@ -6,4 +6,4 @@ fi
 RESOURCE=$1
 printf  "\nReviewing activity on %s:\n" $RESOURCE
 set -x
-docker-compose exec cli conjur audit resource --short $RESOURCE 
+docker-compose -f ../../docker-compose.yml exec cli conjur audit resource --short $RESOURCE 
