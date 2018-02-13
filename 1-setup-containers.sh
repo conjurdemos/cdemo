@@ -1,7 +1,7 @@
 #!/bin/bash -e
 set -o pipefail
 
-. ./_loadcfg.sh
+. ./etc/_loadcfg.sh
 
 ################  MAIN   ################
 # $1 = number of containers to create
