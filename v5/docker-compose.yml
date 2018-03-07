@@ -44,9 +44,3 @@ services:
       - ./policy:/src/policy
     links:
       - conjur-master
-
-# volumes:
-#   seeds:
-#     driver: local
-#   policy:
-#     driver: local
