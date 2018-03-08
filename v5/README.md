@@ -13,7 +13,7 @@ To begin, you'll need access to the Conjur V5 appliance image. We can retrieve t
 
 #### Download an image from S3:
 ```sh
-$ ...
+$ curl 'https://s3.amazonaws.com/appliance-v5-dev.conjur.org/conjur-appliance%3A5.0.0-alpha.1.tar.gz?AWSAccessKeyId=AKIAIFJWM5FD6QYF5QDA&Expires=1521732748&Signature=%2BMIx2%2Fv8QfaxRFP4l8dXBRJtYUU%3D' | gunzip | docker load
 ```
 
 #### Download from Conjur Docker Repository
