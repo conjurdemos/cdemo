@@ -12,8 +12,9 @@ function main {
   docker-compose logs -f conjur-master
 }
 
-function foo {
-  echo 'foo'
+
+function bar {
+  echo 'bar'
 }
 
 main
