@@ -82,6 +82,7 @@ services:
       - "/usr/bin/docker:/usr/bin/docker:z"
     entrypoint: sleep
     command: infinity
+    restart: always
     networks:
       - mnetwk
       - fnetwk
@@ -97,6 +98,7 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock:rw"
     command:
       - "--probe.docker=true"
+    restart: always
     networks:
       - mnetwk
 
@@ -124,6 +126,7 @@ services:
       - APP_HOSTNAME         # values for these variables are in .env file
       - VAR_ID               # written by 1-setup-containers.sh
       - SLEEP_TIME
+    restart: always
     networks:
       - fnetwk
 
@@ -140,6 +143,7 @@ services:
       - data:/data
     entrypoint: sleep
     command: infinity
+    restart: always
     networks:
       - fnetwk
 
@@ -152,6 +156,7 @@ services:
     volumes:
       - ./:/src:rw
       - ./scenarios/ssh_ansible/ansible_hosts:/etc/ansible/hosts:rw
+    restart: always
     networks:
       - fnetwk
 
@@ -162,6 +167,7 @@ services:
     hostname: protected_vm
     entrypoint: sleep
     command: infinity
+    restart: always
     networks:
       - fnetwk
 
@@ -171,6 +177,7 @@ services:
     hostname: bastion_server
     entrypoint: sleep
     command: infinity
+    restart: always
     networks:
       - default
       - fnetwk
@@ -183,6 +190,7 @@ services:
       - .:/src
     entrypoint: sleep
     command: infinity
+    restart: always
     networks:
       - default           # all alone on "external" network
 
@@ -195,6 +203,7 @@ services:
     restart: always
     volumes:
       - .:/src
+    restart: always
     networks:
       - mnetwk
 
@@ -220,6 +229,7 @@ services:
       - "9997:9997"
       - "8088:8088"
       - "1514:1514"
+    restart: always
     networks:
       - mnetwk
 

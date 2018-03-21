@@ -2,7 +2,7 @@
 
 # get pointers to Conjur REST API endpoint and SSL certificate
 export CONJUR_APPLIANCE_URL=https://conjur_master/api
-export CONJUR_CERT_FILE=../etc/conjur-dev.pem
+export CONJUR_CERT_FILE=../../etc/conjur-dev.pem
 
 # global variables
 declare ADMIN_SESSION_TOKEN
