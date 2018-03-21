@@ -1,0 +1,46 @@
+version: '3'
+services:
+
+  conjur-master:
+    image: registry.tld/conjur-appliance:5.0-stable
+    container_name: cdemo_conjur-master
+    ports:
+      - "443:443"
+    security_opt:
+        - "seccomp:unconfined"
+    volumes:
+      - ./seeds:/tmp/seeds
+
+  conjur-standby:
+    image: registry.tld/conjur-appliance:5.0-stable
+    container_name: cdemo_conjur-standby
+    security_opt:
+        - "seccomp:unconfined"
+    links:
+      - conjur-master
+    volumes:
+      - ./seeds:/tmp/seeds
+
+  conjur-follower:
+    image: registry.tld/conjur-appliance:5.0-stable
+    container_name: cdemo_conjur-follower
+    ports:
+      - "8443:443"
+    security_opt:
+        - "seccomp:unconfined"
+    links:
+      - conjur-master
+    volumes:
+      - ./seeds:/tmp/seeds
+
+  conjur-cli:
+    image: conjurinc/cli5
+    container_name: cdemo_conjur-cli
+    environment:
+      CONJUR_APPLIANCE_URL: http://conjur-master
+      CONJUR_ACCOUNT: demo
+      CONJUR_AUTHN_LOGIN: admin
+    volumes:
+      - ./policy:/src/policy
+    links:
+      - conjur-master
