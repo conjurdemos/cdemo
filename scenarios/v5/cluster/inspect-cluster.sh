@@ -10,4 +10,8 @@ for cname in $cont_list; do
 	cip=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $cname)
 	printf "%s, %s, %s\n" $cname $crole $cip
 done
+
+printf "\n\nMaster health status:\n----------------\n"
+curl -k https://localhost/health
 printf "\n\n"
+
