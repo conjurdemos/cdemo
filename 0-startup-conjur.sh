@@ -44,10 +44,10 @@ check_env() {
 		if [[ "$(pidof dhclient)" == "" ]]; then
 			sudo dhclient -v
 		fi
+		# Ensure docker daemon is running
+		sudo sysctl start docker.service
 		set -e
 	fi
-	# Ensure docker daemon is running
-	sudo systemctl start docker.service
 }
 
 ############################
