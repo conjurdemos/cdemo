@@ -48,6 +48,7 @@ Most of the demos have a README in their respective directory with information o
 | [SSH Ansible](./scenarios/ssh_ansible) | Shows how to use policies to control SSH and sudo on hosts, incl. Ansible modules/playbooks |
 | [Host Factory](./scenarios/host_factory) | A basic Host Factory demo with secrets retrieval using REST API and Summon |
 | [Summon](./scenarios/summon) | Demo the use of summon |
+| [v5](./scenarios/v5) | Beta version of Conjur v5 cluster setup |
 
 ## Demo root directory (.../cdemo):
 

@@ -79,7 +79,7 @@ services:
       - data:/data
       - ./:/src:z
       - "/var/run/docker.sock:/var/run/docker.sock:rw"  # enable docker commands from in container
-      - "/usr/bin/docker:/usr/bin/docker:z"
+      - "/usr/local/bin/docker:/usr/bin/docker:z"
     entrypoint: sleep
     command: infinity
     restart: always
