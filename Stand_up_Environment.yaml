@@ -1,0 +1,92 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Install Docker
+      yum:
+        name: docker-ce
+        update_cache: yes
+        state: present
+     
+    - name: Install curl
+      yum:
+        name: curl
+        state: present
+
+    - name: download and install pip
+      get_url:
+        url: https://bootstrap.pypa.io/get-pip.py
+        dest: /opt/
+    
+    - name: install pip
+      shell: |
+        python /opt/get-pip.py
+        pip install docker-py
+        
+    - name: create conjur docker network
+      docker_network:
+        name: conjur
+        
+    - name: create conjur docker volume
+      docker_volume:
+        name: conjur
+    
+    - name: Start Jenkins  
+      docker_container:
+        name: jenkins
+        image: captainfluffytoes/demo_conjur_docker_jenkins
+        state: started
+        env:
+          JAVA_OPTS: "-Djenkins.install.runSetupWizard=false"
+        published_ports: 
+         - "8080:8080" 
+        networks:
+         - name: conjur
+        volumes:
+         - "/var/run/docker.sock:/var/run/docker.sock"
+         - "/scripts:/scripts"
+         - "conjur:/pem"
+        restart_policy: Always
+         
+    - name: Start Conjur CLI
+      docker_container:
+        name: conjur-cli
+        image: cyberark/conjur-cli:5-6.1.0
+        state: started
+        volumes:
+         - "conjur:/pem"
+        restart_policy: Always
+        
+    - name: Load Conjur tar
+      docker_image:
+        load_path: /opt/conjur.tar
+        name: conjur-appliance-cuke-master
+        state: present
+    
+    - name: Start conjur container
+      docker_container:
+         name: conjur
+         image: registry2.itci.conjur.net/conjur-appliance:5.0-stable
+         state: started
+         privileged: yes
+         networks:
+          - name: conjur
+         published_ports:
+          - "443:443"
+        volumes:
+         - "conjur:/opt/conjur/etc/ssl"
+         restart_policy: Always
+         
+    - name: configure conjur container
+      shell: |
+        docker exec conjur evoke configure master -h conjur -p Cyberark1 cyberark/conjur-cli
+        
+    - name: download weavescope
+      get_url:
+        url: git.io/scope
+        dest: /usr/local/bin/scope
+        mode: 0755
+        
+    - name: launch weavescope
+      shell: |
+        /usr/local/bin/scope launch
+      ignore_errors: yes
