@@ -43,7 +43,7 @@
          - name: conjur
         volumes:
          - "/var/run/docker.sock:/var/run/docker.sock"
-         - "/scripts:/scripts"
+         - "./scripts:/scripts"
          - "conjur:/pem"
         restart_policy: Always
          
@@ -78,7 +78,7 @@
          
     - name: configure conjur container
       shell: |
-        docker exec conjur evoke configure master -h conjur -p Cyberark1 cyberark/conjur-cli
+        docker exec conjur evoke configure master -h conjur -p Cyberark1 cyberark
         
     - name: download weavescope
       get_url:
