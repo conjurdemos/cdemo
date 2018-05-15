@@ -1,7 +1,0 @@
-# BEGIN ANSIBLE MANAGED BLOCK
----
-account: cyberark
-plugins: []
-appliance_url: https://conjur-master/
-cert_file: "/pem/ca.pem"
-# END ANSIBLE MANAGED BLOCK

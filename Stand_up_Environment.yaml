@@ -100,8 +100,6 @@
         image: cyberark/conjur-cli:5-6.1.0
         state: started
         volumes:
-         - "conjur_cert:/pem:ro"
-         - "./cli:/root"
          - "./policy:/policy"
         restart_policy: always
         networks:
@@ -110,34 +108,11 @@
         entrypoint: []
         command: ["sleep", "infinity"]
     
-    - name: load configuration file for cli
-      blockinfile:
-        path: ./cli/.conjurrc
-        create: yes
-        state: present
-        block: |
-          ---
-          account: cyberark
-          plugins: []
-          appliance_url: https://conjur-master/
-          cert_file: "/pem/conjur-master.pem"
-    
-    - name: login cli
+    - name: configure cli
       shell: |
+        docker exec conjur-cli bash -c "conjur init -u https://conjur-master -a cyberark <<< yes"
         docker exec conjur-cli conjur authn login -u admin -p Cyberark1
         
-    - name: load configuation file for jenkins
-      blockinfile:
-        path: ./jenkins_identity/.conjurrc
-        create: yes
-        state: present
-        block: |
-          ---
-          account: cyberark
-          plugins: []
-          appliance_url: https://conjur-master/conjur
-          cert_file: "/pem/conjur-master.pem"
-    
     - name: Start Jenkins  
       docker_container:
         name: jenkins
@@ -152,7 +127,6 @@
         volumes:
          - "/var/run/docker.sock:/var/run/docker.sock"
          - "./scripts:/scripts"
-         - "conjur_cert:/pem:ro"
          - "./jenkins_identity:/jenkins_identity"    
         restart_policy: always
         recreate: yes
@@ -173,8 +147,6 @@
          - name: conjur
         published_ports:
          - "80:80"
-         # - "22:22"
-         # - "443:443"
         volumes:
          - "/srv/gitlab/config:/etc/gitlab"
          - "/srv/gitlab/logs:/var/log/gitlab"
