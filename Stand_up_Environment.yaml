@@ -102,7 +102,7 @@
         volumes:
          - "conjur_cert:/pem:ro"
          - "./cli:/root"
-         - "/policy:/policy"
+         - "./policy:/policy"
         restart_policy: always
         networks:
          - name: conjur
@@ -120,7 +120,7 @@
           account: cyberark
           plugins: []
           appliance_url: https://conjur-master/
-          cert_file: "/pem/ca.pem"
+          cert_file: "/pem/conjur-master.pem"
     
     - name: login cli
       shell: |
@@ -135,8 +135,8 @@
           ---
           account: cyberark
           plugins: []
-          appliance_url: https://conjur-master/
-          cert_file: "/pem/ca.pem"
+          appliance_url: https://conjur-master/conjur
+          cert_file: "/pem/conjur-master.pem"
     
     - name: Start Jenkins  
       docker_container:
@@ -153,7 +153,7 @@
          - "/var/run/docker.sock:/var/run/docker.sock"
          - "./scripts:/scripts"
          - "conjur_cert:/pem:ro"
-         - "./jenkins_identity:/jenkins_identity:ro"
+         - "./jenkins_identity:/jenkins_identity"    
         restart_policy: always
         recreate: yes
         
@@ -171,8 +171,8 @@
         recreate: yes
         networks:
          - name: conjur
-        # published_ports:
-         # - "80:80"
+        published_ports:
+         - "80:80"
          # - "22:22"
          # - "443:443"
         volumes:
