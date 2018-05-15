@@ -1,0 +1,4 @@
+*.retry
+*.bash_history
+*.cache
+*.netrc
