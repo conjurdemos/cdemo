@@ -62,14 +62,16 @@
     - name: create conjur docker network
       docker_network:
         name: conjur
+        state: present
         
     - name: create conjur docker volume
       docker_volume:
         name: conjur_cert
+        state: present
     
     - name: Load Conjur tar
       docker_image:
-        name: registry2.itci.conjur.net/conjur-appliance:5.0-stable
+        name: conjur-appliance
         load_path: /opt/conjur.tar
         state: present
     
