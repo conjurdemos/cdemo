@@ -7,3 +7,4 @@ build-timeout
 credentials-binding
 timestamper
 ws-cleanup
+blueocean

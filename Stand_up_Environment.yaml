@@ -19,7 +19,6 @@
         - git
         - make
         
-    
     - name: install docker repo
       shell: |
         yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
@@ -97,12 +96,22 @@
         state: started
         volumes:
          - "conjur:/pem"
+         - "./cli:/root"
         restart_policy: always
         recreate: yes
+        command: sleep infinity
     
-    - name: configure cli
-      shell: |
-        docker exec conjur-cli init -u https://conjur-master 
+    - name: load configuration file
+      blockinfile:
+        path: ./cli/.conjurrc
+        create: yes
+        state: present
+        block: |
+          ---
+          account: cyberark
+          plugins: []
+          appliance_url: https://conjur-master/
+          cert_file: "/pem/ca.pem"
          
     - name: Start Jenkins  
       docker_container:
