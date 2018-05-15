@@ -1,25 +1,24 @@
 ---
 - !policy
-  id: shared-secret-auth
+  id: shared_secret_auth
   body:
-    - !host helloworld
-    - !group consumers
+    - !host secret_rotator
 
-    - !variable helloworld-secret
+    - &variables 
+      - !variable helloworld_secret
+      - !variable database_password
+      - !variable web_config_password
+      - !variable systema_root_sshkey
+      - !variable systemb_root_sshkey
+      - !variable aws_access_key
+      - !variable aws_secret_key
 
     - !permit
-      role: !host helloworld
+      role: !host secret_rotator
       privileges:
         - read
         - update
-      resource: !variable helloworld-secret 
-
-    - !permit
-      role: !group consumers
-      privileges:
-        - read
-        - execute
-      resource: !variable helloworld-secret
+      resource: *variables 
 
 - !policy
   id: tomcat
@@ -35,8 +34,16 @@
     - !host-factory
       layers: [ !layer hosts ]
 
-- !grant
-  role: !group shared-secret-auth/consumers
-  members:
-    - !layer tomcat/hosts
-    - !layer webapp/hosts
+- !permit
+  role: !layer webapp/hosts
+  privileges:
+    - read
+    - execute
+  resource: *variables
+  
+- !permit
+  role: !layer tomcat/hosts
+  privileges:
+    - read
+    - execute
+  resource: *variables
