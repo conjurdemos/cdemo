@@ -104,11 +104,13 @@
          - "./cli:/root"
          - "/policy:/policy"
         restart_policy: always
+        networks:
+         - name: conjur
         recreate: yes
         entrypoint: []
         command: ["sleep", "infinity"]
     
-    - name: load configuration file
+    - name: load configuration file for cli
       blockinfile:
         path: ./cli/.conjurrc
         create: yes
@@ -123,6 +125,18 @@
     - name: login cli
       shell: |
         docker exec conjur-cli conjur authn login -u admin -p Cyberark1
+        
+    - name: load configuation file for jenkins
+      blockinfile:
+        path: ./jenkins_identity/.conjurrc
+        create: yes
+        state: present
+        block: |
+          ---
+          account: cyberark
+          plugins: []
+          appliance_url: https://conjur-master/
+          cert_file: "/pem/ca.pem"
     
     - name: Start Jenkins  
       docker_container:
@@ -139,6 +153,7 @@
          - "/var/run/docker.sock:/var/run/docker.sock"
          - "./scripts:/scripts"
          - "conjur_cert:/pem:ro"
+         - "./jenkins_identity:/jenkins_identity:ro"
         restart_policy: always
         recreate: yes
         
