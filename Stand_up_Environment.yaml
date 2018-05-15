@@ -8,14 +8,17 @@
         
     - name: Install docker dependencies
       yum:
-        name: {{item}}
+        name: "{{ item }}"
         update_cache: yes
         state: latest
       with_items:
-       - curl
-       - yum-utils
-       - device-mapper-persistent-data
-       - lvm2
+        - curl
+        - yum-utils
+        - device-mapper-persistent-data
+        - lvm2
+        - git
+        - make
+        
     
     - name: install docker repo
       shell: |
@@ -42,7 +45,18 @@
       shell: |
         python /opt/get-pip.py
         pip install docker-py
+
+    - name: download weavescope
+      get_url:
+        url: git.io/scope
+        dest: /usr/local/bin/scope
+        mode: 0755
         
+    - name: launch weavescope
+      shell: |
+        /usr/local/bin/scope launch
+      ignore_errors: yes        
+ 
     - name: create conjur docker network
       docker_network:
         name: conjur
@@ -53,26 +67,28 @@
     
     - name: Load Conjur tar
       docker_image:
+        name: registry2.itci.conjur.net/conjur-appliance:5.0-stable
         load_path: /opt/conjur.tar
         state: present
     
     - name: Start conjur container
       docker_container:
-         name: conjur
+         name: conjur-master
          image: registry2.itci.conjur.net/conjur-appliance:5.0-stable
          state: started
          privileged: yes
+         recreate: yes
          networks:
           - name: conjur
          published_ports:
           - "443:443"
-        volumes:
-         - "conjur:/opt/conjur/etc/ssl"
-         restart_policy: Always
+         volumes:
+          - "conjur:/opt/conjur/etc/ssl"
+         restart_policy: always
 
     - name: configure conjur container
       shell: |
-        docker exec conjur evoke configure master -h conjur -p Cyberark1 cyberark
+        docker exec conjur-master evoke configure master -h conjur-master -p Cyberark1 cyberark
 
     - name: Start Conjur CLI
       docker_container:
@@ -81,7 +97,12 @@
         state: started
         volumes:
          - "conjur:/pem"
-        restart_policy: Always
+        restart_policy: always
+        recreate: yes
+    
+    - name: configure cli
+      shell: |
+        docker exec conjur-cli init -u https://conjur-master 
          
     - name: Start Jenkins  
       docker_container:
@@ -98,15 +119,28 @@
          - "/var/run/docker.sock:/var/run/docker.sock"
          - "./scripts:/scripts"
          - "conjur:/pem"
-        restart_policy: Always
+        restart_policy: always
         
-    - name: download weavescope
-      get_url:
-        url: git.io/scope
-        dest: /usr/local/bin/scope
-        mode: 0755
-        
-    - name: launch weavescope
+    - name: install jenkins plugins
       shell: |
-        /usr/local/bin/scope launch
-      ignore_errors: yes
+        docker exec jenkins sh -c 'xargs /usr/local/bin/install-plugins.sh < /scripts/plugins.txt' || true
+        docker container restart jenkins
+        
+    - name: start gitlab
+      docker_container:
+        name: gitlab
+        image: gitlab/gitlab-ce:latest
+        state: started
+        restart_policy: always
+        recreate: yes
+        networks:
+         - name: conjur
+        # published_ports:
+         # - "80:80"
+         # - "22:22"
+         # - "443:443"
+        volumes:
+         - "/srv/gitlab/config:/etc/gitlab"
+         - "/srv/gitlab/logs:/var/log/gitlab"
+         - "/srv/gitlab/data:/var/opt/gitlab"
+         

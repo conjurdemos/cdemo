@@ -1,0 +1,9 @@
+git
+github
+subversion
+cloudbees-folder
+antisamy-markup-formatter
+build-timeout
+credentials-binding
+timestamper
+ws-cleanup
