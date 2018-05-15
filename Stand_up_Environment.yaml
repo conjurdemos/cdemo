@@ -1,17 +1,38 @@
 ---
 - hosts: localhost
   tasks:
-    - name: Install Docker
+    - name: Remove old version of docker
+      yum:
+        name: docker
+        state: absent
+        
+    - name: Install docker dependencies
+      yum:
+        name: {{item}}
+        update_cache: yes
+        state: latest
+      with_items:
+       - curl
+       - yum-utils
+       - device-mapper-persistent-data
+       - lvm2
+    
+    - name: install docker repo
+      shell: |
+        yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+        
+    - name: Install Docker-CE
       yum:
         name: docker-ce
         update_cache: yes
         state: present
-     
-    - name: Install curl
-      yum:
-        name: curl
-        state: present
 
+    - name: Start and enable docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+        
     - name: download and install pip
       get_url:
         url: https://bootstrap.pypa.io/get-pip.py
@@ -30,6 +51,38 @@
       docker_volume:
         name: conjur
     
+    - name: Load Conjur tar
+      docker_image:
+        load_path: /opt/conjur.tar
+        state: present
+    
+    - name: Start conjur container
+      docker_container:
+         name: conjur
+         image: registry2.itci.conjur.net/conjur-appliance:5.0-stable
+         state: started
+         privileged: yes
+         networks:
+          - name: conjur
+         published_ports:
+          - "443:443"
+        volumes:
+         - "conjur:/opt/conjur/etc/ssl"
+         restart_policy: Always
+
+    - name: configure conjur container
+      shell: |
+        docker exec conjur evoke configure master -h conjur -p Cyberark1 cyberark
+
+    - name: Start Conjur CLI
+      docker_container:
+        name: conjur-cli
+        image: cyberark/conjur-cli:5-6.1.0
+        state: started
+        volumes:
+         - "conjur:/pem"
+        restart_policy: Always
+         
     - name: Start Jenkins  
       docker_container:
         name: jenkins
@@ -46,39 +99,6 @@
          - "./scripts:/scripts"
          - "conjur:/pem"
         restart_policy: Always
-         
-    - name: Start Conjur CLI
-      docker_container:
-        name: conjur-cli
-        image: cyberark/conjur-cli:5-6.1.0
-        state: started
-        volumes:
-         - "conjur:/pem"
-        restart_policy: Always
-        
-    - name: Load Conjur tar
-      docker_image:
-        load_path: /opt/conjur.tar
-        name: conjur-appliance-cuke-master
-        state: present
-    
-    - name: Start conjur container
-      docker_container:
-         name: conjur
-         image: registry2.itci.conjur.net/conjur-appliance:5.0-stable
-         state: started
-         privileged: yes
-         networks:
-          - name: conjur
-         published_ports:
-          - "443:443"
-        volumes:
-         - "conjur:/opt/conjur/etc/ssl"
-         restart_policy: Always
-         
-    - name: configure conjur container
-      shell: |
-        docker exec conjur evoke configure master -h conjur -p Cyberark1 cyberark
         
     - name: download weavescope
       get_url:

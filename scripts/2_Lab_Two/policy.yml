@@ -1,0 +1,24 @@
+---
+- !policy
+  id: webapp1
+  body:
+  - &variables
+    - !variable database_password
+    - !variable api_key
+
+  - !layer &tomcat_hosts tomcat_hosts
+  - !host-factory
+    id: tomcat_factory
+    layers: [ *tomcat_hosts ]
+
+  - !group &devops devops
+
+  - !permit
+    role: *tomcat_hosts
+    privileges: [ read, execute ]
+    resource: *variables
+
+  - !permit
+    role: *devops
+    privileges: [ read, execute, update ]
+    resource: *variables

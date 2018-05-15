@@ -1,0 +1,15 @@
+# These values are used by all REST API calls
+# Note: if you've initialized the Conjur CLI, both of these values can be found in your ~/.conjurrc file
+
+# set this to point to your Conjur master URL
+export CONJUR_APPLIANCE_URL=https://localhost/api
+
+# set this to point to your certificate file
+export CONJUR_CERT_FILE=~/conjur-cyberark.pem
+
+# if you have not installed the Conjur CLI, you can generate a certificate
+# from within the conjur master container, then copy it into the current
+# directory with these commands:
+#    docker exec <master-container-name> evoke ca issue conjur-ACCT.pem 
+#    docker cp <master-container-name>:/opt/conjur/etc/ssl/conjur-ACCT.pem .
+# where ACCT is the account name you used when initializing the conjur master (e.g. dev)
