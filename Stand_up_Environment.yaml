@@ -113,9 +113,18 @@
       shell: |
         docker exec conjur-cli bash -c "conjur init -u https://conjur-master -a cyberark <<< yes"
         docker exec conjur-cli conjur authn login -u admin -p Cyberark1
-        docker exec conjur-cli conjur policy load root /policy/policy.yaml
-        docker exec conjur-cli 
-        
+        docker exec conjur-cli conjur policy load --replace root /policy/policy.yaml
+    
+    - name: randomizing variables
+      shell: |
+        docker exec conjur-cli conjur variable values add shared_secret_auth/helloworld_secret $(openssl rand -hex 12)
+        docker exec conjur-cli conjur variable values add shared_secret_auth/database_password $(openssl rand -hex 12)
+        docker exec conjur-cli conjur variable values add shared_secret_auth/web_config_password $(openssl rand -hex 12)
+        docker exec conjur-cli conjur variable values add shared_secret_auth/systema_root_sshkey $(openssl rand -hex 12)
+        docker exec conjur-cli conjur variable values add shared_secret_auth/systemb_root_sshkey $(openssl rand -hex 12)
+        docker exec conjur-cli conjur variable values add shared_secret_auth/aws_access_key $(openssl rand -hex 12)
+        docker exec conjur-cli conjur variable values add shared_secret_auth/aws_secret_key $(openssl rand -hex 12)
+      
     - name: Start Jenkins  
       docker_container:
         name: jenkins
