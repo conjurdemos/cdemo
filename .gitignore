@@ -3,3 +3,4 @@
 *.cache
 *.netrc
 *.pem
+conjur.tar
