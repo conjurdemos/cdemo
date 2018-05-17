@@ -34,6 +34,13 @@
     - !host-factory
       layers: [ !layer hosts ]
 
+- !policy
+  id: jenkins
+  body:
+    - !layer hosts
+    - !host-factory
+      layers: [ !layer hosts ]
+
 - !permit
   role: !layer webapp/hosts
   privileges:
@@ -46,4 +53,12 @@
   privileges:
     - read
     - execute
+  resource: *variables
+
+- !permit
+  role: !layer jenkins/hosts
+  privileges:
+    - read
+    - execute
+    - update
   resource: *variables
