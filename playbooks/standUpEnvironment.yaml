@@ -180,8 +180,24 @@
         networks:
          - name: conjur
         published_ports:
-         - "80:80"
+         - "7070:80"
         volumes:
          - "/srv/gitlab/config:/etc/gitlab"
          - "/srv/gitlab/logs:/var/log/gitlab"
          - "/srv/gitlab/data:/var/opt/gitlab"
+
+    - name: download awx
+      git:
+        dest: /opt/awx
+        clone: yes
+        repo: https://github.com/ansible/awx.git
+
+    - name: start up awx
+      shell: ansible-playbook -i inventory install.yml
+      args:
+        chdir: /opt/awx/installer
+
+    - name: connect instances to docker network
+      shell: |
+        docker network connect conjur awx_web
+        docker network connect conjur awx_task

@@ -16,6 +16,8 @@ main(){
   remove_docker
   printf '\nRemove Weavescope'
   remove_weavescope
+  printf '\nRemove AWX directory'
+  remove_awx
   printf '\n-----\n'
 }
 
@@ -50,6 +52,10 @@ remove_docker(){
 
 remove_weavescope(){
   rm -f /usr/local/bin/scope &> /dev/null
+}
+
+remove_awx(){
+  rm -Rf /opt/awx
 }
 main
 
