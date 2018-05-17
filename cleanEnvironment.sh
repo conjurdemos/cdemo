@@ -42,6 +42,7 @@ remove_volume(){
 remove_docker(){
   pip uninstall docker -y &> /dev/null
   pip uninstall docker-py -y &> /dev/null
+  pip uninstall docker-pycreds -y &> /dev/null
   pip uninstall pip -y &> /dev/null
   yum remove docker -y &> /dev/null
 } 
