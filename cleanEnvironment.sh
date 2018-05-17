@@ -37,6 +37,7 @@ remove_network(){
 
 remove_volume(){
   docker volume rm conjur_cert &> /dev/null
+  docker volume rm jenkins_api &> /dev/null
 }
 
 remove_docker(){

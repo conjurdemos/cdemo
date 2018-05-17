@@ -136,8 +136,9 @@
     - name: Start Jenkins  
       docker_container:
         name: jenkins
-        image: captainfluffytoes/demo_conjur_docker_jenkins
+        image: jenkins/jenkins
         state: started
+        user: root
         env:
           JAVA_OPTS: "-Djenkins.install.runSetupWizard=false"
         published_ports: 
@@ -156,7 +157,18 @@
       shell: |
         docker exec jenkins sh -c 'xargs /usr/local/bin/install-plugins.sh < /scripts/plugins.txt' || true
         docker container restart jenkins
-        
+
+    - name: install conjur summon into jenkins
+      shell: |
+        docker exec jenkins bash -c "apt-get install sudo jq -y"
+        docker exec jenkins bash -c "curl -sSL https://raw.githubusercontent.com/cyberark/summon/master/install.sh | bash"
+        docker exec jenkins bash -c "curl -sSL https://raw.githubusercontent.com/cyberark/summon-conjur/master/install.sh | bash"
+
+    - name: install docker into jenkins
+      shell: |
+        docker exec jenkins bash -c "curl -fsSL get.docker.com -o get-docker.sh && sh get-docker.sh"
+        docker exec jenkins bash -c "usermod -aG docker jenkins"
+
     - name: start gitlab
       docker_container:
         name: gitlab
