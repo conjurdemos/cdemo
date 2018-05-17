@@ -70,8 +70,11 @@
         
     - name: create conjur docker volume
       docker_volume:
-        name: conjur_cert
+        name: "{{ item }}"
         state: present
+      with_items:
+       - conjur_cert
+       - jenkins_api
     
     - name: Load Conjur tar
       docker_image:
@@ -104,7 +107,8 @@
         image: cyberark/conjur-cli:5-6.1.0
         state: started
         volumes:
-         - "./policy:/policy"
+         - "../policy:/policy"
+         - "jenkins_api:/jenkins_api"
         restart_policy: always
         networks:
          - name: conjur
@@ -127,6 +131,10 @@
         docker exec conjur-cli conjur variable values add shared_secret_auth/systemb_root_sshkey $(openssl rand -hex 12)
         docker exec conjur-cli conjur variable values add shared_secret_auth/aws_access_key $(openssl rand -hex 12)
         docker exec conjur-cli conjur variable values add shared_secret_auth/aws_secret_key $(openssl rand -hex 12)
+   
+    - name: creating jenkins identity
+      shell: |
+        
       
     - name: Start Jenkins  
       docker_container:
@@ -141,8 +149,9 @@
          - name: conjur
         volumes:
          - "/var/run/docker.sock:/var/run/docker.sock"
-         - "./scripts:/scripts"
-         - "./jenkins_identity:/jenkins_identity"    
+         - "../scripts:/scripts"
+         - "../jenkins_identity:/jenkins_identity"    
+         - "jenkins_api:/jenkins_api"
         restart_policy: always
         recreate: yes
         
