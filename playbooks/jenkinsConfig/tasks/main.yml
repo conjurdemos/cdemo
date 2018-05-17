@@ -1,0 +1,7 @@
+---
+# tasks file for jenkinsConfig
+- name: Configure pipline job 1
+  uri:
+    url: http://localhost:8080
+    method: POST
+    

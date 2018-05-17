@@ -48,6 +48,7 @@
       pip:
         name: "{{ item }}"
         state: latest
+        extra_args: --ignore-installed
       with_items:
        - docker
 
