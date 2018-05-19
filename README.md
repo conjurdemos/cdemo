@@ -20,11 +20,11 @@ The demo uses the lastest version of Conjur v5
 ## How to use
 
 1. Clone the repo.
-2. Obtain the latest Conjur tar file and place it within the cDemo directory.
+2. Obtain the latest Conjur tar file and place it within the cDemo directory named 'conjur.tar'.
 3. Run 1startUp.sh.
 4. Change directory to ansibleConjurDemo.
 5. Edit inventory.yml to include any machines to be stood up as demo machines.
-6. Run ansible-playbook -i inventory.yml conjurDemo.yml
+6. Run ansible-playbook -i inventory.yml site.yml
 
 ## Requirements
 
@@ -48,7 +48,7 @@ The tools installed have a web interfaces that is made accessible to the host ma
 
 ## Pipeline jobs in Jenkins
 
-Jenkins is configured to skip the start up wizard. There is a shared volume between the conjur-cli container and the jenkins container that contains a hostfactory token that does not exire for 9999 days. 
+Jenkins is configured to skip the start up wizard. There is a shared volume between the conjur-cli container and the jenkins container that contains a hostfactory token that does not expire for 9999 days. 
 
 Jobs:
 1. Install Identity into Jenkins environment using hostfactory token

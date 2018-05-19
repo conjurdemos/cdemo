@@ -81,6 +81,7 @@
         name: conjur-appliance
         load_path: ../conjur.tar
         state: present
+        timeout: 120
     
     - name: Start conjur container
       docker_container:
