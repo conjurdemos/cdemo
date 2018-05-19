@@ -26,6 +26,10 @@ The demo uses the lastest version of Conjur v5
 5. Edit inventory.yml to include any machines to be stood up as demo machines.
 6. Run ansible-playbook -i inventory.yml site.yml
 
+## Conjur CLI information
+
+The cli has been configured to work with the Conjur container.  It has the scripts folder mapped to /scripts.
+
 ## Requirements
 
 1. Centos 7 OS

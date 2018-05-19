@@ -42,6 +42,7 @@
     volumes:
      - "../policy:/policy"
      - "jenkins_api:/jenkins_api"
+     - "../scripts:/scripts"
     restart_policy: always
     networks:
      - name: conjur
