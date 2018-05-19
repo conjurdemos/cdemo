@@ -3,7 +3,8 @@
   roles:
     - machinePrep
     - dockerConfig
+    - weavescopeConfig
+    - conjurConfig
     - jenkinsConfig
     - gitlabConfig
-    - jenkinsJobs
-    - gitlabJobs
+    - awxConfig

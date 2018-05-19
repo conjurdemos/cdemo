@@ -1,2 +1,2 @@
 ---
-- include: conjurDemo.yml
+- import_playbook: conjurDemo.yml

@@ -1,2 +1,17 @@
 ---
-# tasks file for gitlabConfig
+- name: start gitlab
+  docker_container:
+    name: gitlab
+    image: gitlab/gitlab-ce:latest
+    state: started
+    restart_policy: always
+    recreate: yes
+    hostname: gitlab
+    networks:
+     - name: conjur
+    published_ports:
+     - "7070:80"
+    volumes:
+     - "/srv/gitlab/config:/etc/gitlab"
+     - "/srv/gitlab/logs:/var/log/gitlab"
+     - "/srv/gitlab/data:/var/opt/gitlab"

@@ -1,2 +1,37 @@
 ---
-# tasks file for dockerConfig
+- name: installDockerRepo
+  shell: |
+    yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+- name: installDocker
+  yum:
+    name: docker-ce
+    update_cache: yes
+    state: present
+
+- name: handleDockerService
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: installPythonDocker
+  pip:
+    name: "{{ item }}"
+    state: latest
+    extra_args: --ignore-installed
+  with_items:
+   - docker
+
+- name: create conjur docker network
+  docker_network:
+    name: conjur
+    state: present
+
+- name: create conjur docker volume
+  docker_volume:
+    name: "{{ item }}"
+    state: present
+  with_items:
+   - conjur_cert
+   - jenkins_api

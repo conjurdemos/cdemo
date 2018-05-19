@@ -23,5 +23,5 @@
 
 - name: instalPip
   easy_install:
-        name: pip
-        state: latest
+    name: pip
+    state: latest

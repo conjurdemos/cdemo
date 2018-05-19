@@ -1,0 +1,11 @@
+---
+- name: download weavescope
+  get_url:
+        url: https://git.io/scope
+        dest: /usr/local/bin/scope
+        mode: 0755
+
+- name: launch weavescope
+  shell: |
+        /usr/local/bin/scope launch
+  ignore_errors: yes

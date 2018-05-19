@@ -1,0 +1,16 @@
+---
+- name: download awx
+  git:
+    dest: /opt/awx
+    clone: yes
+    repo: https://github.com/ansible/awx.git
+
+- name: start up awx
+  shell: ansible-playbook -i inventory install.yml
+  args:
+    chdir: /opt/awx/installer
+
+- name: connect instances to docker network
+  shell: |
+    docker network connect conjur awx_web
+    docker network connect conjur awx_task

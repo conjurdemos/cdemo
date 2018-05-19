@@ -1,7 +1,39 @@
 ---
-# tasks file for jenkinsConfig
-- name: Configure pipline job 1
-  uri:
-    url: http://localhost:8080
-    method: POST
-    
+- name: Start Jenkins
+  docker_container:
+    name: jenkins
+    image: jenkins/jenkins
+    state: started
+    user: root
+    env:
+     JAVA_OPTS: "-Djenkins.install.runSetupWizard=false"
+    published_ports:
+     - "8080:8080"
+    networks:
+     - name: conjur
+    volumes:
+     - "/var/run/docker.sock:/var/run/docker.sock"
+     - "../scripts:/scripts"
+     - "jenkins_api:/jenkins_api"
+    restart_policy: always
+    recreate: yes
+
+- name: install jenkins plugins
+  shell: |
+    docker exec jenkins sh -c 'xargs /usr/local/bin/install-plugins.sh < /scripts/plugins.txt' || true
+    docker container restart jenkins
+
+- name: install conjur summon into jenkins
+  shell: |
+    docker exec jenkins bash -c "apt-get install sudo jq -y"
+    docker exec jenkins bash -c "curl -sSL https://raw.githubusercontent.com/cyberark/summon/master/install.sh | bash"
+    docker exec jenkins bash -c "curl -sSL https://raw.githubusercontent.com/cyberark/summon-conjur/master/install.sh | bash"
+
+- name: install docker into jenkins
+  shell: |
+    docker exec jenkins bash -c "curl -fsSL get.docker.com -o get-docker.sh && sh get-docker.sh"
+    docker exec jenkins bash -c "usermod -aG docker jenkins"
+
+- name: generate hostfactory for jenkins
+  shell: |
+    docker exec conjur-cli bash -c "conjur hostfactory tokens create --duration-days=9999 jenkins > /jenkins_api/hostfactory"
