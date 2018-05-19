@@ -12,11 +12,11 @@ main(){
   remove_network
   printf '\nRemoving any conjur volume on the system.'
   remove_volume
-  printf '\nRemove pip and docker'
+  printf '\nRemoving pip and docker'
   remove_docker
-  printf '\nRemove Weavescope'
+  printf '\nRemoving Weavescope'
   remove_weavescope
-  printf '\nRemove AWX directory'
+  printf '\nRemoving AWX directory'
   remove_awx
   printf '\n-----\n'
 }
@@ -40,6 +40,7 @@ remove_network(){
 remove_volume(){
   docker volume rm conjur_cert &> /dev/null
   docker volume rm jenkins_api &> /dev/null
+  docker volume prune -f &> /dev/null
 }
 
 remove_docker(){

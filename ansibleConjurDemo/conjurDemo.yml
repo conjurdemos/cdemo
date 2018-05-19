@@ -1,0 +1,9 @@
+---
+- hosts: demoMachines
+  roles:
+    - machinePrep
+    - dockerConfig
+    - jenkinsConfig
+    - gitlabConfig
+    - jenkinsJobs
+    - gitlabJobs
