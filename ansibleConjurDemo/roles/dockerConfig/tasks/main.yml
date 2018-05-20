@@ -1,7 +1,9 @@
 ---
-- name: installDockerRepo
-  shell: |
-    yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+- name: add docker repository
+  get_url:
+    url: https://download.docker.com/linux/centos/docker-ce.repo
+    dest: /etc/yum.repos.d/docker-ce.repo
+  become: true
 
 - name: installDocker
   yum:

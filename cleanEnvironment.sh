@@ -18,6 +18,8 @@ main(){
   remove_weavescope
   printf '\nRemoving AWX directory'
   remove_awx
+  printf '\nRemoving GitLab data directory'
+  remove_gitlab
   printf '\n-----\n'
 }
 
@@ -49,6 +51,8 @@ remove_docker(){
   pip uninstall docker-pycreds -y &> /dev/null
   pip uninstall pip -y &> /dev/null
   yum remove docker -y &> /dev/null
+  yum remove docker-ce -y &> /dev/null
+  rm -f /etc/yum.repos.d/docker-ce.repo &> /dev/null
 } 
 
 remove_weavescope(){
@@ -56,7 +60,11 @@ remove_weavescope(){
 }
 
 remove_awx(){
-  rm -Rf /opt/awx
+  rm -Rf /opt/awx &> /dev/null
+}
+
+remove_gitlab(){
+  rm -Rf /srv &> /dev/null
 }
 main
 

@@ -14,7 +14,9 @@
     volumes:
      - "/var/run/docker.sock:/var/run/docker.sock"
      - "../scripts:/scripts"
-     - "jenkins_api:/jenkins_api"
+     - "conjur_cert:/conjur_cert"
+     - "hostfactoryTokens:/hostfactoryTokens"
+     - "identity:/identity"
     restart_policy: always
     recreate: yes
 
@@ -36,4 +38,8 @@
 
 - name: generate hostfactory for jenkins
   shell: |
-    docker exec conjur-cli bash -c "conjur hostfactory tokens create --duration-days=9999 jenkins > /jenkins_api/hostfactory"
+    docker exec conjur-cli bash -c "conjur hostfactory tokens create --duration-days=9999 jenkins > /hostfactoryTokens/jenkins_hostfactory"
+
+- name: retrieve identity for jenkins
+  shell: |
+    docker exec conjur-cli bash -c "bash /scripts/apiInteraction/IdentityREST.sh"

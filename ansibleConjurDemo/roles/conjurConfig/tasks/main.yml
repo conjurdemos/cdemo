@@ -17,7 +17,8 @@
     state: present
   with_items:
    - conjur_cert
-   - jenkins_api        
+   - hostfactoryTokens
+   - identity
 
 - name: Start conjur container
   docker_container:
@@ -41,8 +42,10 @@
     state: started
     volumes:
      - "../policy:/policy"
-     - "jenkins_api:/jenkins_api"
      - "../scripts:/scripts"
+     - "hostfactoryTokens:/hostfactoryTokens"
+     - "conjur_cert:/conjur_cert"
+     - "identity:/identity"
     restart_policy: always
     networks:
      - name: conjur

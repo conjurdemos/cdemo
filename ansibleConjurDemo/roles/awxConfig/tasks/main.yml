@@ -14,3 +14,4 @@
   shell: |
     docker network connect conjur awx_web
     docker network connect conjur awx_task
+  ignore_errors: yes
