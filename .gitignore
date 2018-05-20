@@ -4,3 +4,4 @@
 *.netrc
 *.pem
 conjur.tar
+*.swp
