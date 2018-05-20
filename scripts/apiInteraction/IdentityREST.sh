@@ -4,12 +4,11 @@ main(){
   printf '\n-----'
   printf '\nObtaining identity using hostfactory token.\n'
   hostfactory
-  exit 0
 }
 
 hostfactory(){
-  local hftoken="jenkins_hostfactory"
-  local token=$(cat /hostfactoryTokens/$hftoken | jq '.[0] | {token}' | awk '{print $2}' | tr -d '"\n\r')
+  local hftoken="jenkins"
+  local token=$(cat /hostfactoryTokens/"$hftoken"_hostfactory | jq '.[0] | {token}' | awk '{print $2}' | tr -d '"\n\r')
   local id="jenkins-$(openssl rand -hex 2)"
   local newidentity=$(curl -k -X POST -s -H "Authorization: Token token=\"$token\"" --data-urlencode id=jenkins-$(openssl rand -hex 2) https://conjur-master/host_factories/hosts)
 
@@ -20,7 +19,8 @@ hostfactory(){
   printf $id
   printf '\nNew Identity:\n'
   echo $newidentity | jq .
-  echo $newidentity > /identity/$hftoken
+  printf "\nOutputing file to /idenfity/"$hftoken"_identity"
+  echo $newidentity > /identity/"$hftoken"_identity
   printf '\n-----\n'
 }
 
