@@ -43,3 +43,8 @@
 - name: retrieve identity for jenkins
   shell: |
     docker exec conjur-cli bash -c "bash /scripts/apiInteraction/IdentityREST.sh"
+
+- name: Install docker-compose on jenkins
+  shell: |
+    docker exec jenkins bash -c "curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose"
+    docker exec jenkins bash -c "chmod +x /usr/local/bin/docker-compose"
