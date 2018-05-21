@@ -17,7 +17,7 @@ hftoken(){
   printf "\nThis is the auth token:\n"
   local auth_token=$(echo -n $auth | base64 | tr -d '\r\n') 
   echo $auth_token
-  local hostfactory=$(curl -k -s -X POST --data-urlencode "host_factory=$account:host_factory:$hf" --data-urlencode "expiration=2065-08-04T22:27:20+00:00" -H "Authorization: Token token=\"$auth_token\"" https://conjur-master/host_factory_tokens)
+  local hostfactory=$(curl -k -s -X POST --data-urlencode "host_factory=$account:host_factory:$hf" --data-urlencode "expiration=2065-08-04T22:27:20+00:00" -H "Authorization: Token token=\"$auth_token\"" https://conjur-master/api/host_factory_tokens)
   printf "\nThis is the hostfactory token:\n"
   echo $hostfactory | jq .
   printf "\nSaving HF token for use in file /hostfactoryTokens/"$hf"_hostfactory"
