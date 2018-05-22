@@ -10,7 +10,8 @@ main(){
 }
 
 hostfactory(){
-  local hftoken="jenkins"
+  printf "\nPlease select hostfactory to use to generate identity:\n"
+  local hftoken=$(menu)
   local id="jenkins-$(openssl rand -hex 2)"
   local token=$(cat /hostfactoryTokens/"$hftoken"_hostfactory | jq '.[0] | {token}' | awk '{print $2}' | tr -d '"\n\r')
   local newidentity=$(curl -k -X POST -s -H "Authorization: Token token=\"$token\"" --data-urlencode id=$id https://conjur-master/host_factories/hosts)

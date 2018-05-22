@@ -10,7 +10,8 @@ main(){
 }
 
 secret_pull(){
-  local identity=jenkins
+  printf "\nPlease select which identity file to use for password retrieval: \n"
+  local identity=$(menu)
   printf "\nUsing identity stored in file /identity/"$identity"_identity"
   local conjurCert="/root/conjur-cyberark.pem"
   local api=$(cat /identity/"$identity"_identity | jq -r '.api_key')

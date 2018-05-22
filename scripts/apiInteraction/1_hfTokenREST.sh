@@ -14,7 +14,9 @@ hftoken(){
   local account=$(cat ~/.conjurrc | grep account | awk '{print $2}')
   local conjurCert="/root/conjur-cyberark.pem"
   local login=$(cat ~/.netrc | grep login | awk '{print $2}')
-  local hf=jenkins
+  printf "\nSelect hostfactory to create.\n"
+  local hf=$(menu)	
+  printf "Generating hostfactory for $hf\n"
   printf "This is the API key = $api"
   local auth=$(curl -s --cacert $conjurCert -H "Content-Type: text/plain" -X POST -d "$api" https://conjur-master/authn/$account/$login/authenticate)
   local auth_token=$(echo -n $auth | base64 | tr -d '\r\n')
