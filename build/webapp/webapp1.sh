@@ -15,6 +15,11 @@ declare INPUT_FILE=/data/foo
 # for logfile to see whats going on
 touch $LOGFILE
 
+write_log_msg() {
+	printf "$1\n"
+	echo "$(date) [$(hostname)] $1" >> $LOGFILE # Left for weave scope demos
+}
+
 OLD_APP_API_KEY=""
 while : ; do
 
@@ -24,12 +29,11 @@ while : ; do
 	if [[ "$APP_API_KEY" != "$OLD_APP_API_KEY" ]]; then
 	   break
 	else
-	   echo "Waiting for new API key." >> $LOGFILE
+	   write_log_msg "Waiting for new API key."
 	   sleep $SLEEP_TIME
 	fi
     done
-    echo "New API key is:" $APP_API_KEY >> $LOGFILE
-
+    write_log_msg "New API key is: $APP_API_KEY"
     while : ; do
 	# Login container w/ its API key, authenticate and get API key for session
 	cont_login=host%2F$APP_HOSTNAME
@@ -40,7 +44,7 @@ while : ; do
 	CONT_SESSION_TOKEN=$(echo -n $response| base64 | tr -d '\r\n')
 
 	if [[ "$CONT_SESSION_TOKEN" == "" ]]; then
-	    echo "API key is invalid..." >> $LOGFILE
+	    write_log_msg "API key is invalid..."
 	    OLD_APP_API_KEY=$APP_API_KEY
 	    break
 	fi
@@ -52,7 +56,7 @@ while : ; do
          -H "Authorization: Token token=\"$CONT_SESSION_TOKEN\"" \
          $ENDPOINT/variables/{$VAR_ID}/value)
 
-  	echo $(date) "The DB Password is: " $DB_PASSWORD >> $LOGFILE
+  	write_log_msg "The DB Password is: $DB_PASSWORD"
 	sleep $SLEEP_TIME 
     done
 done
