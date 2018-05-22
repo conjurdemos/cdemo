@@ -36,14 +36,6 @@
     docker exec jenkins bash -c "curl -fsSL get.docker.com -o get-docker.sh && sh get-docker.sh"
     docker exec jenkins bash -c "usermod -aG docker jenkins"
 
-- name: generate hostfactory for jenkins
-  shell: |
-    docker exec conjur-cli bash -c "conjur hostfactory tokens create --duration-days=9999 jenkins > /hostfactoryTokens/jenkins_hostfactory"
-
-- name: retrieve identity for jenkins
-  shell: |
-    docker exec conjur-cli bash -c "bash /scripts/apiInteraction/IdentityREST.sh"
-
 - name: Install docker-compose on jenkins
   shell: |
     docker exec jenkins bash -c "curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose"

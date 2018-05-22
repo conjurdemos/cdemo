@@ -62,3 +62,40 @@
     - execute
     - update
   resource: *variables
+
+- !user bob
+
+- !user dylan
+
+- !user chris
+
+- !user andy
+
+- !group devops
+
+- !group admins
+
+- !grant
+  role: !group devops
+  members:
+   - !user bob
+   - !user dylan
+
+- !grant
+  role: !group admins
+  members:
+   - !user chris
+   - !user andy
+
+- !permit
+  role: !group devops
+  privileges:
+   - read
+   - execute
+
+- !permit
+  role: !group admins
+  privileges:
+   - read
+   - execute
+   - update
