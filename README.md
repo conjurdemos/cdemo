@@ -69,17 +69,17 @@ The tools installed have a web interfaces that is made accessible to the host ma
     3.  Quincy's demo
         * https://github.com/quincycheng/cicd
 * Refactor playbooks
-    * Create Defaults
-    * Create variables
-    * Changes roles to account for:
-        1. YUM distros
-        2. Debian distros
-        3. macOS distros
+    1. Create Defaults
+    2. Create variables
+    3. Changes roles to account for:
+        * YUM distros
+        * Debian distros
+        * macOS distros
 * Create global menu that will step through set up
 * Create checks in apiInteraction scripts
-    * Identity script should check for existence of hostfactory token file first. If unavailable then it runs the hostfactory creation script
-    * Pull password script checksf or identity file first. If unavailable then it runs the identity script first.
-    * Move functions from each api script into the utils.sh and reduce what each script is doing. 
+    1. Identity script should check for existence of hostfactory token file first. If unavailable then it runs the hostfactory creation script
+    2. Pull password script checksf or identity file first. If unavailable then it runs the identity script first.
+    3. Move functions from each api script into the utils.sh and reduce what each script is doing. 
 * Replace AWX with Ansible Tower
 * Add summon to the set up installation script on the host machine.
-    * Generate an identity for the machine
+    1. Generate an identity for the machine
