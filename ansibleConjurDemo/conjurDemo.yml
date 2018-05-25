@@ -1,12 +1,6 @@
 ---
 - hosts: demoMachines
   roles:
-    - { role: machinePrepYUM, 
-      when: ansible_os_family == "RedHat" }
-    - { role: machinePrepAPT,
-      when: ansible_os_family == "Debian"}
-    - { role: machinePrepMacOS,
-      when: ansible_os_family == "Darwin"}
     - dockerConfig
     - weavescopeConfig
     - conjurConfig
