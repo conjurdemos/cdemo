@@ -50,10 +50,36 @@ The tools installed have a web interfaces that is made accessible to the host ma
 | Conjur     	| 443  	|
 | Weavescope 	| 4040 	|
 
-## Pipeline jobs in Jenkins
+## Default Credentials
+* Jenkins - No credentials needed right now
+* Conjur - U: admin P: Cyberark1
+* AWX - U: admin P: password
 
-Jenkins is configured to skip the start up wizard. There is a shared volume between the conjur-cli container and the jenkins container that contains a hostfactory token that does not expire for 9999 days. 
+#### Things to do!
 
-Jobs:
-1. Install Identity into Jenkins environment using hostfactory token
-2. Use summon to pull back a secret
+* Refactor jenkinsConfig role to assign an identity through environment variables when container is started.
+* Create Jenkins Jobs
+    1. Scalability Demo
+        * Build docker container that writes secret to log file. Stores in local docker registry
+        * Stands up x number of tomcat host containers
+        * stands up x number of webapp host containers
+        * shared volume between all like containers
+    2. Spring integration.
+        * Add in https://github.com/conjurinc/summon-spring-demo
+    3.  Quincy's demo
+        * https://github.com/quincycheng/cicd
+    4. Refactor playbooks
+        * Create Defaults
+        * Create variables
+        * Changes roles to account for:
+            1. YUM distros
+            2. Debian distros
+            3. macOS distros
+    5. Create global menu that will step through set up
+    6. Create checks in apiInteraction scripts
+        * Identity script should check for existence of hostfactory token file first. If unavailable then it runs the hostfactory creation script
+        * Pull password script checksf or identity file first. If unavailable then it runs the identity script first.
+        * Move functions from each api script into the utils.sh and reduce what each script is doing. 
+    7. Replace AWX with Ansible Tower
+    8. Add summon to the set up installation script on the host machine.
+        * Generate an identity for the machine
