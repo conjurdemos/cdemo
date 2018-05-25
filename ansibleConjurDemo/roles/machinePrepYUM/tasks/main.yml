@@ -1,0 +1,27 @@
+---
+- name: removeDocker
+  yum:
+    name: "{{ item }}"
+    state: absent
+  with_items:
+    - docker
+    - docker.io
+    - docker-common
+
+- name: installDependencies
+  yum:
+    name: "{{ item }}"
+    update_cache: yes
+    state: latest
+  with_items:
+    - curl
+    - yum-utils
+    - device-mapper-persistent-data
+    - lvm2
+    - git
+    - make
+
+- name: instalPip
+  easy_install:
+    name: pip
+    state: latest
