@@ -5,3 +5,4 @@
 *.pem
 conjur.tar
 *.swp
+*.DS_Store
