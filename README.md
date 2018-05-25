@@ -68,18 +68,18 @@ The tools installed have a web interfaces that is made accessible to the host ma
         * Add in https://github.com/conjurinc/summon-spring-demo
     3.  Quincy's demo
         * https://github.com/quincycheng/cicd
-    4. Refactor playbooks
-        * Create Defaults
-        * Create variables
-        * Changes roles to account for:
-            1. YUM distros
-            2. Debian distros
-            3. macOS distros
-    5. Create global menu that will step through set up
-    6. Create checks in apiInteraction scripts
-        * Identity script should check for existence of hostfactory token file first. If unavailable then it runs the hostfactory creation script
-        * Pull password script checksf or identity file first. If unavailable then it runs the identity script first.
-        * Move functions from each api script into the utils.sh and reduce what each script is doing. 
-    7. Replace AWX with Ansible Tower
-    8. Add summon to the set up installation script on the host machine.
-        * Generate an identity for the machine
+4. Refactor playbooks
+    * Create Defaults
+    * Create variables
+    * Changes roles to account for:
+        1. YUM distros
+        2. Debian distros
+        3. macOS distros
+5. Create global menu that will step through set up
+6. Create checks in apiInteraction scripts
+    * Identity script should check for existence of hostfactory token file first. If unavailable then it runs the hostfactory creation script
+    * Pull password script checksf or identity file first. If unavailable then it runs the identity script first.
+    * Move functions from each api script into the utils.sh and reduce what each script is doing. 
+7. Replace AWX with Ansible Tower
+8. Add summon to the set up installation script on the host machine.
+    * Generate an identity for the machine
