@@ -1,11 +1,15 @@
 ---
-- name: download weavescope
-  get_url:
-        url: https://git.io/scope
-        dest: /usr/local/bin/scope
-        mode: 0755
-
-- name: launch weavescope
-  shell: |
-        /usr/local/bin/scope launch
-  ignore_errors: yes
+- name: Start Weavescope container
+  docker_container:
+    name: weavescope
+    image: weaveworks/scope:1.9.0
+    network_mode: host
+    pid_mode: host
+    privileged: yes
+    published_ports:
+     - "4040:4040"
+    labels:
+       "works.weaves.role=system"
+    volumes:
+     - "/var/run/docker.sock:/var/run/docker.sock:rw"
+    command: ["--probe.docker=true"]
