@@ -1,42 +1,26 @@
 ---
+- name: Build jenkins image
+  docker_image:
+    name: conjur_jenkins
+    path: "{{ role_path }}/files/"
+    state: present
+    force: yes
+
 - name: Start Jenkins
   docker_container:
     name: jenkins
-    image: jenkins/jenkins
+    image: conjur_jenkins:latest
     state: started
     user: root
-    env:
-     JAVA_OPTS: "-Djenkins.install.runSetupWizard=false"
     published_ports:
      - "8080:8080"
+     - "50000:50000"
     networks:
      - name: conjur
     volumes:
      - "/var/run/docker.sock:/var/run/docker.sock"
-     - "../scripts:/scripts"
      - "conjur_cert:/conjur_cert"
      - "hostfactoryTokens:/hostfactoryTokens"
      - "identity:/identity"
     restart_policy: always
     recreate: yes
-
-- name: install jenkins plugins
-  shell: |
-    docker exec jenkins sh -c 'xargs /usr/local/bin/install-plugins.sh < /scripts/plugins.txt' || true
-    docker container restart jenkins
-
-- name: install conjur summon into jenkins
-  shell: |
-    docker exec jenkins bash -c "apt-get install sudo jq -y"
-    docker exec jenkins bash -c "curl -sSL https://raw.githubusercontent.com/cyberark/summon/master/install.sh | bash"
-    docker exec jenkins bash -c "curl -sSL https://raw.githubusercontent.com/cyberark/summon-conjur/master/install.sh | bash"
-
-- name: install docker into jenkins
-  shell: |
-    docker exec jenkins bash -c "curl -fsSL get.docker.com -o get-docker.sh && sh get-docker.sh"
-    docker exec jenkins bash -c "usermod -aG docker jenkins"
-
-- name: Install docker-compose on jenkins
-  shell: |
-    docker exec jenkins bash -c "curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose"
-    docker exec jenkins bash -c "chmod +x /usr/local/bin/docker-compose"
