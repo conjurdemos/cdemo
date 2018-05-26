@@ -24,3 +24,7 @@
      - "identity:/identity"
     restart_policy: always
     recreate: yes
+
+- name: create identity file for jenkins
+  shell: |
+    docker exec conjur-cli bash -c "cd /scripts/apiInteraction && bash 1_hfTokenREST.sh automate && bash 2_obtainIdentityREST.sh automate"

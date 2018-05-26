@@ -1,29 +1,17 @@
 #!/bin/bash
 
-source utils.sh
-
+source ./utils.sh
+VAR1=$1
 main(){
-  printf '\n-----'
-  printf '\nObtaining identity using hostfactory token.'
-  hostfactory
-  printf '\n-----\n'
-}
-
-hostfactory(){
-  printf "\nPlease select hostfactory to use to generate identity:\n"
-  local hftoken=$(menu)
-  local id="jenkins-$(openssl rand -hex 2)"
-  local token=$(cat /hostfactoryTokens/"$hftoken"_hostfactory | jq '.[0] | {token}' | awk '{print $2}' | tr -d '"\n\r')
-  local newidentity=$(curl -k -X POST -s -H "Authorization: Token token=\"$token\"" --data-urlencode id=$id https://conjur-master/host_factories/hosts)
-
-  printf "\nHostfactory token: $token"
-  printf "\nNew host name in Conjur: $id"
-  printf "\n"
-  pause 'Press [ENTER] key to continue...'
-  printf '\nNew Identity:\n'
-  echo $newidentity | jq .
-  printf "\nOutputing file to /identity/"$hftoken"_identity"
-  echo $newidentity > /identity/"$hftoken"_identity
+  if [ "$VAR1" == "automate" ];
+    then
+      identity_jenkins
+  else
+    printf '\n-----'
+    printf '\nObtaining identity using hostfactory token.'
+    identity_interactive
+    printf '\n-----\n'
+  fi
 }
 
 main
