@@ -22,9 +22,10 @@ The demo uses the lastest version of Conjur v5
 1. Clone the repo.
 2. Obtain the latest Conjur tar file and place it within the cDemo directory named 'conjur.tar'.
 3. Run 1startUp.sh.
-4. Change directory to ansibleConjurDemo.
+4. Change directory to ConjurDemo.
 5. Edit inventory.yml to include any machines to be stood up as demo machines.
-6. Run ansible-playbook -i inventory.yml site.yml
+6. Run ansible-playbook -i inventory.yml site.yml to install conjur and it's tools.
+    * Conjur alone can be configured by running ansible-playbook -i inventory.yml conjurSetup.yml
 
 ## Conjur CLI information
 
@@ -81,5 +82,3 @@ The tools installed have a web interfaces that is made accessible to the host ma
     2. Pull password script checksf or identity file first. If unavailable then it runs the identity script first.
     3. Move functions from each api script into the utils.sh and reduce what each script is doing. 
 * Replace AWX with Ansible Tower
-* Add summon to the set up installation script on the host machine.
-    1. Generate an identity for the machine

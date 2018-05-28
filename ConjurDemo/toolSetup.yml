@@ -1,0 +1,7 @@
+---
+- hosts: demoMachines
+  roles:
+    - weavescopeConfig
+    - jenkinsConfig
+    - gitlabConfig
+    - awxConfig

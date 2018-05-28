@@ -1,0 +1,4 @@
+---
+- import_playbook: machineSetup.yml
+- import_playbook: conjurSetup.yml
+- import_playbook: toolSetup.yml
