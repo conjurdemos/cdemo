@@ -1,8 +1,15 @@
 ---
+- name: Build curl image
+  docker_image:
+    name: curl_image
+    path: "{{ role_path }}/files/curlContainer/"
+    state: present
+    force: yes
+
 - name: Build jenkins image
   docker_image:
     name: conjur_jenkins
-    path: "{{ role_path }}/files/"
+    path: "{{ role_path }}/files/jenkins/"
     state: present
     force: yes
 
@@ -19,6 +26,7 @@
      - name: conjur
     volumes:
      - "/var/run/docker.sock:/var/run/docker.sock"
+     - "../scripts:/scripts"
      - "conjur_cert:/conjur_cert"
      - "hostfactoryTokens:/hostfactoryTokens"
      - "identity:/identity"
@@ -28,3 +36,6 @@
 - name: create identity file for jenkins
   shell: |
     docker exec conjur-cli bash -c "cd /scripts/apiInteraction && bash 1_hfTokenREST.sh automate && bash 2_obtainIdentityREST.sh automate"
+    docker exec jenkins cp /identity/.netrc /root/.netrc
+    docker exec jenkins cp /identity/.conjurrc /root/.conjurrc
+    docker exec jenkins cp /identity/conjur-cyberark.pem /root/conjur-cyberark.pem

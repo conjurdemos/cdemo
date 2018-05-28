@@ -2,11 +2,11 @@ FROM jenkins/jenkins:lts
 
 USER root
 
-VOLUME [ "/scripts"]
+VOLUME [ "/plugins"]
 
 ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false
 
-COPY plugins.txt /scripts/
+COPY plugins.txt /plugins/
 
 RUN apt-get update &&\
     apt-get install -qy git apt-utils curl dpkg jq libexpat1-dev libpython2.7-dev python2.7-dev vim sudo &&\
@@ -20,7 +20,7 @@ RUN apt-get update &&\
 	usermod -aG docker jenkins &&\
     curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose &&\
     chmod +x /usr/local/bin/docker-compose &&\
-    xargs /usr/local/bin/install-plugins.sh < /scripts/plugins.txt || true &&\
+    xargs /usr/local/bin/install-plugins.sh < /plugins/plugins.txt || true &&\
 	apt-get clean &&\
 	rm -rf \
 	/tmp/* \

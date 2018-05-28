@@ -56,7 +56,13 @@ identity_jenkins(){
   local id="$hftoken-$(openssl rand -hex 2)"
   local token=$(cat /hostfactoryTokens/"$hftoken"_hostfactory | jq '.[0] | {token}' | awk '{print $2}' | tr -d '"\n\r')
   local newidentity=$(curl -k -X POST -s -H "Authorization: Token token=\"$token\"" --data-urlencode id=$id https://conjur-master/host_factories/hosts)
-  echo $newidentity > /identity/"$hftoken"_identity
+  local hostname=$(echo $newidentity | jq -r '.id' | awk -F: '{print $NF}')
+  local api=$(echo $newidentity | jq -r '.api_key')
+  cp /root/conjur-cyberark.pem /identity/conjur-cyberark.pem
+  cp /root/.conjurrc /identity/.conjurrc
+  echo "machine https://conjur-master/authn" > /identity/.netrc
+  echo "  login host/$hostname" >> /identity/.netrc
+  echo "  password $api" >> /identity/.netrc
 }
 
 hostfactory_interactive(){
