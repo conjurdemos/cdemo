@@ -44,7 +44,7 @@ while [ 1=1 ]; do
          -H "Authorization: Token token=\"$CONT_SESSION_TOKEN\"" \
          $CONJUR_APPLIANCE_URL/secrets/$CONJUR_ACCOUNT/variable/$secret_name)
 
-  	echo $(date) "The DB Password is: " $secret >> $LOGFILE
+  	echo $(date) "The secret is: " $secret >> $LOGFILE
 	sleep $SLEEP_TIME 
 done
 
