@@ -50,7 +50,7 @@ remove_docker(){
   pip uninstall docker-py -y &> /dev/null
   pip uninstall docker-pycreds -y &> /dev/null
   pip uninstall pip -y &> /dev/null
-  if [[ $(cat /etc/*-release | grep -w ID_LIKE) == 'ID="rhel fedora"' ]]; then
+  if [[ $(cat /etc/*-release | grep -w ID_LIKE) == 'ID_LIKE="rhel fedora"' ]]; then
     yum remove docker -y &> /dev/null
     yum remove docker-ce -y &> /dev/null
     rm -f /etc/yum.repos.d/docker-ce.repo &> /dev/null

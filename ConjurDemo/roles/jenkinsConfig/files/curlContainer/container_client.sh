@@ -12,15 +12,7 @@ printf "\n\n\nExecuting within the container...\n\n"
 # CONJUR_VARIABLE - Variable to pull from conjur
 # SLEEP_TIME - The amount of time between password pulls
 
-function urlify(){
-  local str=$1; shift
-  str=$(echo $str | sed 's= =%20=g')
-  str=$(echo $str | sed 's=/=%2F=g')
-  str=$(echo $str | sed 's=:=%3A=g')
-  URLIFIED=$str
-}
-
-$secret_name=$(urlify $CONJUR_VARIABLE)
+$secret_name=$(echo $CONJUR_VARIABLE)
 declare LOGFILE=cc.log
 
 # for logfile to see whats going on

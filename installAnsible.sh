@@ -3,7 +3,7 @@
 main(){
   printf '\n-----'
   printf '\nInstalling dependencies'
-  if [[ $(cat /etc/*-release | grep -w ID_LIKE) == 'ID="rhel fedora"' ]]; then
+  if [[ $(cat /etc/*-release | grep -w ID_LIKE) == 'ID_LIKE="rhel fedora"' ]]; then
     install_ansible_yum
   elif [[ $(cat /etc/*-release | grep -w ID) == 'ID=debian' ]]; then
     install_ansible_apt
