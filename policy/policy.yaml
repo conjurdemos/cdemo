@@ -21,25 +21,37 @@
       resource: *variables 
 
 - !policy
-  id: tomcat
+  id: jenkins
   body:
     - !layer hosts
     - !host-factory
       layers: [ !layer hosts ]
 
+- !policy
+  id: tomcat
+  body:
+    - !layer hosts
+    - !host-factory
+      layers: [ !layer hosts ]
+    - !permit
+      role: !layer /jenkins/hosts
+      privileges: 
+        - execute
+        - read
+      resource: !host-factory
+      
 - !policy
   id: webapp
   body:
     - !layer hosts
     - !host-factory
       layers: [ !layer hosts ]
-
-- !policy
-  id: jenkins
-  body:
-    - !layer hosts
-    - !host-factory
-      layers: [ !layer hosts ]
+    - !permit
+      role: !layer /jenkins/hosts
+      privileges: 
+        - execute
+        - read
+      resource: !host-factory
 
 - !permit
   role: !layer webapp/hosts
