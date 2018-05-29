@@ -50,9 +50,17 @@ remove_docker(){
   pip uninstall docker-py -y &> /dev/null
   pip uninstall docker-pycreds -y &> /dev/null
   pip uninstall pip -y &> /dev/null
-  yum remove docker -y &> /dev/null
-  yum remove docker-ce -y &> /dev/null
-  rm -f /etc/yum.repos.d/docker-ce.repo &> /dev/null
+  if [[ $(cat /etc/*-release | grep -w ID_LIKE) == 'ID="rhel fedora"' ]]; then
+    yum remove docker -y &> /dev/null
+    yum remove docker-ce -y &> /dev/null
+    rm -f /etc/yum.repos.d/docker-ce.repo &> /dev/null
+  elif [[ $(cat /etc/*-release | grep -w ID) == 'ID=debian' ]]; then
+    apt-get remove docker -y
+    apt-get remove docker-ce -y
+  else
+    printf "\nCouldn't figure out OS"
+    exit
+  fi
 } 
 
 remove_weavescope(){
