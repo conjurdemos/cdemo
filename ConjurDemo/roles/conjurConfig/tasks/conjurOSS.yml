@@ -1,0 +1,56 @@
+---
+- name: createConjurNetwork
+  docker_network:
+    name: conjur
+    state: present
+
+- name: createConjurVolume
+  docker_volume:
+    name: "{{ item }}"
+    state: present
+  with_items:
+   - hostfactoryTokens
+   - identity
+
+- name: Start postgres
+  docker_container:
+    name: database
+    image: postgres:9.3
+    state: started
+    recreate: yes
+    networks:
+     - name: conjur
+    restart_policy: always
+
+- name: Start Conjur
+  docker_container:
+    name: "{{ conjuross_container_name }}"
+    image: cyberark/conjur
+    networks:
+     - name: conjur
+    published_ports:
+     - "{{ conjuross_port }}:80"
+    state: started
+    recreate: yes
+    env:
+       DATABASE_URL: postgres://postgres@database/postgres
+       CONJUR_DATA_KEY: Eb/WhB7csC3v68/h4Ye6l/SpSBM5OwqhEfJm9JFFYP0=
+    restart_policy: always
+    command: server
+
+- name: Start Conjur CLI
+  docker_container:
+    name: conjur-cli
+    image: cyberark/conjur-cli:5-6.1.0
+    state: started
+    volumes:
+     - "../policy:/policy"
+     - "../scripts:/scripts"
+     - "hostfactoryTokens:/hostfactoryTokens"
+     - "identity:/identity"
+    restart_policy: always
+    networks:
+     - name: conjur
+    recreate: yes
+    entrypoint: []
+    command: ["sleep", "infinity"]

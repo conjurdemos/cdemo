@@ -1,2 +1,5 @@
 ---
 # defaults file for conjurConfig
+
+conjuross_container_name: 'conjur-oss'
+conjuross_port: '81'

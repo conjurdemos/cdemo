@@ -1,0 +1,74 @@
+---
+- name: Load Conjur tar
+  docker_image:
+    name: conjur-appliance
+    load_path: ../conjur.tar
+    state: present
+    timeout: 120
+
+- name: createConjurNetwork
+  docker_network:
+    name: conjur
+    state: present
+
+- name: createConjurVolume
+  docker_volume:
+    name: "{{ item }}"
+    state: present
+  with_items:
+   - conjur_cert
+   - hostfactoryTokens
+   - identity
+
+- name: Start conjur container
+  docker_container:
+    name: conjur-master
+    image: registry2.itci.conjur.net/conjur-appliance:5.0-stable
+    state: started
+    privileged: yes
+    recreate: yes
+    networks:
+     - name: conjur
+    published_ports:
+     - "443:443"
+    volumes:
+     - "conjur_cert:/opt/conjur/etc/ssl"
+    restart_policy: always
+
+- name: Start Conjur CLI
+  docker_container:
+    name: conjur-cli
+    image: cyberark/conjur-cli:5-6.1.0
+    state: started
+    volumes:
+     - "../policy:/policy"
+     - "../scripts:/scripts"
+     - "hostfactoryTokens:/hostfactoryTokens"
+     - "conjur_cert:/conjur_cert"
+     - "identity:/identity"
+    restart_policy: always
+    networks:
+     - name: conjur
+    recreate: yes
+    entrypoint: []
+    command: ["sleep", "infinity"]
+
+- name: configure conjur container
+  shell: |
+    docker exec conjur-master evoke configure master -h conjur-master -p Cyberark1 cyberark
+
+- name: configure cli and load policy
+  shell: |
+    docker exec conjur-cli bash -c "conjur init -u https://conjur-master -a cyberark <<< yes"
+    docker exec conjur-cli conjur authn login -u admin -p Cyberark1
+    docker exec conjur-cli bash -c "conjur policy load --replace root /policy/policy.yaml"
+
+- name: randomizing variables
+  shell: |
+    docker exec conjur-cli conjur variable values add shared_secret_auth/helloworld_secret $(openssl rand -hex 12)
+    docker exec conjur-cli conjur variable values add shared_secret_auth/database_password $(openssl rand -hex 12)
+    docker exec conjur-cli conjur variable values add shared_secret_auth/web_config_password $(openssl rand -hex 12)
+    docker exec conjur-cli conjur variable values add shared_secret_auth/systema_root_sshkey $(openssl rand -hex 12)
+    docker exec conjur-cli conjur variable values add shared_secret_auth/systemb_root_sshkey $(openssl rand -hex 12)
+    docker exec conjur-cli conjur variable values add shared_secret_auth/aws_access_key $(openssl rand -hex 12)
+    docker exec conjur-cli conjur variable values add shared_secret_auth/aws_secret_key $(openssl rand -hex 12)
