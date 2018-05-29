@@ -1,2 +1,7 @@
 ---
 # defaults file for dockerConfig
+docker_edition: 'ce'
+docker_package: "docker-{{ docker_edition }}"
+
+#docker redhat/centos repo
+docker_yum_repo_url: https://download.docker.com/linux/{{ (ansible_distribution == "Fedora") | ternary("fedora","centos") }}/docker-{{ docker_edition }}.repo

@@ -1,0 +1,33 @@
+---
+- name: removeDocker
+  yum:
+    name: "{{ item }}"
+    state: absent
+  with_items:
+    - docker
+    - docker.io
+    - docker-common
+    - docker-engine
+
+- name: add docker repository
+  get_url:
+    url: "{{ docker_yum_repo_url }}"
+    dest: /etc/yum.repos.d/docker-{{ docker_edition }}.repo
+    owner: root
+    group: root
+  become: true
+
+- name: installDocker
+  yum:
+    name: "{{ docker_package }}"
+    update_cache: yes
+    state: present
+  notify: "start docker"
+
+- name: installPythonDocker
+  pip:
+    name: "{{ item }}"
+    state: latest
+    extra_args: --ignore-installed
+  with_items:
+   - docker

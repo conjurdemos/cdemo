@@ -1,13 +1,4 @@
 ---
-- name: removeDocker
-  yum:
-    name: "{{ item }}"
-    state: absent
-  with_items:
-    - docker
-    - docker.io
-    - docker-common
-
 - name: installDependencies
   yum:
     name: "{{ item }}"
@@ -20,6 +11,7 @@
     - lvm2
     - git
     - make
+    - jq
 
 - name: instalPip
   easy_install:

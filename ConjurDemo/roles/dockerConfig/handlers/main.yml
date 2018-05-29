@@ -1,2 +1,14 @@
 ---
 # handlers file for dockerConfig
+
+- name: restartDocker
+  service:
+    name: docker
+    state: started
+  listen: "start docker"
+
+- name: enableDocker
+  service:
+    name: docker
+    enabled: yes
+  listen: "start docker"

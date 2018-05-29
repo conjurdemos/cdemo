@@ -8,15 +8,15 @@
 
 - name: Build jenkins image
   docker_image:
-    name: conjur_jenkins
+    name: "{{ jenkins_image_name }}"
     path: "{{ role_path }}/files/jenkins/"
     state: present
     force: yes
 
 - name: Start Jenkins
   docker_container:
-    name: jenkins
-    image: conjur_jenkins:latest
+    name: "{{ jenkins_container_name }}"
+    image: "{{ jenkins_image_name }}:latest"
     state: started
     user: root
     published_ports:
@@ -36,6 +36,6 @@
 - name: create identity file for jenkins
   shell: |
     docker exec conjur-cli bash -c "cd /scripts/apiInteraction && bash 1_hfTokenREST.sh automate && bash 2_obtainIdentityREST.sh automate"
-    docker exec jenkins cp /identity/.netrc /root/.netrc
-    docker exec jenkins cp /identity/.conjurrc /root/.conjurrc
-    docker exec jenkins cp /identity/conjur-cyberark.pem /root/conjur-cyberark.pem
+    docker exec "{{ jenkins_container_name }}" cp /identity/.netrc /root/.netrc
+    docker exec "{{ jenkins_container_name }}" cp /identity/.conjurrc /root/.conjurrc
+    docker exec "{{ jenkins_container_name }}" cp /identity/conjur-cyberark.pem /root/conjur-cyberark.pem
