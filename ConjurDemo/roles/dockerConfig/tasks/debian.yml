@@ -26,3 +26,11 @@
   with_items:
    - "{{ docker_package }}"
   notify: "start docker"
+
+- name: Install docker for python
+  pip:
+    name: "{{ item }}"
+    state: latest
+    extra_args: --ignore-installed
+  with_items:
+   - docker

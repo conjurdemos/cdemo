@@ -1,8 +1,4 @@
 ---
-- hosts: demoMachines
+- hosts: conjurMachines
   roles:
-    - weavescopeConfig
     - conjurConfig
-    - jenkinsConfig
-    - gitlabConfig
-    - awxConfig

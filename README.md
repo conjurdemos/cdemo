@@ -56,10 +56,11 @@ The tools installed have a web interfaces that is made accessible to the host ma
 * Jenkins - No credentials needed right now
 * Conjur - U: admin P: Cyberark1
 * AWX - U: admin P: password
+* GitLab - U: root P: Cyberark1
 
 #### Things to do!
 
-* Refactor jenkinsConfig role to assign an identity through environment variables when container is started.
+* ~~Refactor jenkinsConfig role to assign an identity through environment variables when container is started.~~
 * Create Jenkins Jobs
     1. Scalability Demo
         * Build docker container that writes secret to log file. Stores in local docker registry
@@ -70,13 +71,13 @@ The tools installed have a web interfaces that is made accessible to the host ma
         * Add in https://github.com/conjurinc/summon-spring-demo
     3.  Quincy's demo
         * https://github.com/quincycheng/cicd
-* Refactor playbooks
-    1. Create Defaults
-    2. Create variables
-    3. Changes roles to account for:
-        * YUM distros
-        * Debian distros
-        * macOS distros
+* ~~Refactor playbooks~~
+    1. ~~Create Defaults~~
+    2. ~~Create variables~~
+    3. ~~Changes roles to account for:~~
+        * ~~YUM distros~~
+        * ~~Debian distros~~
+        * ~~macOS distros~~
 * Create global menu that will step through set up
 * Create checks in apiInteraction scripts
     1. Identity script should check for existence of hostfactory token file first. If unavailable then it runs the hostfactory creation script

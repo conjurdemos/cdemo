@@ -1,0 +1,65 @@
+---
+- name: install python jenkins
+  pip:
+    name: "{{ item }}"
+    state: present
+  with_items:
+   - python-jenkins
+   - lxml
+
+- name: Build curl image
+  docker_image:
+    name: curl_image
+    path: "{{ role_path }}/files/curlContainer/"
+    state: present
+    force: yes
+
+- name: Build jenkins image
+  docker_image:
+    name: "{{ jenkins_image_name }}"
+    path: "{{ role_path }}/files/jenkins/"
+    state: present
+    force: yes
+
+- name: Start Jenkins
+  docker_container:
+    name: "{{ jenkins_container_name }}"
+    image: "{{ jenkins_image_name }}:latest"
+    state: started
+    user: root
+    published_ports:
+     - "8080:8080"
+     - "50000:50000"
+    networks:
+     - name: conjur
+    volumes:
+     - "/var/run/docker.sock:/var/run/docker.sock"
+     - "../scripts:/scripts"
+     - "conjur_cert:/conjur_cert"
+     - "hostfactoryTokens:/hostfactoryTokens"
+     - "identity:/identity"
+    restart_policy: always
+    recreate: yes
+
+- name: create identity file for jenkins
+  shell: |
+    docker exec conjur-cli bash -c "cd /scripts/apiInteraction && bash 1_hfTokenREST.sh automate && bash 2_obtainIdentityREST.sh automate"
+    docker exec "{{ jenkins_container_name }}" cp /identity/.netrc /root/.netrc
+    docker exec "{{ jenkins_container_name }}" cp /identity/.conjurrc /root/.conjurrc
+    docker exec "{{ jenkins_container_name }}" cp /identity/conjur-cyberark.pem /root/conjur-cyberark.pem
+
+# - name: Create LAB1 in jenkins
+#   uri:
+#     url: "{{ jenkins_url }}/createItem?name=LAB1"
+#     body: "{{ job1_config }}"
+#     headers:
+#       Content-Type: "text/xml"
+#     method: POST
+#     validate_certs: no
+
+
+# - name: Create LAB1 in Jenkins
+#   jenkins_job:
+#     config: "{{ job1_config }}"
+#     name: LAB1_Summon
+#     state: present  

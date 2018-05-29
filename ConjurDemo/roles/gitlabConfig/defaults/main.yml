@@ -1,2 +1,3 @@
 ---
-# defaults file for gitlabConfig
+gitlab_root_password: 'Cyberark1'
+gitlab_root_email: 'admin@cyberark.com'

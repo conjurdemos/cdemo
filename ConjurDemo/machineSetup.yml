@@ -1,5 +1,5 @@
 ---
-- hosts: demoMachines
+- hosts: all
   roles:
     - machinePrep
     - dockerConfig

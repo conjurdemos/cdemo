@@ -24,7 +24,7 @@
     state: present
   notify: "start docker"
 
-- name: installPythonDocker
+- name: Install docker for python
   pip:
     name: "{{ item }}"
     state: latest
