@@ -1,0 +1,29 @@
+---
+- name: Install PIP
+  easy_install:
+    name: pip
+    state: latest
+
+- name: Install apt packages
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+  with_items:
+   - sudo
+   - jq
+   - curl
+   - git
+   - apt-transport-https
+   - ca-certificates
+   - gnupg2
+   - software-properties-common
+   - python-apt
+
+- name: install Ansible Dependencies
+  pip:
+    name: " {{ item }}"
+    state: latest
+  with_items:
+    - virtualenv
+    - python-apt

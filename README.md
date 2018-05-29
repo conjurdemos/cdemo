@@ -21,7 +21,7 @@ The demo uses the lastest version of Conjur v5
 
 1. Clone the repo.
 2. Obtain the latest Conjur tar file and place it within the cDemo directory named 'conjur.tar'.
-3. Run 1startUp.sh.
+3. Run installAnsible.sh.
 4. Change directory to ConjurDemo.
 5. Edit inventory.yml to include any machines to be stood up as demo machines.
 6. Run ansible-playbook -i inventory.yml site.yml to install conjur and it's tools.
@@ -38,6 +38,7 @@ The cli has been configured to work with the Conjur container.  It has the scrip
 3. 4 vCPU
 4. 8 GB Ram
 5. 32 GB hdd space at minimum
+6. Ansible v2.5
 
 ## Access WEB interfaces
 
