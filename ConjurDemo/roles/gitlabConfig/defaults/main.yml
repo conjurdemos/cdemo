@@ -1,4 +1,9 @@
 ---
 gitlab_container_name: 'gitlab'
 gitlab_root_password: 'Cyberark1'
+gitlab_account: 'root'
 gitlab_root_email: 'admin@cyberark.com'
+gitlab_port: 7070
+gitlab_url: "http://{{ ansible_default_ipv4.address }}:{{ gitlab_port }}"
+
+conjur_docker_network: 'conjur'

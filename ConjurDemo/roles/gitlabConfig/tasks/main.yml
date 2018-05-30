@@ -6,14 +6,24 @@
     state: started
     restart_policy: always
     recreate: yes
-    hostname: gitlab
+    hostname: "{{ gitlab_container_name }}"
     networks:
-     - name: conjur
+     - name: "{{ conjur_docker_network }}"
     published_ports:
-     - "7070:80"
+     - "{{ gitlab_port }}:80"
     env:
       GITLAB_ROOT_PASSWORD: "{{ gitlab_root_password }}"
       GITLAB_ROOT_EMAIL: "{{ gitlab_root_email }}"
-      GITLAB_EXT_URL: "http://gitlab:7070"
+      GITLAB_EXT_URL: "http://{{ gitlab_container_name }}:{{ gitlab_port }}"
       GITLAB_OMNIBUS_CONFIG: | 
         external_url 'http://gitlab:7070'
+
+- name: wait for port 7070
+  wait_for:
+    port: 7070
+    delay: 60
+
+- name: Create gitlab Project LAB2_Containers
+  shell: |
+    docker cp "{{ role_path }}/templates/JOB2_Containers" conjur-cli:/
+    docker exec conjur-cli bash -c "cd /JOB2_Containers && git init && git add --all && git commit -m 'Initial Commit' && git push --set-upstream http://{{ gitlab_account }}:{{ gitlab_root_password }}@{{ gitlab_url }}/root/LAB2_Containers.git master"
