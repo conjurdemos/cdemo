@@ -1,4 +1,0 @@
-2018-05-30_10:15:45.04029 time="2018-05-30T10:15:45Z" level=info msg="Error opening connection to database (user=gitlab-psql%20host=/var/opt/gitlab/postgresql%20database=postgres%20sslmode=allow): pq: the database system is starting up" source="postgres_exporter.go:1012"
-2018-05-30_10:15:45.04041 time="2018-05-30T10:15:45Z" level=info msg="Starting Server: localhost:9187" source="postgres_exporter.go:1114"
-2018-05-30_10:15:51.16891 time="2018-05-30T10:15:51Z" level=info msg="Established new database connection." source="postgres_exporter.go:986"
-2018-05-30_10:15:51.17662 time="2018-05-30T10:15:51Z" level=info msg="Semantic Version Changed: 0.0.0 -> 9.6.8" source="postgres_exporter.go:919"

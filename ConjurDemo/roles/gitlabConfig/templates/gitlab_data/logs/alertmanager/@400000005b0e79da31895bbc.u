@@ -1,9 +1,0 @@
-2018-05-30_08:25:13.69373 level=info ts=2018-05-30T08:25:13.693618775Z caller=main.go:136 msg="Starting Alertmanager" version="(version=, branch=, revision=)"
-2018-05-30_08:25:13.69377 level=info ts=2018-05-30T08:25:13.693660017Z caller=main.go:137 build_context="(go=go1.9.2, user=, date=)"
-2018-05-30_08:25:13.69462 level=info ts=2018-05-30T08:25:13.694604356Z caller=main.go:275 msg="Loading configuration file" file=/var/opt/gitlab/alertmanager/alertmanager.yml
-2018-05-30_08:25:13.70282 level=info ts=2018-05-30T08:25:13.702761517Z caller=main.go:350 msg=Listening address=localhost:9093
-2018-05-30_08:26:15.25692 level=info ts=2018-05-30T08:26:15.254461028Z caller=main.go:378 msg="Received SIGTERM, exiting gracefully..."
-2018-05-30_08:26:15.25719 level=info ts=2018-05-30T08:26:15.256883068Z caller=nflog.go:293 component=nflog msg="Running maintenance"
-2018-05-30_08:26:15.25723 level=info ts=2018-05-30T08:26:15.256887231Z caller=silence.go:269 component=silences msg="Running maintenance"
-2018-05-30_08:26:15.27306 level=info ts=2018-05-30T08:26:15.271455739Z caller=silence.go:271 component=silences msg="Maintenance done" duration=14.573797ms size=0
-2018-05-30_08:26:15.27309 level=info ts=2018-05-30T08:26:15.272731699Z caller=nflog.go:295 component=nflog msg="Maintenance done" duration=15.853692ms size=0
