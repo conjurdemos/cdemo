@@ -1,0 +1,42 @@
+=============== May 30, 2018 (UTC) ===============
+08:22:33.748688 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+08:22:33.749110 db@open opening
+08:22:33.750175 version@stat F·[] S·0B[] Sc·[]
+08:22:33.751099 db@janitor F·2 G·0
+08:22:33.751134 db@open done T·2.016219ms
+08:22:57.446772 db@close closing
+08:22:57.446790 db@close done T·18.198µs
+=============== May 30, 2018 (UTC) ===============
+08:22:57.556665 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+08:22:57.557065 version@stat F·[] S·0B[] Sc·[]
+08:22:57.557078 db@open opening
+08:22:57.557128 journal@recovery F·1
+08:22:57.559022 journal@recovery recovering @1
+08:22:57.567081 memdb@flush created L0@2 N·1974 S·298KiB "\x04db\x06db0,v927":"\x1cre..826,v958"
+08:22:57.567400 version@stat F·[1] S·298KiB[298KiB] Sc·[0.25]
+08:22:57.569513 db@janitor F·3 G·0
+08:22:57.569540 db@open done T·12.456881ms
+08:23:21.853950 db@close closing
+08:23:21.854005 db@close done T·55.218µs
+=============== May 30, 2018 (UTC) ===============
+08:25:13.872564 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+08:25:13.872965 version@stat F·[1] S·298KiB[298KiB] Sc·[0.25]
+08:25:13.872978 db@open opening
+08:25:13.873027 journal@recovery F·1
+08:25:13.873252 journal@recovery recovering @3
+08:25:13.876383 memdb@flush created L0@5 N·128 S·48KiB "\x04le\b+Inf,v2086":"\x14sc..ema,v2012"
+08:25:13.892281 version@stat F·[2] S·346KiB[346KiB] Sc·[0.50]
+08:25:13.892646 db@janitor F·4 G·0
+08:25:13.892676 db@open done T·19.692481ms
+08:26:19.141505 db@close closing
+08:26:19.142215 db@close done T·708.97µs
+=============== May 30, 2018 (UTC) ===============
+10:15:45.232871 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+10:15:45.234364 version@stat F·[2] S·346KiB[346KiB] Sc·[0.50]
+10:15:45.234377 db@open opening
+10:15:45.234431 journal@recovery F·1
+10:15:45.240430 journal@recovery recovering @6
+10:15:45.252526 memdb@flush created L0@8 N·57 S·30KiB "\x04le\b+Inf,v2117":"\x10in..229,v2126"
+10:15:45.260424 version@stat F·[3] S·377KiB[377KiB] Sc·[0.75]
+10:15:45.260908 db@janitor F·5 G·0
+10:15:45.260920 db@open done T·26.538172ms

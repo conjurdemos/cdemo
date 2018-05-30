@@ -1,0 +1,214 @@
+2018-05-30_10:15:59.86628 2018-05-30T10:15:59.866Z 503 TID-otvc8x23s INFO: Booting Sidekiq 5.0.5 with redis options {:path=>"/var/opt/gitlab/redis/redis.socket", :namespace=>"resque:gitlab", :id=>"Sidekiq-server-PID-503", :url=>nil}
+2018-05-30_10:15:59.95799 2018-05-30T10:15:59.957Z 503 TID-otvc8x23s INFO: Cron Jobs - add job with name: stuck_ci_jobs_worker
+2018-05-30_10:15:59.96012 2018-05-30T10:15:59.960Z 503 TID-otvc8x23s INFO: Cron Jobs - add job with name: expire_build_artifacts_worker
+2018-05-30_10:15:59.96123 2018-05-30T10:15:59.961Z 503 TID-otvc8x23s INFO: Cron Jobs - add job with name: pipeline_schedule_worker
+2018-05-30_10:15:59.96261 2018-05-30T10:15:59.962Z 503 TID-otvc8x23s INFO: Cron Jobs - add job with name: repository_check_worker
+2018-05-30_10:15:59.96363 2018-05-30T10:15:59.963Z 503 TID-otvc8x23s INFO: Cron Jobs - add job with name: admin_email_worker
+2018-05-30_10:15:59.96551 2018-05-30T10:15:59.965Z 503 TID-otvc8x23s INFO: Cron Jobs - add job with name: repository_archive_cache_worker
+2018-05-30_10:15:59.96678 2018-05-30T10:15:59.966Z 503 TID-otvc8x23s INFO: Cron Jobs - add job with name: pages_domain_verification_cron_worker
+2018-05-30_10:15:59.96867 2018-05-30T10:15:59.968Z 503 TID-otvc8x23s INFO: Cron Jobs - add job with name: import_export_project_cleanup_worker
+2018-05-30_10:15:59.97010 2018-05-30T10:15:59.970Z 503 TID-otvc8x23s INFO: Cron Jobs - add job with name: requests_profiles_worker
+2018-05-30_10:15:59.97156 2018-05-30T10:15:59.971Z 503 TID-otvc8x23s INFO: Cron Jobs - add job with name: remove_expired_members_worker
+2018-05-30_10:15:59.97298 2018-05-30T10:15:59.972Z 503 TID-otvc8x23s INFO: Cron Jobs - add job with name: remove_expired_group_links_worker
+2018-05-30_10:15:59.97411 2018-05-30T10:15:59.974Z 503 TID-otvc8x23s INFO: Cron Jobs - add job with name: prune_old_events_worker
+2018-05-30_10:15:59.97562 2018-05-30T10:15:59.975Z 503 TID-otvc8x23s INFO: Cron Jobs - add job with name: trending_projects_worker
+2018-05-30_10:15:59.97734 2018-05-30T10:15:59.977Z 503 TID-otvc8x23s INFO: Cron Jobs - add job with name: remove_unreferenced_lfs_objects_worker
+2018-05-30_10:15:59.98035 2018-05-30T10:15:59.980Z 503 TID-otvc8x23s INFO: Cron Jobs - add job with name: stuck_import_jobs_worker
+2018-05-30_10:15:59.98300 2018-05-30T10:15:59.982Z 503 TID-otvc8x23s INFO: Cron Jobs - add job with name: gitlab_usage_ping_worker
+2018-05-30_10:15:59.98559 2018-05-30T10:15:59.985Z 503 TID-otvc8x23s INFO: Cron Jobs - add job with name: schedule_update_user_activity_worker
+2018-05-30_10:15:59.98808 2018-05-30T10:15:59.988Z 503 TID-otvc8x23s INFO: Cron Jobs - add job with name: remove_old_web_hook_logs_worker
+2018-05-30_10:15:59.99055 2018-05-30T10:15:59.990Z 503 TID-otvc8x23s INFO: Cron Jobs - add job with name: stuck_merge_jobs_worker
+2018-05-30_10:15:59.99292 2018-05-30T10:15:59.992Z 503 TID-otvc8x23s INFO: Cron Jobs - add job with name: issue_due_scheduler_worker
+2018-05-30_10:16:09.37442 2018-05-30T10:16:09.374Z 503 TID-otvc8x23s INFO: Running in ruby 2.3.7p456 (2018-03-28 revision 63024) [x86_64-linux]
+2018-05-30_10:16:09.37446 2018-05-30T10:16:09.374Z 503 TID-otvc8x23s INFO: See LICENSE and the LGPL-3.0 for licensing details.
+2018-05-30_10:16:09.37446 2018-05-30T10:16:09.374Z 503 TID-otvc8x23s INFO: Upgrade to Sidekiq Pro for more features and support: http://sidekiq.org
+2018-05-30_10:16:09.37571 2018-05-30T10:16:09.375Z 503 TID-otvc8x23s INFO: Starting processing, hit Ctrl-C to stop
+2018-05-30_10:16:09.37882 2018-05-30T10:16:09.378Z 503 TID-otvc8x23s INFO: Listening on queues ["authorized_projects", "background_migration", "create_gpg_signature", "cronjob", "cronjob:admin_email", "cronjob:expire_build_artifacts", "cronjob:gitlab_usage_ping", "cronjob:import_export_project_cleanup", "cronjob:issue_due_scheduler", "cronjob:pages_domain_verification_cron", "cronjob:pipeline_schedule", "cronjob:prune_old_events", "cronjob:remove_expired_group_links", "cronjob:remove_expired_members", "cronjob:remove_old_web_hook_logs", "cronjob:remove_unreferenced_lfs_objects", "cronjob:repository_archive_cache", "cronjob:repository_check_batch", "cronjob:requests_profiles", "cronjob:schedule_update_user_activity", "cronjob:stuck_ci_jobs", "cronjob:stuck_import_jobs", "cronjob:stuck_merge_jobs", "cronjob:trending_projects", "default", "delete_merged_branches", "delete_user", "email_receiver", "emails_on_push", "expire_build_instance_artifacts", "gcp_cluster", "gcp_cluster:check_gcp_project_billing", "gcp_cluster:cluster_install_app", "gcp_cluster:cluster_provision", "gcp_cluster:cluster_wait_for_app_installation", "gcp_cluster:cluster_wait_for_ingress_ip_address", "gcp_cluster:wait_for_cluster_creation", "git_garbage_collect", "github_import_advance_stage", "github_importer", "github_importer:github_import_import_diff_note", "github_importer:github_import_import_issue", "github_importer:github_import_import_note", "github_importer:github_import_import_pull_request", "github_importer:github_import_refresh_import_jid", "github_importer:github_import_stage_finish_import", "github_importer:github_import_stage_import_base_data", "github_importer:github_import_stage_import_issues_and_diff_notes", "github_importer:github_import_stage_import_notes", "github_importer:github_import_stage_import_pull_requests", "github_importer:github_import_stage_import_repository", "gitlab_shell", "group_destroy", "invalid_gpg_signature_update", "irker", "mail_scheduler", "mail_scheduler:mail_scheduler_issue_due", "mail_scheduler:mail_scheduler_notification_service", "mailers", "merge", "namespaceless_project_destroy", "new_issue", "new_merge_request", "new_note", "object_storage", "object_storage:object_storage_background_move", "object_storage:object_storage_migrate_uploads", "object_storage_upload", "pages", "pages_domain_verification", "pipeline_background", "pipeline_background:archive_trace", "pipeline_background:ci_build_trace_chunk_flush", "pipeline_cache", "pipeline_cache:expire_job_cache", "pipeline_cache:expire_pipeline_cache", "pipeline_creation", "pipeline_creation:create_pipeline", "pipeline_creation:run_pipeline_schedule", "pipeline_default", "pipeline_default:build_coverage", "pipeline_default:build_trace_sections", "pipeline_default:pipeline_metrics", "pipeline_default:pipeline_notification", "pipeline_hooks", "pipeline_hooks:build_hooks", "pipeline_hooks:pipeline_hooks", "pipeline_processing", "pipeline_processing:build_finished", "pipeline_processing:build_queue", "pipeline_processing:build_success", "pipeline_processing:pipeline_process", "pipeline_processing:pipeline_success", "pipeline_processing:pipeline_update", "pipeline_processing:stage_update", "pipeline_processing:update_head_pipeline_for_merge_request", "plugin", "post_receive", "process_commit", "project_cache", "project_destroy", "project_export", "project_migrate_hashed_storage", "project_service", "propagate_service_template", "reactive_caching", "rebase", "repository_check", "repository_check:repository_check_clear", "repository_check:repository_check_single_repository", "repository_fork", "repository_import", "repository_remove_remote", "repository_update_remote_mirror", "storage_migrator", "system_hook_push", "update_merge_requests", "update_user_activity", "upload_checksum", "web_hook"]
+2018-05-30_10:19:24.60834 2018-05-30T10:19:24.608Z 503 TID-otv6h7z38 PipelineScheduleWorker JID-88732baed39f946d4de7f9d1 INFO: start
+2018-05-30_10:19:24.70065 2018-05-30T10:19:24.700Z 503 TID-otv6h7z38 PipelineScheduleWorker JID-88732baed39f946d4de7f9d1 INFO: done: 0.092 sec
+2018-05-30_10:20:35.76533 2018-05-30T10:20:35.765Z 503 TID-otv6h7zfg RepositoryCheck::BatchWorker JID-75e259e98f0b90ec11815ac3 INFO: start
+2018-05-30_10:20:35.80804 2018-05-30T10:20:35.807Z 503 TID-otv6h7zfg RepositoryCheck::BatchWorker JID-75e259e98f0b90ec11815ac3 INFO: done: 0.043 sec
+2018-05-30_10:21:38.72869 2018-05-30T10:21:38.728Z 503 TID-otv6h7zro RepositoryImportWorker JID-b7c09f16f5d00f49ebbdd0b1 INFO: start
+2018-05-30_10:21:38.91206 2018-05-30T10:21:38.911Z 503 TID-otv6h7zro RepositoryImportWorker JID-b7c09f16f5d00f49ebbdd0b1 INFO: fail: 0.183 sec
+2018-05-30_10:21:38.91257 2018-05-30T10:21:38.912Z 503 TID-otv6h7zro WARN: {"context":"Job raised exception","job":{"retry":false,"args":[1],"class":"RepositoryImportWorker","queue":"repository_import","backtrace":5,"status_expiration":54000,"jid":"b7c09f16f5d00f49ebbdd0b1","created_at":1527675698.7269168,"enqueued_at":1527675698.7279394},"jobstr":"{\"retry\":false,\"args\":[1],\"class\":\"RepositoryImportWorker\",\"queue\":\"repository_import\",\"backtrace\":5,\"status_expiration\":54000,\"jid\":\"b7c09f16f5d00f49ebbdd0b1\",\"created_at\":1527675698.7269168,\"enqueued_at\":1527675698.7279394}"}
+2018-05-30_10:21:38.91271 2018-05-30T10:21:38.912Z 503 TID-otv6h7zro WARN: RuntimeError: Error importing repository  into root/LAB2_Containers - 
+2018-05-30_10:21:38.91273 gzip: stdin: not in gzip format
+2018-05-30_10:21:38.91273 tar: Child returned status 1
+2018-05-30_10:21:38.91273 tar: Error is not recoverable: exiting now
+2018-05-30_10:21:38.91273 , Unable to decompress /var/opt/gitlab/gitlab-rails/shared/tmp/project_exports/uploads/40d2f8dd17b20471dbe236940d0e8d79 into /var/opt/gitlab/gitlab-rails/shared/tmp/project_exports/root/LAB2_Containers/26fb400420a5e8a5adc7762fcf1b25fb
+2018-05-30_10:21:38.91273 2018-05-30T10:21:38.912Z 503 TID-otv6h7zro WARN: /opt/gitlab/embedded/service/gitlab-rails/app/workers/repository_import_worker.rb:26:in `perform'
+2018-05-30_10:21:38.91274 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:188:in `execute_job'
+2018-05-30_10:21:38.91274 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:170:in `block (2 levels) in process'
+2018-05-30_10:21:38.91274 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/middleware/chain.rb:128:in `block in invoke'
+2018-05-30_10:21:38.91274 /opt/gitlab/embedded/service/gitlab-rails/lib/gitlab/sidekiq_status/server_middleware.rb:5:in `call'
+2018-05-30_10:21:38.91279 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/middleware/chain.rb:130:in `block in invoke'
+2018-05-30_10:21:38.91279 /opt/gitlab/embedded/service/gitlab-rails/lib/gitlab/sidekiq_middleware/request_store_middleware.rb:6:in `call'
+2018-05-30_10:21:38.91279 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/middleware/chain.rb:130:in `block in invoke'
+2018-05-30_10:21:38.91280 /opt/gitlab/embedded/service/gitlab-rails/lib/gitlab/sidekiq_middleware/shutdown.rb:52:in `call'
+2018-05-30_10:21:38.91280 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/middleware/chain.rb:130:in `block in invoke'
+2018-05-30_10:21:38.91280 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/middleware/server/active_record.rb:15:in `call'
+2018-05-30_10:21:38.91280 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/middleware/chain.rb:130:in `block in invoke'
+2018-05-30_10:21:38.91280 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sentry-raven-2.7.2/lib/raven/integrations/sidekiq.rb:9:in `call'
+2018-05-30_10:21:38.91280 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/middleware/chain.rb:130:in `block in invoke'
+2018-05-30_10:21:38.91281 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/middleware/chain.rb:133:in `invoke'
+2018-05-30_10:21:38.91281 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:169:in `block in process'
+2018-05-30_10:21:38.91281 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:141:in `block (6 levels) in dispatch'
+2018-05-30_10:21:38.91288 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/job_retry.rb:97:in `local'
+2018-05-30_10:21:38.91288 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:140:in `block (5 levels) in dispatch'
+2018-05-30_10:21:38.91288 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq.rb:36:in `block in <module:Sidekiq>'
+2018-05-30_10:21:38.91288 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:136:in `block (4 levels) in dispatch'
+2018-05-30_10:21:38.91290 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:204:in `stats'
+2018-05-30_10:21:38.91291 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:131:in `block (3 levels) in dispatch'
+2018-05-30_10:21:38.91291 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/job_logger.rb:7:in `call'
+2018-05-30_10:21:38.91291 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:130:in `block (2 levels) in dispatch'
+2018-05-30_10:21:38.91292 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/job_retry.rb:72:in `global'
+2018-05-30_10:21:38.91292 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:129:in `block in dispatch'
+2018-05-30_10:21:38.91292 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/logging.rb:44:in `with_context'
+2018-05-30_10:21:38.91292 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/logging.rb:38:in `with_job_hash_context'
+2018-05-30_10:21:38.91292 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:128:in `dispatch'
+2018-05-30_10:21:38.91292 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:168:in `process'
+2018-05-30_10:21:38.91293 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:85:in `process_one'
+2018-05-30_10:21:38.91293 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:73:in `run'
+2018-05-30_10:21:38.91294 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/util.rb:16:in `watchdog'
+2018-05-30_10:21:38.91294 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/util.rb:25:in `block in safe_thread'
+2018-05-30_10:22:55.29363 2018-05-30T10:22:55.293Z 503 TID-otv6h80m8 ProjectDestroyWorker JID-69d7ad93e0809c583336c36d INFO: start
+2018-05-30_10:22:55.60347 2018-05-30T10:22:55.603Z 503 TID-otv6h80m8 ProjectDestroyWorker JID-69d7ad93e0809c583336c36d INFO: done: 0.31 sec
+2018-05-30_10:26:07.13051 2018-05-30T10:26:07.129Z 503 TID-otv6h838o PostReceive JID-3560f9e07f41fe4e14c5d7c3 INFO: start
+2018-05-30_10:26:07.21020 2018-05-30T10:26:07.210Z 503 TID-otv6h814k UpdateMergeRequestsWorker JID-ac255b9868a2576e17f95635 INFO: start
+2018-05-30_10:26:07.29587 2018-05-30T10:26:07.295Z 503 TID-otv6h814k UpdateMergeRequestsWorker JID-ac255b9868a2576e17f95635 INFO: done: 0.085 sec
+2018-05-30_10:26:07.30402 2018-05-30T10:26:07.303Z 503 TID-otv6h83es SystemHookPushWorker JID-8991cf666c7a192ef1fd810f INFO: start
+2018-05-30_10:26:07.30969 2018-05-30T10:26:07.309Z 503 TID-otv6h83es SystemHookPushWorker JID-8991cf666c7a192ef1fd810f INFO: done: 0.005 sec
+2018-05-30_10:26:07.32393 2018-05-30T10:26:07.323Z 503 TID-otv6h7yes ProjectCacheWorker JID-79328e3c18d0c18df706d254 INFO: start
+2018-05-30_10:26:07.33553 2018-05-30T10:26:07.335Z 503 TID-otv6h838o PostReceive JID-3560f9e07f41fe4e14c5d7c3 INFO: done: 0.206 sec
+2018-05-30_10:26:07.35145 2018-05-30T10:26:07.351Z 503 TID-otv6h7yes ProjectCacheWorker JID-79328e3c18d0c18df706d254 INFO: done: 0.028 sec
+2018-05-30_10:27:23.16103 2018-05-30T10:27:23.160Z 503 TID-otv6h80m8 PostReceive JID-c068f4523635a0c2a45a6414 INFO: start
+2018-05-30_10:27:23.17162 2018-05-30T10:27:23.171Z 503 TID-otv6h7zxs UpdateMergeRequestsWorker JID-da71ea8fbe36de285da87a08 INFO: start
+2018-05-30_10:27:23.20546 2018-05-30T10:27:23.205Z 503 TID-otv6h7zxs UpdateMergeRequestsWorker JID-da71ea8fbe36de285da87a08 INFO: done: 0.034 sec
+2018-05-30_10:27:23.22330 2018-05-30T10:27:23.221Z 503 TID-otv6h7zlk SystemHookPushWorker JID-f56e2eac127aa6b8210b0114 INFO: start
+2018-05-30_10:27:23.22995 2018-05-30T10:27:23.229Z 503 TID-otv6h7zlk SystemHookPushWorker JID-f56e2eac127aa6b8210b0114 INFO: done: 0.008 sec
+2018-05-30_10:27:23.23212 2018-05-30T10:27:23.231Z 503 TID-otv8ztedc ProjectCacheWorker JID-dfcab698ba14c38262494a8c INFO: start
+2018-05-30_10:27:23.24156 2018-05-30T10:27:23.241Z 503 TID-otv6h80m8 PostReceive JID-c068f4523635a0c2a45a6414 INFO: done: 0.08 sec
+2018-05-30_10:27:23.26964 2018-05-30T10:27:23.269Z 503 TID-otv8ztedc ProjectCacheWorker JID-dfcab698ba14c38262494a8c INFO: done: 0.038 sec
+2018-05-30_10:28:00.66481 2018-05-30T10:28:00.664Z 503 TID-otv6h814k GitlabShellWorker JID-ce352dedf8729023e4dcf825 INFO: start
+2018-05-30_10:28:00.66774 2018-05-30T10:28:00.667Z 503 TID-otv6h838o GitlabShellWorker JID-6294e9c757aaf0881a1e9686 INFO: start
+2018-05-30_10:28:00.67417 2018-05-30T10:28:00.673Z 503 TID-otv6h814k GitlabShellWorker JID-ce352dedf8729023e4dcf825 INFO: done: 0.009 sec
+2018-05-30_10:28:00.67490 2018-05-30T10:28:00.674Z 503 TID-otv6h838o GitlabShellWorker JID-6294e9c757aaf0881a1e9686 INFO: done: 0.007 sec
+2018-05-30_10:30:18.94296 2018-05-30T10:30:18.942Z 503 TID-otv6h80sc PagesDomainVerificationCronWorker JID-8d41589f03147e39e798c8db INFO: start
+2018-05-30_10:30:18.95403 2018-05-30T10:30:18.953Z 503 TID-otv6h80sc PagesDomainVerificationCronWorker JID-8d41589f03147e39e798c8db INFO: done: 0.011 sec
+2018-05-30_10:30:59.48105 2018-05-30T10:30:59.480Z 503 TID-otv6h7zlk ProjectExportWorker JID-a423febc687a9847f84cbeac INFO: start
+2018-05-30_10:30:59.70868 2018-05-30T10:30:59.708Z 503 TID-otv6h80g4 ActionMailer::DeliveryJob JID-be485cb7874c91f3c40a03a5 INFO: start
+2018-05-30_10:30:59.72675 2018-05-30T10:30:59.726Z 503 TID-otv6h7zlk ProjectExportWorker JID-a423febc687a9847f84cbeac INFO: done: 0.246 sec
+2018-05-30_10:30:59.81557 sh: 1: /usr/sbin/sendmail: not found
+2018-05-30_10:30:59.82308 2018-05-30T10:30:59.823Z 503 TID-otv6h80g4 ActionMailer::DeliveryJob JID-be485cb7874c91f3c40a03a5 INFO: done: 0.115 sec
+2018-05-30_10:32:08.26466 2018-05-30T10:32:08.264Z 503 TID-otv6h7z9c RepositoryImportWorker JID-922b018003d77e78e1fae5f3 INFO: start
+2018-05-30_10:32:08.30740 2018-05-30T10:32:08.307Z 503 TID-otv6h7z9c RepositoryImportWorker JID-922b018003d77e78e1fae5f3 INFO: fail: 0.043 sec
+2018-05-30_10:32:08.30768 2018-05-30T10:32:08.307Z 503 TID-otv6h7z9c WARN: {"context":"Job raised exception","job":{"retry":false,"args":[3],"class":"RepositoryImportWorker","queue":"repository_import","backtrace":5,"status_expiration":54000,"jid":"922b018003d77e78e1fae5f3","created_at":1527676328.2626812,"enqueued_at":1527676328.2637289},"jobstr":"{\"retry\":false,\"args\":[3],\"class\":\"RepositoryImportWorker\",\"queue\":\"repository_import\",\"backtrace\":5,\"status_expiration\":54000,\"jid\":\"922b018003d77e78e1fae5f3\",\"created_at\":1527676328.2626812,\"enqueued_at\":1527676328.2637289}"}
+2018-05-30_10:32:08.30769 2018-05-30T10:32:08.307Z 503 TID-otv6h7z9c WARN: RuntimeError: Error importing repository  into root/Lab2_test - 
+2018-05-30_10:32:08.30769 gzip: stdin: not in gzip format
+2018-05-30_10:32:08.30769 tar: Child returned status 1
+2018-05-30_10:32:08.30769 tar: Error is not recoverable: exiting now
+2018-05-30_10:32:08.30769 , Unable to decompress /var/opt/gitlab/gitlab-rails/shared/tmp/project_exports/uploads/eed0c4cc03b0b59dc37e2e1dd54701f1 into /var/opt/gitlab/gitlab-rails/shared/tmp/project_exports/root/Lab2_test/4fc5db073b94137c09b4884a212063d5
+2018-05-30_10:32:08.30770 2018-05-30T10:32:08.307Z 503 TID-otv6h7z9c WARN: /opt/gitlab/embedded/service/gitlab-rails/app/workers/repository_import_worker.rb:26:in `perform'
+2018-05-30_10:32:08.30770 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:188:in `execute_job'
+2018-05-30_10:32:08.30771 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:170:in `block (2 levels) in process'
+2018-05-30_10:32:08.30771 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/middleware/chain.rb:128:in `block in invoke'
+2018-05-30_10:32:08.30771 /opt/gitlab/embedded/service/gitlab-rails/lib/gitlab/sidekiq_status/server_middleware.rb:5:in `call'
+2018-05-30_10:32:08.30771 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/middleware/chain.rb:130:in `block in invoke'
+2018-05-30_10:32:08.30771 /opt/gitlab/embedded/service/gitlab-rails/lib/gitlab/sidekiq_middleware/request_store_middleware.rb:6:in `call'
+2018-05-30_10:32:08.30772 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/middleware/chain.rb:130:in `block in invoke'
+2018-05-30_10:32:08.30773 /opt/gitlab/embedded/service/gitlab-rails/lib/gitlab/sidekiq_middleware/shutdown.rb:52:in `call'
+2018-05-30_10:32:08.30773 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/middleware/chain.rb:130:in `block in invoke'
+2018-05-30_10:32:08.30773 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/middleware/server/active_record.rb:15:in `call'
+2018-05-30_10:32:08.30774 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/middleware/chain.rb:130:in `block in invoke'
+2018-05-30_10:32:08.30774 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sentry-raven-2.7.2/lib/raven/integrations/sidekiq.rb:9:in `call'
+2018-05-30_10:32:08.30774 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/middleware/chain.rb:130:in `block in invoke'
+2018-05-30_10:32:08.30774 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/middleware/chain.rb:133:in `invoke'
+2018-05-30_10:32:08.30774 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:169:in `block in process'
+2018-05-30_10:32:08.30774 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:141:in `block (6 levels) in dispatch'
+2018-05-30_10:32:08.30775 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/job_retry.rb:97:in `local'
+2018-05-30_10:32:08.30785 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:140:in `block (5 levels) in dispatch'
+2018-05-30_10:32:08.30785 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq.rb:36:in `block in <module:Sidekiq>'
+2018-05-30_10:32:08.30785 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:136:in `block (4 levels) in dispatch'
+2018-05-30_10:32:08.30786 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:204:in `stats'
+2018-05-30_10:32:08.30786 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:131:in `block (3 levels) in dispatch'
+2018-05-30_10:32:08.30786 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/job_logger.rb:7:in `call'
+2018-05-30_10:32:08.30786 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:130:in `block (2 levels) in dispatch'
+2018-05-30_10:32:08.30786 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/job_retry.rb:72:in `global'
+2018-05-30_10:32:08.30786 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:129:in `block in dispatch'
+2018-05-30_10:32:08.30786 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/logging.rb:44:in `with_context'
+2018-05-30_10:32:08.30787 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/logging.rb:38:in `with_job_hash_context'
+2018-05-30_10:32:08.30788 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:128:in `dispatch'
+2018-05-30_10:32:08.30788 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:168:in `process'
+2018-05-30_10:32:08.30788 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:85:in `process_one'
+2018-05-30_10:32:08.30788 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:73:in `run'
+2018-05-30_10:32:08.30788 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/util.rb:16:in `watchdog'
+2018-05-30_10:32:08.30788 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/util.rb:25:in `block in safe_thread'
+2018-05-30_11:00:57.64023 2018-05-30T11:00:57.640Z 503 TID-otv6h81ao RepositoryArchiveCacheWorker JID-dd610a6b37263a10ae0c5a13 INFO: start
+2018-05-30_11:00:57.64743 2018-05-30T11:00:57.647Z 503 TID-otv6h81ao RepositoryArchiveCacheWorker JID-dd610a6b37263a10ae0c5a13 INFO: done: 0.007 sec
+2018-05-30_11:00:57.64891 2018-05-30T11:00:57.648Z 503 TID-otv6h7zxs StuckCiJobsWorker JID-90d060f4f179d533b13a04d1 INFO: start
+2018-05-30_11:00:57.66537 2018-05-30T11:00:57.664Z 503 TID-otv6h80yg PagesDomainVerificationCronWorker JID-7f634dfd4f7666444f2e25ed INFO: start
+2018-05-30_11:00:57.66656 2018-05-30T11:00:57.666Z 503 TID-otv6h7zlk ImportExportProjectCleanupWorker JID-a52181bd18befbd9b41388fa INFO: start
+2018-05-30_11:00:57.68317 2018-05-30T11:00:57.683Z 503 TID-otv6h7zxs StuckCiJobsWorker JID-90d060f4f179d533b13a04d1 INFO: done: 0.034 sec
+2018-05-30_11:00:57.68840 2018-05-30T11:00:57.688Z 503 TID-otv6h7zlk ImportExportProjectCleanupWorker JID-a52181bd18befbd9b41388fa INFO: done: 0.022 sec
+2018-05-30_11:00:57.69100 2018-05-30T11:00:57.690Z 503 TID-otv6h80yg PagesDomainVerificationCronWorker JID-7f634dfd4f7666444f2e25ed INFO: done: 0.026 sec
+2018-05-30_11:15:13.37356 2018-05-30T11:15:13.373Z 503 TID-otv6h7z38 PagesDomainVerificationCronWorker JID-053f0bd8baa2a66a70d6ff67 INFO: start
+2018-05-30_11:15:13.38684 2018-05-30T11:15:13.386Z 503 TID-otv6h80m8 StuckImportJobsWorker JID-ca24b63043bc988c522a87fe INFO: start
+2018-05-30_11:15:13.39659 2018-05-30T11:15:13.396Z 503 TID-otv6h7z38 PagesDomainVerificationCronWorker JID-053f0bd8baa2a66a70d6ff67 INFO: done: 0.023 sec
+2018-05-30_11:15:13.40461 2018-05-30T11:15:13.404Z 503 TID-otv6h80m8 StuckImportJobsWorker JID-ca24b63043bc988c522a87fe INFO: done: 0.018 sec
+2018-05-30_11:19:31.18074 2018-05-30T11:19:31.180Z 503 TID-otv6h83os PipelineScheduleWorker JID-3bac6cecf07c2fdb63c0da21 INFO: start
+2018-05-30_11:19:31.21221 2018-05-30T11:19:31.211Z 503 TID-otv6h83os PipelineScheduleWorker JID-3bac6cecf07c2fdb63c0da21 INFO: done: 0.031 sec
+2018-05-30_11:20:06.73506 2018-05-30T11:20:06.734Z 503 TID-otv6h81ao RepositoryCheck::BatchWorker JID-16edff66e3ba37a02312abc2 INFO: start
+2018-05-30_11:20:06.76884 2018-05-30T11:20:06.768Z 503 TID-otv6h81ao RepositoryCheck::BatchWorker JID-16edff66e3ba37a02312abc2 INFO: done: 0.034 sec
+2018-05-30_11:29:46.37484 2018-05-30T11:29:46.374Z 503 TID-otv6h80g4 ProjectDestroyWorker JID-05667d028e7f03d1efef856d INFO: start
+2018-05-30_11:29:46.52930 2018-05-30T11:29:46.529Z 503 TID-otv6h80g4 ProjectDestroyWorker JID-05667d028e7f03d1efef856d INFO: done: 0.154 sec
+2018-05-30_11:30:02.43291 2018-05-30T11:30:02.432Z 503 TID-otv6jlmf8 RepositoryImportWorker JID-7482083aa400cac7ddfb2a21 INFO: start
+2018-05-30_11:30:02.45528 2018-05-30T11:30:02.455Z 503 TID-otv6jlmf8 RepositoryImportWorker JID-7482083aa400cac7ddfb2a21 INFO: fail: 0.022 sec
+2018-05-30_11:30:02.45562 2018-05-30T11:30:02.455Z 503 TID-otv6jlmf8 WARN: {"context":"Job raised exception","job":{"retry":false,"args":[4],"class":"RepositoryImportWorker","queue":"repository_import","backtrace":5,"status_expiration":54000,"jid":"7482083aa400cac7ddfb2a21","created_at":1527679802.431441,"enqueued_at":1527679802.432283},"jobstr":"{\"retry\":false,\"args\":[4],\"class\":\"RepositoryImportWorker\",\"queue\":\"repository_import\",\"backtrace\":5,\"status_expiration\":54000,\"jid\":\"7482083aa400cac7ddfb2a21\",\"created_at\":1527679802.431441,\"enqueued_at\":1527679802.432283}"}
+2018-05-30_11:30:02.45580 2018-05-30T11:30:02.455Z 503 TID-otv6jlmf8 WARN: RuntimeError: Error importing repository  into root/LAB2_test - 
+2018-05-30_11:30:02.45582 gzip: stdin: not in gzip format
+2018-05-30_11:30:02.45582 tar: Child returned status 1
+2018-05-30_11:30:02.45583 tar: Error is not recoverable: exiting now
+2018-05-30_11:30:02.45583 , Unable to decompress /var/opt/gitlab/gitlab-rails/shared/tmp/project_exports/uploads/aedf2985272265ef3b3e7134b5d21a52 into /var/opt/gitlab/gitlab-rails/shared/tmp/project_exports/root/LAB2_test/b65c09e302c635a93407dc1866ae9369
+2018-05-30_11:30:02.45613 2018-05-30T11:30:02.456Z 503 TID-otv6jlmf8 WARN: /opt/gitlab/embedded/service/gitlab-rails/app/workers/repository_import_worker.rb:26:in `perform'
+2018-05-30_11:30:02.45615 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:188:in `execute_job'
+2018-05-30_11:30:02.45615 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:170:in `block (2 levels) in process'
+2018-05-30_11:30:02.45616 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/middleware/chain.rb:128:in `block in invoke'
+2018-05-30_11:30:02.45617 /opt/gitlab/embedded/service/gitlab-rails/lib/gitlab/sidekiq_status/server_middleware.rb:5:in `call'
+2018-05-30_11:30:02.45617 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/middleware/chain.rb:130:in `block in invoke'
+2018-05-30_11:30:02.45618 /opt/gitlab/embedded/service/gitlab-rails/lib/gitlab/sidekiq_middleware/request_store_middleware.rb:6:in `call'
+2018-05-30_11:30:02.45619 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/middleware/chain.rb:130:in `block in invoke'
+2018-05-30_11:30:02.45619 /opt/gitlab/embedded/service/gitlab-rails/lib/gitlab/sidekiq_middleware/shutdown.rb:52:in `call'
+2018-05-30_11:30:02.45621 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/middleware/chain.rb:130:in `block in invoke'
+2018-05-30_11:30:02.45621 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/middleware/server/active_record.rb:15:in `call'
+2018-05-30_11:30:02.45622 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/middleware/chain.rb:130:in `block in invoke'
+2018-05-30_11:30:02.45622 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sentry-raven-2.7.2/lib/raven/integrations/sidekiq.rb:9:in `call'
+2018-05-30_11:30:02.45623 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/middleware/chain.rb:130:in `block in invoke'
+2018-05-30_11:30:02.45624 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/middleware/chain.rb:133:in `invoke'
+2018-05-30_11:30:02.45624 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:169:in `block in process'
+2018-05-30_11:30:02.45625 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:141:in `block (6 levels) in dispatch'
+2018-05-30_11:30:02.45625 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/job_retry.rb:97:in `local'
+2018-05-30_11:30:02.45627 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:140:in `block (5 levels) in dispatch'
+2018-05-30_11:30:02.45627 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq.rb:36:in `block in <module:Sidekiq>'
+2018-05-30_11:30:02.45628 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:136:in `block (4 levels) in dispatch'
+2018-05-30_11:30:02.45628 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:204:in `stats'
+2018-05-30_11:30:02.45629 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:131:in `block (3 levels) in dispatch'
+2018-05-30_11:30:02.45629 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/job_logger.rb:7:in `call'
+2018-05-30_11:30:02.45630 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:130:in `block (2 levels) in dispatch'
+2018-05-30_11:30:02.45631 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/job_retry.rb:72:in `global'
+2018-05-30_11:30:02.45631 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:129:in `block in dispatch'
+2018-05-30_11:30:02.45632 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/logging.rb:44:in `with_context'
+2018-05-30_11:30:02.45633 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/logging.rb:38:in `with_job_hash_context'
+2018-05-30_11:30:02.45634 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:128:in `dispatch'
+2018-05-30_11:30:02.45634 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:168:in `process'
+2018-05-30_11:30:02.45635 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:85:in `process_one'
+2018-05-30_11:30:02.45635 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/processor.rb:73:in `run'
+2018-05-30_11:30:02.45636 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/util.rb:16:in `watchdog'
+2018-05-30_11:30:02.45637 /opt/gitlab/embedded/lib/ruby/gems/2.3.0/gems/sidekiq-5.0.5/lib/sidekiq/util.rb:25:in `block in safe_thread'
+2018-05-30_11:30:23.17120 2018-05-30T11:30:23.170Z 503 TID-otv6h832k PagesDomainVerificationCronWorker JID-ae9fdb3997abc561ddacf738 INFO: start
+2018-05-30_11:30:23.19591 2018-05-30T11:30:23.195Z 503 TID-otv6h832k PagesDomainVerificationCronWorker JID-ae9fdb3997abc561ddacf738 INFO: done: 0.025 sec
+2018-05-30_11:32:26.96218 2018-05-30T11:32:26.961Z 503 TID-otv6h83os ProjectDestroyWorker JID-81615bf718102c0eb66b1987 INFO: start
+2018-05-30_11:32:27.09927 2018-05-30T11:32:27.099Z 503 TID-otv6h83os ProjectDestroyWorker JID-81615bf718102c0eb66b1987 INFO: done: 0.137 sec
+2018-05-30_11:35:01.95064 2018-05-30T11:35:01.950Z 503 TID-otv6h81ao GitlabShellWorker JID-c3d6f59366152d9fde19f0bb INFO: start
+2018-05-30_11:35:01.95432 2018-05-30T11:35:01.954Z 503 TID-otv6h7yes GitlabShellWorker JID-7bd0ebd9ac16b0084b5ae323 INFO: start
+2018-05-30_11:35:02.03722 2018-05-30T11:35:02.036Z 503 TID-otv6h81ao GitlabShellWorker JID-c3d6f59366152d9fde19f0bb INFO: done: 0.087 sec
+2018-05-30_11:35:02.04203 2018-05-30T11:35:02.041Z 503 TID-otv6h7yes GitlabShellWorker JID-7bd0ebd9ac16b0084b5ae323 INFO: done: 0.088 sec

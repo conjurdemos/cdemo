@@ -1,7 +1,7 @@
 ---
 - name: start gitlab
   docker_container:
-    name: gitlab
+    name: "{{ gitlab_container_name }}"
     image: gitlab/gitlab-ce:latest
     state: started
     restart_policy: always
@@ -14,3 +14,15 @@
     env:
       GITLAB_ROOT_PASSWORD: "{{ gitlab_root_password }}"
       GITLAB_ROOT_EMAIL: "{{ gitlab_root_email }}"
+
+- name: copy data into gitlab
+  shell: |
+    docker cp {{ gitlab_data }}/config {{ gitlab_container_name }}:/etc/gitlab
+    docker cp {{ gitlab_data }}/data {{ gitlab_container_name }}:/var/opt/gitlab
+    docker cp {{ gitlab_data }}/logs {{ gitlab_container_name }}:/var/log/gitlab
+
+- name: restart gitlab
+  docker_container:
+    name: "{{ gitlab_container_name }}"
+    state: started
+    restart: yes

@@ -1,0 +1,34 @@
+I, [2018-05-30T08:21:52.855060 #950]  INFO -- : Refreshing Gem list
+I, [2018-05-30T08:22:14.533728 #950]  INFO -- : listening on addr=127.0.0.1:8080 fd=18
+I, [2018-05-30T08:22:14.533892 #950]  INFO -- : listening on addr=/var/opt/gitlab/gitlab-rails/sockets/gitlab.socket fd=19
+I, [2018-05-30T08:22:14.572633 #950]  INFO -- : master process ready
+I, [2018-05-30T08:22:14.752311 #1080]  INFO -- : worker=1 ready
+I, [2018-05-30T08:22:14.836303 #1077]  INFO -- : worker=0 ready
+I, [2018-05-30T08:23:24.457179 #950]  INFO -- : reaped #<Process::Status: pid 1077 exit 0> worker=0
+I, [2018-05-30T08:23:24.457637 #950]  INFO -- : reaped #<Process::Status: pid 1080 exit 0> worker=1
+I, [2018-05-30T08:23:24.458044 #950]  INFO -- : master complete
+I, [2018-05-30T08:25:14.357518 #602]  INFO -- : Refreshing Gem list
+I, [2018-05-30T08:25:37.296418 #602]  INFO -- : listening on addr=127.0.0.1:8080 fd=18
+I, [2018-05-30T08:25:37.296641 #602]  INFO -- : unlinking existing socket=/var/opt/gitlab/gitlab-rails/sockets/gitlab.socket
+I, [2018-05-30T08:25:37.296822 #602]  INFO -- : listening on addr=/var/opt/gitlab/gitlab-rails/sockets/gitlab.socket fd=19
+I, [2018-05-30T08:25:37.329878 #602]  INFO -- : master process ready
+I, [2018-05-30T08:25:37.486169 #759]  INFO -- : worker=1 ready
+I, [2018-05-30T08:25:37.491197 #756]  INFO -- : worker=0 ready
+I, [2018-05-30T08:26:21.721099 #602]  INFO -- : reaped #<Process::Status: pid 756 exit 0> worker=0
+I, [2018-05-30T08:26:21.721658 #602]  INFO -- : reaped #<Process::Status: pid 759 exit 0> worker=1
+I, [2018-05-30T08:26:21.721824 #602]  INFO -- : master complete
+I, [2018-05-30T10:15:45.931470 #601]  INFO -- : Refreshing Gem list
+I, [2018-05-30T10:16:11.443983 #601]  INFO -- : listening on addr=127.0.0.1:8080 fd=18
+I, [2018-05-30T10:16:11.444544 #601]  INFO -- : unlinking existing socket=/var/opt/gitlab/gitlab-rails/sockets/gitlab.socket
+I, [2018-05-30T10:16:11.444703 #601]  INFO -- : listening on addr=/var/opt/gitlab/gitlab-rails/sockets/gitlab.socket fd=19
+I, [2018-05-30T10:16:11.461620 #601]  INFO -- : master process ready
+I, [2018-05-30T10:16:11.615034 #757]  INFO -- : worker=0 ready
+I, [2018-05-30T10:16:11.622855 #760]  INFO -- : worker=1 ready
+W, [2018-05-30T10:21:43.547080 #757]  WARN -- : #<Unicorn::HttpServer:0x00007ff08c1b1b40>: worker (pid: 757) exceeds memory limit (505714688.0 bytes > 457077285 bytes)
+W, [2018-05-30T10:21:43.547574 #757]  WARN -- : Unicorn::WorkerKiller send SIGQUIT (pid: 757) alive: 316 sec (trial 1)
+I, [2018-05-30T10:21:43.770707 #601]  INFO -- : reaped #<Process::Status: pid 757 exit 0> worker=0
+I, [2018-05-30T10:21:44.005937 #1446]  INFO -- : worker=0 ready
+W, [2018-05-30T10:31:13.108506 #1446]  WARN -- : #<Unicorn::HttpServer:0x00007ff08c1b1b40>: worker (pid: 1446) exceeds memory limit (495450624.0 bytes > 480674107 bytes)
+W, [2018-05-30T10:31:13.108976 #1446]  WARN -- : Unicorn::WorkerKiller send SIGQUIT (pid: 1446) alive: 568 sec (trial 1)
+I, [2018-05-30T10:31:13.475777 #601]  INFO -- : reaped #<Process::Status: pid 1446 exit 0> worker=0
+I, [2018-05-30T10:31:14.251163 #2723]  INFO -- : worker=0 ready

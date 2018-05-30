@@ -1,0 +1,79 @@
+2018-05-30_08:21:21.22176 LOG:  database system was shut down at 2018-05-30 08:21:16 GMT
+2018-05-30_08:21:21.22292 LOG:  MultiXact member wraparound protections are now enabled
+2018-05-30_08:21:21.22412 LOG:  database system is ready to accept connections
+2018-05-30_08:21:21.22463 LOG:  autovacuum launcher started
+2018-05-30_08:22:43.31097 ERROR:  relation "plans" does not exist at character 183
+2018-05-30_08:22:43.31110 STATEMENT:  SELECT COUNT(*) FROM projects INNER JOIN project_mirror_data ON project_mirror_data.project_id = projects.id
+2018-05-30_08:22:43.31111 	INNER JOIN namespaces ON projects.namespace_id = namespaces.id
+2018-05-30_08:22:43.31111 	LEFT JOIN plans ON namespaces.plan_id = plans.id
+2018-05-30_08:22:43.31111 	 WHERE projects.mirror = true
+2018-05-30_08:22:43.31111 	AND project_mirror_data.retry_count <= 14
+2018-05-30_08:22:43.31111 	AND (projects.visibility_level = 20 OR plans.name IN ('early_adopter', 'bronze', 'silver', 'gold'))
+2018-05-30_08:22:43.31112 	
+2018-05-30_08:22:43.31112 	AND projects.import_status NOT IN ('scheduled', 'started')
+2018-05-30_08:22:43.31112 	AND project_mirror_data.next_execution_timestamp <= NOW()
+2018-05-30_08:22:43.31112 	;
+2018-05-30_08:22:43.31215 ERROR:  relation "plans" does not exist at character 183
+2018-05-30_08:22:43.31216 STATEMENT:  SELECT COUNT(*) FROM projects INNER JOIN project_mirror_data ON project_mirror_data.project_id = projects.id
+2018-05-30_08:22:43.31216 	INNER JOIN namespaces ON projects.namespace_id = namespaces.id
+2018-05-30_08:22:43.31216 	LEFT JOIN plans ON namespaces.plan_id = plans.id
+2018-05-30_08:22:43.31216 	 WHERE projects.mirror = true
+2018-05-30_08:22:43.31216 	AND project_mirror_data.retry_count <= 14
+2018-05-30_08:22:43.31216 	AND (projects.visibility_level = 20 OR plans.name IN ('early_adopter', 'bronze', 'silver', 'gold'))
+2018-05-30_08:22:43.31216 	
+2018-05-30_08:22:43.31217 	AND projects.import_status NOT IN ('scheduled', 'started')
+2018-05-30_08:22:43.31217 	AND (project_mirror_data.next_execution_timestamp - projects.mirror_last_update_at) <= '30 minutes'::interval
+2018-05-30_08:22:43.31217 	AND projects.mirror_last_update_at < NOW() - '30 minutes'::interval
+2018-05-30_08:22:43.31217 	;
+2018-05-30_08:22:43.31323 ERROR:  relation "plans" does not exist at character 183
+2018-05-30_08:22:43.31324 STATEMENT:  SELECT COUNT(*) FROM projects INNER JOIN project_mirror_data ON project_mirror_data.project_id = projects.id
+2018-05-30_08:22:43.31324 	INNER JOIN namespaces ON projects.namespace_id = namespaces.id
+2018-05-30_08:22:43.31324 	LEFT JOIN plans ON namespaces.plan_id = plans.id
+2018-05-30_08:22:43.31324 	 WHERE projects.mirror = true
+2018-05-30_08:22:43.31324 	AND project_mirror_data.retry_count <= 14
+2018-05-30_08:22:43.31325 	AND (projects.visibility_level = 20 OR plans.name IN ('early_adopter', 'bronze', 'silver', 'gold'))
+2018-05-30_08:22:43.31325 	
+2018-05-30_08:22:43.31325 	AND projects.import_status NOT IN ('scheduled', 'started')
+2018-05-30_08:22:43.31325 	AND projects.mirror_last_update_at >= NOW() - '30 seconds'::interval
+2018-05-30_08:22:43.31325 	;
+2018-05-30_08:22:43.31423 ERROR:  relation "plans" does not exist at character 183
+2018-05-30_08:22:43.31423 STATEMENT:  SELECT COUNT(*) FROM projects INNER JOIN project_mirror_data ON project_mirror_data.project_id = projects.id
+2018-05-30_08:22:43.31423 	INNER JOIN namespaces ON projects.namespace_id = namespaces.id
+2018-05-30_08:22:43.31424 	LEFT JOIN plans ON namespaces.plan_id = plans.id
+2018-05-30_08:22:43.31424 	 WHERE projects.mirror = true
+2018-05-30_08:22:43.31424 	AND project_mirror_data.retry_count <= 14
+2018-05-30_08:22:43.31424 	AND (projects.visibility_level = 20 OR plans.name IN ('early_adopter', 'bronze', 'silver', 'gold'))
+2018-05-30_08:22:43.31424 	
+2018-05-30_08:22:43.31424 	AND projects.import_status NOT IN ('scheduled', 'started')
+2018-05-30_08:22:43.31425 	AND project_mirror_data.next_execution_timestamp <= NOW() - '10 seconds'::interval
+2018-05-30_08:22:43.31425 	;
+2018-05-30_08:22:43.31514 ERROR:  relation "plans" does not exist at character 183
+2018-05-30_08:22:43.31514 STATEMENT:  SELECT COUNT(*) FROM projects INNER JOIN project_mirror_data ON project_mirror_data.project_id = projects.id
+2018-05-30_08:22:43.31515 	INNER JOIN namespaces ON projects.namespace_id = namespaces.id
+2018-05-30_08:22:43.31516 	LEFT JOIN plans ON namespaces.plan_id = plans.id
+2018-05-30_08:22:43.31516 	 WHERE projects.mirror = true
+2018-05-30_08:22:43.31516 	AND project_mirror_data.retry_count <= 14
+2018-05-30_08:22:43.31516 	AND (projects.visibility_level = 20 OR plans.name IN ('early_adopter', 'bronze', 'silver', 'gold'))
+2018-05-30_08:22:43.31516 	
+2018-05-30_08:22:43.31516 	AND projects.import_status IN ('scheduled', 'started')
+2018-05-30_08:22:43.31516 	;
+2018-05-30_08:22:43.31611 ERROR:  relation "plans" does not exist at character 183
+2018-05-30_08:22:43.31611 STATEMENT:  SELECT COUNT(*) FROM projects INNER JOIN project_mirror_data ON project_mirror_data.project_id = projects.id
+2018-05-30_08:22:43.31612 	INNER JOIN namespaces ON projects.namespace_id = namespaces.id
+2018-05-30_08:22:43.31612 	LEFT JOIN plans ON namespaces.plan_id = plans.id
+2018-05-30_08:22:43.31612 	 WHERE projects.mirror = true
+2018-05-30_08:22:43.31612 	AND project_mirror_data.retry_count <= 14
+2018-05-30_08:22:43.31612 	AND (projects.visibility_level = 20 OR plans.name IN ('early_adopter', 'bronze', 'silver', 'gold'))
+2018-05-30_08:22:43.31612 	
+2018-05-30_08:22:43.31612 	AND projects.import_status = 'scheduled'
+2018-05-30_08:22:43.31613 	;
+2018-05-30_08:22:43.31700 ERROR:  relation "plans" does not exist at character 183
+2018-05-30_08:22:43.31701 STATEMENT:  SELECT COUNT(*) FROM projects INNER JOIN project_mirror_data ON project_mirror_data.project_id = projects.id
+2018-05-30_08:22:43.31701 	INNER JOIN namespaces ON projects.namespace_id = namespaces.id
+2018-05-30_08:22:43.31702 	LEFT JOIN plans ON namespaces.plan_id = plans.id
+2018-05-30_08:22:43.31702 	 WHERE projects.mirror = true
+2018-05-30_08:22:43.31702 	AND project_mirror_data.retry_count <= 14
+2018-05-30_08:22:43.31702 	AND (projects.visibility_level = 20 OR plans.name IN ('early_adopter', 'bronze', 'silver', 'gold'))
+2018-05-30_08:22:43.31702 	
+2018-05-30_08:22:43.31702 	AND projects.import_status = 'started'
+2018-05-30_08:22:43.31702 	;

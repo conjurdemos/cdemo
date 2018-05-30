@@ -1,0 +1,6 @@
+[core]
+	bare = true
+	repositoryformatversion = 0
+	filemode = true
+[gitlab]
+	fullpath = root/LAB2_Containers
