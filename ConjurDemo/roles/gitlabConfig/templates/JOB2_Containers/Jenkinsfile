@@ -1,0 +1,21 @@
+pipeline {
+    agent any
+   
+    stages {
+        stage ('Create Identity for tomcat contaienrs') {
+            steps {
+                sh "cd bin && bash hfToken.sh tomcat"
+            }
+        }
+		stage ('Create Identity for webapp containers') {
+			steps {
+				sh "cd bin && bash hfToken.sh webapp"
+			}
+		}
+		stage ('Create tomcat containers') {
+			steps {
+				sh "cd bin && bash tomcatContainers.sh tomcat 'shared_secret_auth/aws_access_key'"
+			}
+		}
+    }
+}

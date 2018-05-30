@@ -2,4 +2,3 @@
 gitlab_container_name: 'gitlab'
 gitlab_root_password: 'Cyberark1'
 gitlab_root_email: 'admin@cyberark.com'
-gitlab_data: "{{ role_path }}/templates/gitlab_data"
