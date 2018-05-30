@@ -7,4 +7,6 @@ jenkins_url: "http://{{ ansible_default_ipv4.address }}:8080"
 jenkins_image_name: 'conjur_jenkins'
 jenkins_container_name: 'jenkins'
 
-job1_config: "{{ lookup('file','{{ role_path}}/files/LAB1_Summon/config.xml') }}"
+job1_config: "{{ lookup('file','templates/LAB1_Summon/config.xml') }}"
+
+job2_config: "{{ lookup('file', 'templates/LAB2_Containers/config.xml') }}"
