@@ -48,10 +48,14 @@
     docker exec "{{ jenkins_container_name }}" cp /identity/.conjurrc /root/.conjurrc
     docker exec "{{ jenkins_container_name }}" cp /identity/conjur-cyberark.pem /root/conjur-cyberark.pem
 
-- name: wait for port 8080
-  wait_for:
-    port: 8080
-    delay: 60
+- name: Wait for jenkins to start
+  uri:
+    url: "{{ jenkins_url }}"
+    return_content: yes
+  register: webpage
+  until: '"New Item" in webpage.content'
+  retries: 60
+  delay: 3
 
 - name: Set Up Lab1
   jenkins_job:
