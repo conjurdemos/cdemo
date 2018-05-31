@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source ../utils.sh
+
 main(){
   if [ "$1" == "automate" ];
     then
