@@ -14,8 +14,13 @@ main (){
   echo "conjur appliance url = $conjur_appliance_url"
   echo "conjur variable name= $conjur_variable"
   echo "sleep time= $sleep_time"
-
-  docker container run -d --name "$1-$(openssl rand -hex 4)" --network conjur -e CONJUR_AUTHN_LOGIN=$conjur_authn_login -e CONJUR_AUTHN_API_KEY=$conjur_authn_api_key -e CONJUR_APPLIANCE_URL=$conjur_appliance_url -e CONJUR_ACCOUNT=$conjur_account -e CONJUR_VARIABLE=$conjur_variable -e SLEEP_TIME=$sleep_time curl_image
+  
+  count=1
+  while [ $count -le 2 ]
+  do
+    docker container run -d --name "$1-$(openssl rand -hex 4)" --network conjur --entrypoint /root/container_client.sh -e CONJUR_AUTHN_LOGIN=$conjur_authn_login -e CONJUR_AUTHN_API_KEY=$conjur_authn_api_key -e CONJUR_APPLIANCE_URL=$conjur_appliance_url -e CONJUR_ACCOUNT=$conjur_account -e CONJUR_VARIABLE=$conjur_variable -e SLEEP_TIME=$sleep_time curl_image
+    (( count++ ))
+  done
 }
 
 main $1 $2
