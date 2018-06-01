@@ -2,6 +2,6 @@
 - hosts: toolMachines
   roles:
     - weavescopeConfig
-    - jenkinsConfig
     - gitlabConfig
+    - jenkinsConfig
     - awxConfig
