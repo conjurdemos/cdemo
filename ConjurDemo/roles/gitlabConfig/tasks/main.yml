@@ -47,3 +47,11 @@
 - name: create gitlab job2_rotation
   shell: |
     docker exec conjur-cli bash -c "cd /JOB2_Rotation && git init && git add --all && git -c user.name='Cyber Admin' -c user.email='admin@cyberark.com' commit -m 'Initial Commit' && git -c user.name='Cyber Admin' -c user.email='admin@cyberark.com' push --set-upstream http://{{ gitlab_account }}:{{ gitlab_root_password }}@{{ gitlab_container_name }}/root/LAB2_Rotation.git master"
+
+- name: copy files into conjur-cli for job2_DenialTomcat
+  shell: |
+    docker cp "{{ role_path }}/templates/JOB2_DenialTomcat" conjur-cli:/
+
+- name: create gitlab job2_denialTomcat
+  shell: |
+    docker exec conjur-cli bash -c "cd /JOB2_DenialTomcat && git init && git add --all && git -c user.name='Cyber Admin' -c user.email='admin@cyberark.com' commit -m 'Initial Commit' && git -c user.name='Cyber Admin' -c user.email='admin@cyberark.com' push --set-upstream http://{{ gitlab_account }}:{{ gitlab_root_password }}@{{ gitlab_container_name }}/root/LAB2_DenialTomcat.git master"

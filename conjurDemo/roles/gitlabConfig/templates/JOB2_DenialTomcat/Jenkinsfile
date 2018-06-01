@@ -2,9 +2,9 @@ pipeline {
     agent any
    
     stages {
-        stage ('Rotate Secret') {
+        stage ('Deny TOMCAT containers') {
             steps {
-                sh "cd bin && bash hfToken.sh tomcat"
+                sh "echo "eventually""
             }
         }
     }

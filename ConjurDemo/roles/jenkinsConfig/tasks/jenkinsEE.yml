@@ -81,3 +81,10 @@
     config: "{{ job2_rotation }}"
     url: "{{ jenkins_url }}"
     state: present
+
+- name: Set up Lab2_DenialTomcat
+  jenkins_job:
+    name: LAB2_DenialTomcat
+    config: "{{ job2_DenialTomcat }}"
+    url: "{{ jenkins_url }}"
+    state: present
