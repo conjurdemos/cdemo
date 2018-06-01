@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage ('Use summon to pull password') {
             steps {
-                sh "summon -f secrets.yml bash pullPasswordSUMMON.sh automate"
+                sh "summon -f secrets.yml bash pullPasswordSUMMON.sh"
             }
         }
     }
