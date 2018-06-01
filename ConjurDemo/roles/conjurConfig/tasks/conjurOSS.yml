@@ -1,7 +1,7 @@
 ---
 - name: createConjurNetwork
   docker_network:
-    name: conjur
+    name: "{{ conjur_network_name }}"
     state: present
 
 - name: createConjurVolume
@@ -19,7 +19,7 @@
     state: started
     recreate: yes
     networks:
-     - name: conjur
+     - name: "{{ conjur_network_name }}"
     restart_policy: always
 
 - name: Start Conjur
@@ -27,7 +27,7 @@
     name: "{{ conjuross_container_name }}"
     image: cyberark/conjur
     networks:
-     - name: conjur
+     - name: "{{ conjur_network_name }}"
     published_ports:
      - "{{ conjuross_port }}:80"
     state: started
@@ -41,16 +41,14 @@
 - name: Start Conjur CLI
   docker_container:
     name: conjur-cli
-    image: cyberark/conjur-cli:5-6.1.0
+    image: cdemo/conjur-cli:latest
     state: started
     volumes:
-     - "../policy:/policy"
-     - "../scripts:/scripts"
      - "hostfactoryTokens:/hostfactoryTokens"
      - "identity:/identity"
     restart_policy: always
     networks:
-     - name: conjur
+     - name: "{{ conjur_network_name }}"
     recreate: yes
     entrypoint: []
     command: ["sleep", "infinity"]
