@@ -11,4 +11,4 @@ job1_config: "{{ lookup('file','templates/LAB1_Summon/config.xml') }}"
 
 job2_config: "{{ lookup('file', 'templates/LAB2_Containers/config.xml') }}"
 
-job2_rotation: "{{vlookup('file', 'templates/LAB2_Rotation/config.xml') }}"
+job2_rotation: "{{lookup('file', 'templates/LAB2_Rotation/config.xml') }}"
