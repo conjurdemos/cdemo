@@ -20,7 +20,7 @@
             <configVersion>2</configVersion>
             <userRemoteConfigs>
                 <hudson.plugins.git.UserRemoteConfig>
-                    <url>http://gitlab/root/LAB1_Summon.git</url>
+                    <url>http://gitlab/root/LAB2_Rotation.git</url>
                     <credentialsId>gitlabcred</credentialsId>
                 </hudson.plugins.git.UserRemoteConfig>
             </userRemoteConfigs>

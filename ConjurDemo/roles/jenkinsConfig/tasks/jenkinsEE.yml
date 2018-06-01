@@ -83,3 +83,10 @@
     config: "{{ job2_config }}"
     url: "{{ jenkins_url }}"
     state: present
+
+- name: Set up Lab2_Rotation
+  jenkins_job:
+    name: LAB2_Rotation
+    config: "{{ job2_rotation }}"
+    url: "{{ jenkins_url }}"
+    state: present
