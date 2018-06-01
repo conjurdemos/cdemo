@@ -61,15 +61,6 @@
   shell: |
     curl -s -X POST 'http://localhost:8080/credentials/store/system/domain/_/createCredentials' --data-urlencode 'json={"": "0","credentials": {"scope": "GLOBAL","id": "gitlabcred","username": "root", "password": "Cyberark1", "description": "", "$class": "com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl"}}'
 
-# - name: Create gitlab creds
-#   uri:
-#     url: "{{ jenkins_url }}"
-#     method: POST
-#     validate_certs: no
-#     headers:
-#       Content-Type: "application/json"
-#     body: "json={{ lookup('file', 'templates/LAB2_Containers/credential.json') }}"
-
 - name: Set Up Lab1
   jenkins_job:
     name: LAB1_Summon
