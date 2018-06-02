@@ -13,6 +13,4 @@ job2_config: "{{ lookup('file', 'templates/LAB2_Containers/config.xml') }}"
 
 job2_rotation: "{{lookup('file', 'templates/LAB2_Rotation/config.xml') }}"
 
-job2_DenialTomcat: "{{lookup('file', 'templates/LAB2_DenialTomcat/config.xml') }}"
-
 job2_StopContainers: "{{lookup('file', 'templates/LAB2_StopContainers/config.xml') }}"
