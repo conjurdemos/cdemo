@@ -1,5 +1,0 @@
-<Context docBase="${basedir}/src/main/webapp" reloadable="true">
-    <!-- http://tomcat.apache.org/tomcat-7.0-doc/config/context.html -->
-    <Parameter name="database_password" value="<%= SuperSecret123 %>"/>
-    <Environment name="app.devel.api" value="<%= @api_token %>" type="java.lang.String" override="true"/>
-</Context>
