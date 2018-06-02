@@ -14,12 +14,12 @@ pipeline {
 		}
 		stage ('Create tomcat containers') {
 			steps {
-				sh "cd bin && bash startContainers.sh tomcat 'shared_secret_auth/aws_access_key'"
+				sh "cd bin && bash startContainers.sh tomcat 'shared_secret_auth/aws_access_key' 5"
 			}
 		}
 		stage ('Create webapp containers') {
 			steps {
-				sh "cd bin && bash startContainers.sh webapp 'shared_secret_auth/aws_access_key'"
+				sh "cd bin && bash startContainers.sh webapp 'shared_secret_auth/aws_access_key' 5"
 			}
 		}
     }

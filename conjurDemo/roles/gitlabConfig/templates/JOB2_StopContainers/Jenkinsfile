@@ -4,11 +4,12 @@ pipeline {
     stages {
         stage ('stop Tomcat containers') {
             steps {
-                sh "docker container rm -f $(docker container ls -f name="tomcat*")"
+                sh "bash stopContainers.sh tomcat"
             }
+        }
         stage ('stop WebApp containers') {
             steps {
-                sh "docker container rm -f $(docker container ls -f name="webapp*")"
+                sh "bash stopContainers.sh webapp"
             }
         }
     }

@@ -12,7 +12,7 @@ printf "\n\n\nExecuting within the container...\n\n"
 # CONJUR_VARIABLE - Variable to pull from conjur
 # SLEEP_TIME - The amount of time between password pulls
 
-secret_name=$(echo $CONJUR_VARIABLE)
+secret_name=$(echo $CONJUR_VARIABLE | sed 's=/=%2F=g')
 declare LOGFILE=cc.log
 
 # for logfile to see whats going on
@@ -21,22 +21,22 @@ touch $LOGFILE
 while [ 1=1 ]; do
 	# Login container w/ its API key, authenticate and get API key for session
 	hostname=host%2F$CONJUR_AUTHN_LOGIN
-	response=$(curl -s -k \
+	echo "Hostname is $hostname"
+	echo "API key is $CONJUR_AUTHN_API_KEY"
+	echo "The Conjur Account is $CONJUR_ACCOUNT"
+	echo "Pulling secret $CONJUR_VARIABLE"
+	response=$(curl -k \
 	 --request POST \
 	 --data-binary $CONJUR_AUTHN_API_KEY \
 	 $CONJUR_APPLIANCE_URL/authn/$CONJUR_ACCOUNT/$hostname/authenticate)
 	CONT_SESSION_TOKEN=$(echo -n $response| base64 | tr -d '\r\n')
-
-#echo "CONT_SESSION_TOKEN: " $CONT_SESSION_TOKEN >> $LOGFILE
-
-	# FETCH variable value
 	secret=$(curl -s -k \
          --request GET \
          -H "Content-Type: application/json" \
          -H "Authorization: Token token=\"$CONT_SESSION_TOKEN\"" \
          $CONJUR_APPLIANCE_URL/secrets/$CONJUR_ACCOUNT/variable/$secret_name)
-
-  	echo $(date) "The secret is: " $secret >> $LOGFILE
+	echo "The secret is $secret"
+  	echo "$(date) The secret is: $secret" >> $LOGFILE
 	sleep $SLEEP_TIME 
 done
 

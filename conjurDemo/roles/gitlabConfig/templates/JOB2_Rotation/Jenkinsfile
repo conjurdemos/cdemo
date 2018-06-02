@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage ('Rotate Secret') {
             steps {
-                sh "cd bin && bash hfToken.sh tomcat"
+                sh "bash rotateSecret.sh"
             }
         }
     }
