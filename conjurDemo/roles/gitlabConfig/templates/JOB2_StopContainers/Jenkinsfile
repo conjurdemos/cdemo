@@ -1,0 +1,15 @@
+pipeline {
+    agent any
+   
+    stages {
+        stage ('stop Tomcat containers') {
+            steps {
+                sh "docker container rm -f $(docker container ls -f name="tomcat*")"
+            }
+        stage ('stop WebApp containers') {
+            steps {
+                sh "docker container rm -f $(docker container ls -f name="webapp*")"
+            }
+        }
+    }
+}

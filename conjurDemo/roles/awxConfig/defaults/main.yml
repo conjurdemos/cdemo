@@ -1,3 +1,3 @@
 ---
 # defaults file for awxConfig
-awx_url: "http://{{ ansible_default_ipv4.address }}"
+awx_url: 'http://{{ ansible_default_ipv4.address }}/#/login'

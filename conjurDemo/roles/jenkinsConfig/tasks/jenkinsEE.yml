@@ -43,7 +43,7 @@
 
 - name: create identity file for jenkins
   shell: |
-    docker exec conjur-cli bash -c "cd /scripts/apiInteraction && bash 1_hfTokenREST.sh automate && bash 2_obtainIdentityREST.sh automate"
+    docker exec conjur-cli bash -c "cd /scripts/ && bash 1_hfTokenREST.sh automate && bash 2_obtainIdentityREST.sh automate"
     docker exec "{{ jenkins_container_name }}" cp /identity/.netrc /root/.netrc
     docker exec "{{ jenkins_container_name }}" cp /identity/.conjurrc /root/.conjurrc
     docker exec "{{ jenkins_container_name }}" cp /identity/conjur-cyberark.pem /root/conjur-cyberark.pem
@@ -86,5 +86,12 @@
   jenkins_job:
     name: LAB2_DenialTomcat
     config: "{{ job2_DenialTomcat }}"
+    url: "{{ jenkins_url }}"
+    state: present
+
+- name: Set up Lab2_StopContainers
+  jenkins_job:
+    name: LAB2_StopContainers
+    config: "{{ job2_StopContainers }}"
     url: "{{ jenkins_url }}"
     state: present

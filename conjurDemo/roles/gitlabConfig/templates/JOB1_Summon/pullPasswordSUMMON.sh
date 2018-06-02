@@ -5,9 +5,9 @@ main(){
 }
 
 summon_jenkins(){
-  local api=$(cat ~/.netrc | grep password | awk '{print $2}')
-  local account=$(cat ~/.conjurrc | grep account | awk '{print $2}')
-  local login=$(cat ~/.netrc | grep login | awk '{print $2}')
+  local api=$(cat /root/.netrc | grep password | awk '{print $2}')
+  local account=$(cat /root/.conjurrc | grep account | awk '{print $2}')
+  local login=$(cat /root/.netrc | grep login | awk '{print $2}')
   
   printf "Using Conjur login name: $login\n"
   printf "Using api: $api\n"
