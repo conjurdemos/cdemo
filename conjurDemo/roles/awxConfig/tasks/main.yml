@@ -15,7 +15,7 @@
     url: "{{ awx_url }}"
     return_content: yes
   register: webpage
-  until: '"Welcome to Ansible AWX!" in webpage.content'
+  until: '"working..." in webpage.content'
   retries: 60
   delay: 3
 
