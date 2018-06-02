@@ -10,6 +10,15 @@
   args:
     chdir: /opt/awx/installer
 
+- name: Wait for AWX
+  uri:
+    url: "{{ awx_url }}"
+    return_content: yes
+  register: webpage
+  until: '"Welcome to Ansible AWX!" in webpage.content'
+  retries: 60
+  delay: 3
+
 - name: connect instances to docker network
   shell: |
     docker network connect conjur awx_web
