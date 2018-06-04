@@ -24,17 +24,16 @@
 - name: Start Jenkins
   docker_container:
     name: "{{ jenkins_container_name }}"
-    image: "{{ jenkins_image_name }}:latest"
+    image: "{{ jenkins_image_name }}"
     state: started
     user: root
     published_ports:
-     - "8080:8080"
+     - "{{ jenkins_port }}:8080"
      - "50000:50000"
     networks:
      - name: conjur
     volumes:
      - "/var/run/docker.sock:/var/run/docker.sock"
-     - "../scripts:/scripts"
      - "conjur_cert:/conjur_cert"
      - "hostfactoryTokens:/hostfactoryTokens"
      - "identity:/identity"
@@ -44,9 +43,9 @@
 - name: create identity file for jenkins
   shell: |
     docker exec conjur-cli bash -c "cd /scripts/ && bash 1_hfTokenREST.sh automate && bash 2_obtainIdentityREST.sh automate"
-    docker exec "{{ jenkins_container_name }}" cp /identity/.netrc /root/.netrc
-    docker exec "{{ jenkins_container_name }}" cp /identity/.conjurrc /root/.conjurrc
-    docker exec "{{ jenkins_container_name }}" cp /identity/conjur-cyberark.pem /root/conjur-cyberark.pem
+    docker exec {{ jenkins_container_name }} cp /identity/.netrc /root/.netrc
+    docker exec {{ jenkins_container_name }} cp /identity/.conjurrc /root/.conjurrc
+    docker exec {{ jenkins_container_name }} cp /identity/conjur-{{ conjur_account }}.pem /root/conjur-{{ conjur_account }}.pem
 
 - name: Wait for jenkins to start
   uri:
@@ -61,14 +60,14 @@
   shell: |
     curl -s -X POST 'http://localhost:8080/credentials/store/system/domain/_/createCredentials' --data-urlencode 'json={"": "0","credentials": {"scope": "GLOBAL","id": "gitlabcred","username": "root", "password": "Cyberark1", "description": "", "$class": "com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl"}}'
 
-- name: Set Up Lab1
+- name: Set Up Lab1_Summon
   jenkins_job:
     name: LAB1_Summon
     config: "{{ job1_config }}"
-    url: http://localhost:8080
+    url: "{{ jenkins_url }}"
     state: present
 
-- name: Set up Lab2
+- name: Set up Lab2_Containers
   jenkins_job:
     name: LAB2_Containers
     config: "{{ job2_config }}"

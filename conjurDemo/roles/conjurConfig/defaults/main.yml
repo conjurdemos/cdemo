@@ -9,7 +9,7 @@ conjur_OSS_image_name: 'cyberark/conjur'
 conjur_network_name: conjur
 conjur_cli_container_name: 'conjur-cli'
 conjur_cli_image_name: 'cdemo/conjur-cli:latest'
-conjur_account: 'Cyberark'
+conjur_account: 'cyberark'
 conjur_admin_password: 'Cyberark1'
 
 conjur_EE_port: '443'

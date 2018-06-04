@@ -24,6 +24,10 @@
   retries: 60
   delay: 3
 
+- name: Pause for Gitlab to get ready
+  pause:
+    seconds: 10
+
 - name: copy files into {{ conjur_cli_container_name }} for gitlab
   shell: |
     docker cp "{{ role_path }}/files/{{ item }}" {{ conjur_cli_container_name }}:/

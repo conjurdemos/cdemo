@@ -1,6 +1,18 @@
 ---
 conjur_version: 'EE'
 
+conjur_container_name: 'conjur-master'
+conjur_EE_image_name: 'registry2.itci.conjur.net/conjur-appliance:5.0-stable'
+conjur_OSS_image_name: 'cyberark/conjur'
+conjur_network_name: conjur
+conjur_cli_container_name: 'conjur-cli'
+conjur_cli_image_name: 'cdemo/conjur-cli:latest'
+conjur_account: 'cyberark'
+conjur_admin_password: 'Cyberark1'
+
+conjur_EE_port: '443'
+conjur_OSS_port: '81'
+
 gitlab_container_name: 'gitlab'
 gitlab_image_name: gitlab/gitlab-ce:latest
 gitlab_root_password: 'Cyberark1'
@@ -8,6 +20,3 @@ gitlab_account: 'root'
 gitlab_root_email: 'admin@cyberark.com'
 gitlab_port: 7070
 gitlab_url: "http://{{ ansible_default_ipv4.address }}:{{ gitlab_port }}"
-
-conjur_network_name: 'conjur'
-conjur_cli_container_name: 'conjur-cli'

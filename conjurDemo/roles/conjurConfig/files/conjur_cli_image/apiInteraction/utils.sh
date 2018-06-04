@@ -58,7 +58,7 @@ identity_jenkins(){
   local newidentity=$(curl -k -X POST -s -H "Authorization: Token token=\"$token\"" --data-urlencode id=$id https://conjur-master/host_factories/hosts)
   local hostname=$(echo $newidentity | jq -r '.id' | awk -F: '{print $NF}')
   local api=$(echo $newidentity | jq -r '.api_key')
-  cp /root/conjur-cyberark.pem /identity/conjur-cyberark.pem
+  cp /root/*.pem /identity/
   cp /root/.conjurrc /identity/.conjurrc
   echo "machine https://conjur-master/authn" > /identity/.netrc
   echo "  login host/$hostname" >> /identity/.netrc
