@@ -2,13 +2,13 @@
 - name: start gitlab
   docker_container:
     name: "{{ gitlab_container_name }}"
-    image: gitlab/gitlab-ce:latest
+    image: "{{ gitlab_image_name }}"
     state: started
     restart_policy: always
     recreate: yes
     hostname: "{{ gitlab_container_name }}"
     networks:
-     - name: "{{ conjur_docker_network }}"
+     - name: "{{ conjur_network_name }}"
     published_ports:
      - "{{ gitlab_port }}:80"
     env:
@@ -24,34 +24,12 @@
   retries: 60
   delay: 3
 
-- name: copy files into conjur-cli for job1_summon
+- name: copy files into {{ conjur_cli_container_name }} for gitlab
   shell: |
-    docker cp "{{ role_path }}/files/JOB1_Summon" conjur-cli:/
-
-- name: create gitlab job1_summon
-  shell: |
-    docker exec conjur-cli bash -c "cd /JOB1_Summon && git init && git add --all && git -c user.name='Cyber Admin' -c user.email='admin@cyberark.com' commit -m 'Initial Commit' && git -c user.name='Cyber Admin' -c user.email='admin@cyberark.com' push --set-upstream http://{{ gitlab_account }}:{{ gitlab_root_password }}@{{ gitlab_container_name }}/root/LAB1_Summon.git master"
- 
-- name: copy files into conjur-cli for Job2_containers
-  shell: |
-    docker cp "{{ role_path }}/files/JOB2_Containers" conjur-cli:/
-
-- name: create gitlab job2_containers
-  shell: |
-    docker exec conjur-cli bash -c "cd /JOB2_Containers && git init && git add --all && git -c user.name='Cyber Admin' -c user.email='admin@cyberark.com' commit -m 'Initial Commit' && git -c user.name='Cyber Admin' -c user.email='admin@cyberark.com' push --set-upstream http://{{ gitlab_account }}:{{ gitlab_root_password }}@{{ gitlab_container_name }}/root/LAB2_Containers.git master"
-
-- name: copy files into conjur-cli for job2_rotation
-  shell: |
-    docker cp "{{ role_path }}/files/JOB2_Rotation" conjur-cli:/
-
-- name: create gitlab job2_rotation
-  shell: |
-    docker exec conjur-cli bash -c "cd /JOB2_Rotation && git init && git add --all && git -c user.name='Cyber Admin' -c user.email='admin@cyberark.com' commit -m 'Initial Commit' && git -c user.name='Cyber Admin' -c user.email='admin@cyberark.com' push --set-upstream http://{{ gitlab_account }}:{{ gitlab_root_password }}@{{ gitlab_container_name }}/root/LAB2_Rotation.git master"
-
-- name: copy files into conjur-cli for job2_StopContainers
-  shell: |
-    docker cp "{{ role_path }}/files/JOB2_StopContainers" conjur-cli:/
-
-- name: create gitlab job2_stopContainers
-  shell: |
-    docker exec conjur-cli bash -c "cd /JOB2_StopContainers && git init && git add --all && git -c user.name='Cyber Admin' -c user.email='admin@cyberark.com' commit -m 'Initial Commit' && git -c user.name='Cyber Admin' -c user.email='admin@cyberark.com' push --set-upstream http://{{ gitlab_account }}:{{ gitlab_root_password }}@{{ gitlab_container_name }}/root/LAB2_StopContainers.git master"
+    docker cp "{{ role_path }}/files/{{ item }}" {{ conjur_cli_container_name }}:/
+    docker exec {{ conjur_cli_container_name }} bash -c "cd /{{ item }} && git init && git add --all && git -c user.name={{ gitlab_account }} -c user.email={{ gitlab_root_email }} commit -m 'Initial Commit' && git -c user.name={{ gitlab_account }} -c user.email={{ gitlab_root_email }} push --set-upstream http://{{ gitlab_account }}:{{ gitlab_root_password }}@{{ gitlab_container_name }}/root/{{ item }}.git master"
+  with_items:
+    - LAB1_Summon
+    - LAB2_Containers
+    - LAB2_Rotation
+    - LAB2_StopContainers
