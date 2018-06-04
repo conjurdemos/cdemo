@@ -7,10 +7,10 @@ jenkins_url: "http://{{ ansible_default_ipv4.address }}:8080"
 jenkins_image_name: 'conjur_jenkins'
 jenkins_container_name: 'jenkins'
 
-job1_config: "{{ lookup('file','templates/LAB1_Summon/config.xml') }}"
+job1_config: "{{ lookup('file','files/LAB1_Summon/config.xml') }}"
 
-job2_config: "{{ lookup('file', 'templates/LAB2_Containers/config.xml') }}"
+job2_config: "{{ lookup('file', 'files/LAB2_Containers/config.xml') }}"
 
-job2_rotation: "{{lookup('file', 'templates/LAB2_Rotation/config.xml') }}"
+job2_rotation: "{{lookup('file', 'files/LAB2_Rotation/config.xml') }}"
 
-job2_StopContainers: "{{lookup('file', 'templates/LAB2_StopContainers/config.xml') }}"
+job2_StopContainers: "{{lookup('file', 'files/LAB2_StopContainers/config.xml') }}"

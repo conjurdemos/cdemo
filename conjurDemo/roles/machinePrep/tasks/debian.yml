@@ -1,9 +1,4 @@
 ---
-- name: Install PIP
-  easy_install:
-    name: pip
-    state: latest
-
 - name: Install apt packages
   apt:
     name: "{{ item }}"
@@ -19,6 +14,11 @@
    - gnupg2
    - software-properties-common
    - python-apt
+
+- name: Install PIP
+  easy_install:
+    name: pip
+    state: latest
 
 - name: install Ansible Dependencies
   pip:

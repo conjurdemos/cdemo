@@ -26,7 +26,7 @@
 
 - name: copy files into conjur-cli for job1_summon
   shell: |
-    docker cp "{{ role_path }}/templates/JOB1_Summon" conjur-cli:/
+    docker cp "{{ role_path }}/files/JOB1_Summon" conjur-cli:/
 
 - name: create gitlab job1_summon
   shell: |
@@ -34,7 +34,7 @@
  
 - name: copy files into conjur-cli for Job2_containers
   shell: |
-    docker cp "{{ role_path }}/templates/JOB2_Containers" conjur-cli:/
+    docker cp "{{ role_path }}/files/JOB2_Containers" conjur-cli:/
 
 - name: create gitlab job2_containers
   shell: |
@@ -42,7 +42,7 @@
 
 - name: copy files into conjur-cli for job2_rotation
   shell: |
-    docker cp "{{ role_path }}/templates/JOB2_Rotation" conjur-cli:/
+    docker cp "{{ role_path }}/files/JOB2_Rotation" conjur-cli:/
 
 - name: create gitlab job2_rotation
   shell: |
@@ -50,7 +50,7 @@
 
 - name: copy files into conjur-cli for job2_StopContainers
   shell: |
-    docker cp "{{ role_path }}/templates/JOB2_StopContainers" conjur-cli:/
+    docker cp "{{ role_path }}/files/JOB2_StopContainers" conjur-cli:/
 
 - name: create gitlab job2_stopContainers
   shell: |
