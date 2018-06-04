@@ -1,4 +1,6 @@
 ---
+conjur_version: 'EE'
+
 gitlab_container_name: 'gitlab'
 gitlab_image_name: gitlab/gitlab-ce:latest
 gitlab_root_password: 'Cyberark1'
