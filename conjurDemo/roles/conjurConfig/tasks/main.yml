@@ -5,7 +5,7 @@
   register: conjurTar
 
 - include_tasks: conjurEE.yml
-  when: conjurTar.stat.exists == True
+  when: conjurTar.stat.exists == True and conjur_version == 'EE'
 
 - include_tasks: conjurOSS.yml
-  when: conjurTar.stat.exists == False
+  when: conjurTar.stat.exists == False or conjur_version == 'OSS'

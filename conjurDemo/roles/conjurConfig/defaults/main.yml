@@ -1,7 +1,16 @@
 ---
 # defaults file for conjurConfig
 
-conjuross_container_name: 'conjur-oss'
-conjuross_port: '81'
+conjur_version: 'EE'
 
+conjur_container_name: 'conjur-master'
+conjur_EE_image_name: 'registry2.itci.conjur.net/conjur-appliance:5.0-stable'
+conjur_OSS_image_name: 'cyberark/conjur'
 conjur_network_name: conjur
+conjur_cli_container_name: 'conjur-cli'
+conjur_cli_image_name: 'cdemo/conjur-cli:latest'
+conjur_account: 'Cyberark'
+conjur_admin_password: 'Cyberark1'
+
+conjur_EE_port: '443'
+conjur_OSS_port: '81'

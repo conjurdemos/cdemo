@@ -1,4 +1,11 @@
 ---
+- name: Build conjur-cli
+  docker_image:
+    name: "{{ conjur_cli_image_name }}"
+    path: "{{ role_path }}/files/conjur_cli_image/"
+    state: present
+    force: yes
+
 - name: createConjurNetwork
   docker_network:
     name: "{{ conjur_network_name }}"
@@ -24,12 +31,12 @@
 
 - name: Start Conjur
   docker_container:
-    name: "{{ conjuross_container_name }}"
-    image: cyberark/conjur
+    name: "{{ conjur_container_name }}"
+    image: "{{ conjur_OSS_image_name }}"
     networks:
      - name: "{{ conjur_network_name }}"
     published_ports:
-     - "{{ conjuross_port }}:80"
+     - "{{ conjur_OSS_port }}:80"
     state: started
     recreate: yes
     env:
@@ -40,8 +47,8 @@
 
 - name: Start Conjur CLI
   docker_container:
-    name: conjur-cli
-    image: cdemo/conjur-cli:latest
+    name: "{{ conjur_cli_container_name }}"
+    image: "{{ conjur_cli_image_name }}"
     state: started
     volumes:
      - "hostfactoryTokens:/hostfactoryTokens"
