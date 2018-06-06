@@ -25,7 +25,7 @@ while [ 1=1 ]; do
 	echo "API key is $CONJUR_AUTHN_API_KEY"
 	echo "The Conjur Account is $CONJUR_ACCOUNT"
 	echo "Pulling secret $CONJUR_VARIABLE"
-	response=$(curl -k \
+	response=$(curl -s -k \
 	 --request POST \
 	 --data-binary $CONJUR_AUTHN_API_KEY \
 	 $CONJUR_APPLIANCE_URL/authn/$CONJUR_ACCOUNT/$hostname/authenticate)
