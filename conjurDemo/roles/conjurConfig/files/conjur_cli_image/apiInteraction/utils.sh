@@ -83,7 +83,8 @@ hostfactory_interactive(){
     local login=$(cat ~/.netrc | grep login | awk '{print $2}')
     printf "\nSelect hostfactory to create.\n"
     local hf=$(menu)	
-    printf "Generating hostfactory for $hf\n"
+    printf "Generating hostfactory for $hf.\n"
+    printf "Using login = $login\n"
     printf "This is the API key = $api"
     local auth=$(curl -s --cacert $conjurCert -H "Content-Type: text/plain" -X POST -d "$api" https://conjur-master/authn/$account/$login/authenticate)
     local auth_token=$(echo -n $auth | base64 | tr -d '\r\n')
