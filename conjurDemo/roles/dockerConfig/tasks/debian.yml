@@ -1,3 +1,4 @@
+---
 - name: Remove old versions of docker
   apt:
     name: "{{ item }}"
