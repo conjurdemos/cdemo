@@ -4,3 +4,7 @@ COPY ./apiInteraction /scripts/
 
 COPY ./policy /policy/
 
+ENTRYPOINT []
+
+CMD [ "sleep","infinity" ]
+
