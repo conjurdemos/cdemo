@@ -75,13 +75,13 @@
     - update
   resource: *variables
 
-- !user bob
+- !user mike
 
-- !user dylan
+- !user john
 
-- !user chris
+- !user cindy
 
-- !user andy
+- !user paul
 
 - !group devops
 
@@ -90,20 +90,21 @@
 - !grant
   role: !group devops
   members:
-   - !user bob
-   - !user dylan
+   - !user john
+   - !user paul
+   - !user cindy
 
 - !grant
   role: !group admins
   members:
-   - !user chris
-   - !user andy
+   - !user mike
 
 - !permit
   role: !group devops
   privileges:
    - read
    - execute
+  resource: *variables
 
 - !permit
   role: !group admins
@@ -111,3 +112,4 @@
    - read
    - execute
    - update
+  resource: *variables
