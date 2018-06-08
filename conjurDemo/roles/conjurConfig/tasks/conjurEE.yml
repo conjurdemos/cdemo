@@ -67,13 +67,18 @@
     docker exec {{ conjur_cli_container_name }} bash -c "conjur init -u https://{{ conjur_container_name }} -a {{ conjur_account }} <<< yes"
     docker exec {{ conjur_cli_container_name }} conjur authn login -u admin -p {{ conjur_admin_password }}
     docker exec {{ conjur_cli_container_name }} bash -c "conjur policy load --replace root /policy/policy.yaml > /identity/personas"
+
+- name: Set user login passwords
+  shell: |
     docker exec {{ conjur_cli_container_name }} conjur authn logout
-    docker exec {{ conjur_cli_container_name }} conjur authn login -u {{ item }} -p $(cat /identity/personas | jq .created_roles."{{ conjur_account }}:user:{{ item }}".api_key | tr -d '"')
+    docker exec {{ conjur_cli_container_name }} cat /identity/personas | jq .created_roles.\"{{ conjur_account }}:user:{{ item }}\".api_key | tr -d '"' > {{ item }}.cliidentity
+    docker exec {{ conjur_cli_container_name }} conjur authn login -u {{ item }} -p $(cat {{ item }}.cliidentity)
     docker exec {{ conjur_cli_container_name }} conjur user update_password -p {{ conjur_admin_password }}
+    rm -f {{ item }}.cliidentity
   with_items:
     - john
-    - cindy
     - paul
+    - cindy
     - mike
 
 - name: randomizing variables
