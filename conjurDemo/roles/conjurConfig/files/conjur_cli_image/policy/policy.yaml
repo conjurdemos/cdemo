@@ -96,17 +96,23 @@
 
 - !group admins
 
+- !group auditors
+
 - !grant
   role: !group devops
   members:
    - !user john
    - !user paul
-   - !user cindy
 
 - !grant
   role: !group admins
   members:
    - !user mike
+
+- !grant
+  role: !group auditors
+  members:
+   - !user cindy
 
 - !permit
   role: !group devops
@@ -121,4 +127,10 @@
    - read
    - execute
    - update
+  resource: *variables
+
+- !permit
+  role: !group auditors
+  privileges:
+   - read
   resource: *variables
