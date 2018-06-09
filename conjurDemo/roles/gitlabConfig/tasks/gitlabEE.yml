@@ -1,0 +1,39 @@
+---
+- name: start gitlab
+  docker_container:
+    name: "{{ gitlab_container_name }}"
+    image: "{{ gitlab_image_name }}"
+    state: started
+    restart_policy: always
+    recreate: yes
+    hostname: "{{ gitlab_container_name }}"
+    networks:
+     - name: "{{ conjur_network_name }}"
+    published_ports:
+     - "{{ gitlab_port }}:80"
+    env:
+      GITLAB_ROOT_PASSWORD: "{{ gitlab_root_password }}"
+      GITLAB_ROOT_EMAIL: "{{ gitlab_root_email }}"
+
+- name: Wait for gitlab to come up
+  uri:
+    url: "{{ gitlab_url }}"
+    return_content: yes
+  register: webpage
+  until: '"GitLab Community Edition" in webpage.content' 
+  retries: 60
+  delay: 3
+
+- name: Pause for Gitlab to get ready
+  pause:
+    seconds: 10
+
+- name: copy files into {{ conjur_cli_container_name }} for gitlab
+  shell: |
+    docker cp "{{ role_path }}/files/{{ item }}" {{ conjur_cli_container_name }}:/
+    docker exec {{ conjur_cli_container_name }} bash -c "cd /{{ item }} && git init && git add --all && git -c user.name={{ gitlab_account }} -c user.email={{ gitlab_root_email }} commit -m 'Initial Commit' && git -c user.name={{ gitlab_account }} -c user.email={{ gitlab_root_email }} push --set-upstream http://{{ gitlab_account }}:{{ gitlab_root_password }}@{{ gitlab_container_name }}/root/{{ item }}.git master"
+  with_items:
+    - LAB1_Summon
+    - LAB2_Containers
+    - LAB2_Rotation
+    - LAB2_StopContainers
