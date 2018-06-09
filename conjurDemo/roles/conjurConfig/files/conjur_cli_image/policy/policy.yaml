@@ -2,8 +2,6 @@
 - !policy
   id: shared_secret_auth
   body:
-    - !host secret_rotator
-
     - &variables 
       - !variable helloworld_secret
       - !variable database_password
@@ -13,19 +11,18 @@
       - !variable aws_access_key
       - !variable aws_secret_key
 
-    - !permit
-      role: !host secret_rotator
-      privileges:
-        - read
-        - update
-      resource: *variables 
-
 - !policy
   id: jenkins
   body:
     - !layer hosts
     - !host-factory
       layers: [ !layer hosts ]
+    - !permit
+      role: !group /admins
+      privileges:
+        - execute
+        - read
+      resource: !host-factory
 
 - !policy
   id: tomcat
@@ -39,6 +36,12 @@
         - execute
         - read
       resource: !host-factory
+    - !permit
+      role: !group /admins
+      privileges:
+        - execute
+        - read
+      resource: !host-factory
       
 - !policy
   id: webapp
@@ -49,6 +52,12 @@
     - !permit
       role: !layer /jenkins/hosts
       privileges: 
+        - execute
+        - read
+      resource: !host-factory
+    - !permit
+      role: !group /admins
+      privileges:
         - execute
         - read
       resource: !host-factory
