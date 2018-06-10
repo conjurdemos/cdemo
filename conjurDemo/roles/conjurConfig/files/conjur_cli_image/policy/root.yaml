@@ -134,3 +134,12 @@
   privileges:
    - read
   resource: *variables
+
+  - !permit
+    role: !group admins
+    privileges:
+      - read
+      - update
+      - create
+    resources:
+      - !policy root
