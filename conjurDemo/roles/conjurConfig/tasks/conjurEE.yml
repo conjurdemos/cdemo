@@ -81,6 +81,15 @@
     - cindy
     - mike
 
+- name: Load app policies
+  shell: |
+    docker exec {{ conjur_cli_container_name }} conjur policy load {{ item }} /policy/{{ item }}.yml
+  with_tems:
+   - secrets
+   - jenkins
+   - tomcat
+   - webapp
+
 - name: randomizing variables
   shell: |
     docker exec {{ conjur_cli_container_name }} conjur variable values add {{ item }} $(openssl rand -hex 12)
