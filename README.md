@@ -55,18 +55,22 @@ The tools installed have a web interfaces that is made accessible to the host ma
 ## Default Credentials
 * Jenkins - No credentials needed right now
 * Conjur - U: admin P: Cyberark1
+* Conjur - U: mike P: Cyberark1
+* Conjur - U: paul P: Cyberark1
+* Conjur - U: cindy P: Cyberark1
+* Conjur - U: john P: Cyberark1
 * AWX - U: admin P: password
 * GitLab - U: root P: Cyberark1
 
 #### Things to do!
 
 * ~~Refactor jenkinsConfig role to assign an identity through environment variables when container is started.~~
-* Create Jenkins Jobs
-    1. Scalability Demo
-        * Build docker container that writes secret to log file. Stores in local docker registry
-        * Stands up x number of tomcat host containers
-        * stands up x number of webapp host containers
-        * shared volume between all like containers
+* ~~Create Jenkins Jobs~~
+    1. ~~Scalability Demo~~
+        * ~~Build docker container that writes secret to log file. Stores in local docker registry~~
+        * ~~Stands up x number of tomcat host containers~~
+        * ~~stands up x number of webapp host containers~~
+        * ~~shared volume between all like containers~~
     2. Spring integration.
         * Add in https://github.com/conjurinc/summon-spring-demo
     3.  Quincy's demo
