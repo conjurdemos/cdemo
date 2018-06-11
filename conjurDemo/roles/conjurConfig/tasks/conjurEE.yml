@@ -62,13 +62,13 @@
   shell: |
     docker exec {{ conjur_container_name }} evoke configure master -h {{ conjur_container_name }} -p {{ conjur_admin_password }} {{ conjur_account }}
 
-- name: configure cli and load policy
+- name: configure cli and load root policy
   shell: |
     docker exec {{ conjur_cli_container_name }} bash -c "conjur init -u https://{{ conjur_container_name }} -a {{ conjur_account }} <<< yes"
     docker exec {{ conjur_cli_container_name }} conjur authn login -u admin -p {{ conjur_admin_password }}
-    docker exec {{ conjur_cli_container_name }} bash -c "conjur policy load --replace root /policy/root.yaml > /identity/personas"
+    docker exec {{ conjur_cli_container_name }} bash -c "conjur policy load --replace root /policy/root.yml > /identity/personas"
 
-- name: Set user login passwords
+- name: Set user login passwords and set mike as the logged in user
   shell: |
     docker exec {{ conjur_cli_container_name }} conjur authn logout
     docker exec {{ conjur_cli_container_name }} cat /identity/personas | jq .created_roles.\"{{ conjur_account }}:user:{{ item }}\".api_key | tr -d '"' > {{ item }}.cliidentity
@@ -85,10 +85,10 @@
   shell: |
     docker exec {{ conjur_cli_container_name }} conjur variable values add {{ item }} $(openssl rand -hex 12)
   with_items:
-     - shared_secret_auth/helloworld_secret
-     - shared_secret_auth/database_password
-     - shared_secret_auth/web_config_password
-     - shared_secret_auth/systema_root_sshkey
-     - shared_secret_auth/systemb_root_sshkey
-     - shared_secret_auth/aws_access_key
-     - shared_secret_auth/aws_secret_key
+     - secrets/frontend/helloworld_secret
+     - secrets/frontend/database_password
+     - secrets/frontend/web_config_password
+     - secrets/frontend/systema_root_sshkey
+     - secrets/frontend/systemb_root_sshkey
+     - secrets/frontend/aws_access_key
+     - secrets/frontend/aws_secret_key
