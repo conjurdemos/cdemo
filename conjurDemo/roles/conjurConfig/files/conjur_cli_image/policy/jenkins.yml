@@ -1,0 +1,14 @@
+- !policy
+  id: nodes
+  body:
+    - !layer
+
+    - !host-factory
+      layers: [ !layer ]
+      
+    - !permit
+      role: !group /admins
+      privileges:
+        - execute
+        - read
+      resource: !host-factory

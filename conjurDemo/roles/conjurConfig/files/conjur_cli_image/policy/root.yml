@@ -1,0 +1,55 @@
+---
+- !user mike
+
+- !user john
+
+- !user cindy
+
+- !user paul
+
+- !group admins
+
+- !group devops
+
+- !group auditors
+
+- !grant
+  role: !group admins
+  members:
+   - !user mike
+
+- !grant
+  role: !group devops
+  members:
+   - !user john
+   - !user paul
+
+- !grant
+  role: !group auditors
+  members:
+   - !user cindy
+
+- !permit
+  role: !group admins
+  privileges:
+   - read
+   - update
+   - create
+  resources:
+   - !policy root
+
+- !policy
+  id: secrets
+  owner: !group admins
+
+- !policy
+  id: jenkins
+  owner: !group admins
+
+- !policy
+  id: tomcat
+  owner: !group admins
+      
+- !policy
+  id: webapp
+  owner: !group admins
