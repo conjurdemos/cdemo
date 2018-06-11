@@ -36,7 +36,7 @@ function menu(){
 }
 
 identity_interactive(){
-  printf "\nPlease select hostfactory to use to generate identity:\n"
+  printf "\nPlease select hostfactory token to use for identity generation:\n"
   local hftoken=$(menu)
   local id="$hftoken-$(openssl rand -hex 2)"
   local token=$(cat /hostfactoryTokens/"$hftoken"_hostfactory | jq '.[0] | {token}' | awk '{print $2}' | tr -d '"\n\r')
@@ -88,7 +88,7 @@ hostfactory_interactive(){
     printf "This is the API key = $api"
     local auth=$(curl -s --cacert $conjurCert -H "Content-Type: text/plain" -X POST -d "$api" https://conjur-master/authn/$account/$login/authenticate)
     local auth_token=$(echo -n $auth | base64 | tr -d '\r\n')
-    local hostfactory=$(curl --cacert $conjurCert -s -X POST --data-urlencode "host_factory=$account:host_factory:$hf" --data-urlencode "expiration=2065-08-04T22:27:20+00:00" -H "Authorization: Token token=\"$auth_token\"" https://conjur-master/host_factory_tokens)
+    local hostfactory=$(curl --cacert $conjurCert -s -X POST --data-urlencode "host_factory=$account:host_factory:$hf/nodes" --data-urlencode "expiration=2065-08-04T22:27:20+00:00" -H "Authorization: Token token=\"$auth_token\"" https://conjur-master/host_factory_tokens)
     printf "\n"
     pause 'Press [ENTER] key to continue...'
     printf "\nThis is the hostfactory token:\n"

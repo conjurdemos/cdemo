@@ -16,9 +16,9 @@ secret_pull(){
   local conjurCert="/root/conjur-cyberark.pem"
   local api=$(cat /identity/"$identity"_identity | jq -r '.api_key')
   local hostname=$(cat /identity/"$identity"_identity | jq -r '.id' | awk -F: '{print $NF}')
-  local secret_name="shared_secret_auth/aws_access_key"
+  local secret_name="secrets/frontend/aws_access_key"
   local secret_url=$(urlify $secret_name) 
-  printf '\nPulling secret: aws_access_key'
+  printf "\nPulling secret: $secret_name"
   printf "\nUsing Conjur hostname: $hostname"
   printf "\nUsing API key: $api"
   local auth=$(curl -s --cacert $conjurCert  -H "Content-Type: text/plain" -X POST -d "$api" https://conjur-master/authn/cyberark/host%2F$hostname/authenticate)
