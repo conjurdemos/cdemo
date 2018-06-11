@@ -84,11 +84,11 @@
 - name: Load app policies
   shell: |
     docker exec {{ conjur_cli_container_name }} bash -c "conjur policy load {{ item }} /policy/{{ item }}.yml"
-  with_tems:
-   - secrets
+  with_items:
    - jenkins
    - tomcat
    - webapp
+   - secrets
 
 - name: randomizing variables
   shell: |
