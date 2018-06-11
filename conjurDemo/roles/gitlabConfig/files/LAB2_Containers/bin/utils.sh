@@ -30,7 +30,7 @@ create_hftoken(){
   echo "$auth_token"
   echo "====="
   echo "getting hostfactory token"
-  local hostfactory=$(curl --cacert $conjurCert -s -X POST --data-urlencode "host_factory=$account:host_factory:$hf" --data-urlencode "expiration=2065-08-04T22:27:20+00:00" -H "Authorization: Token token=\"$auth_token\"" https://conjur-master/host_factory_tokens)
+  local hostfactory=$(curl --cacert $conjurCert -s -X POST --data-urlencode "host_factory=$account:host_factory:$hf/nodes" --data-urlencode "expiration=2065-08-04T22:27:20+00:00" -H "Authorization: Token token=\"$auth_token\"" https://conjur-master/host_factory_tokens)
   echo "hostfactory is $(echo $hostfactory | jq .)"
   create_identity $hostfactory $hf
 }
