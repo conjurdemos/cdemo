@@ -31,7 +31,7 @@ install_ansible_apt(){
   printf "\nInstalling dirmngr"
   sudo apt-get install dirmngr
   printf "\nInstalling source repo"
-  echo 'deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main' >> /etc/apt/sources
+  echo 'deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main' >> /etc/apt/sources.list
   printf "\nInstalling keyserver"
   sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
   printf "\nUpdating APT"
