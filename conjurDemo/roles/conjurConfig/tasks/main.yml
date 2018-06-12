@@ -1,11 +1,25 @@
 ---
+- name: Check for conjur registry access
+  shell: |
+    cat ~/.docker/config.json
+  ignore_errors: yes
+  register: conjurRegistry
+
 - name: Check for conjur.tar
   stat:
      path: ../conjur.tar
   register: conjurTar
 
+- name: Load Conjur tar
+  docker_image:
+    name: conjur-appliance
+    load_path: ../conjur.tar
+    state: present
+    timeout: 120
+  when: (conjurRegistry.stdout.find('registry2.itci.conjur.net') == -1) and (conjurTar.stat.exists == True)
+
 - include_tasks: conjurEE.yml
-  when: conjurTar.stat.exists == True and conjur_version == 'EE'
+  when: ((conjurRegistry.stdout.find('registry2.itci.conjur.net') != -1) or (conjurTar.stat.exists == True)) and conjur_version == 'EE'
 
 - include_tasks: conjurOSS.yml
   when: conjurTar.stat.exists == False or conjur_version == 'OSS'

@@ -1,11 +1,4 @@
 ---
-- name: Load Conjur tar
-  docker_image:
-    name: conjur-appliance
-    load_path: ../conjur.tar
-    state: present
-    timeout: 120
-
 - name: Build conjur-cli
   docker_image:
     name: "{{ conjur_cli_image_name }}"
@@ -101,3 +94,4 @@
      - secrets/frontend/systemb_root_sshkey
      - secrets/frontend/aws_access_key
      - secrets/frontend/aws_secret_key
+     - secrets/frontend/sql_password
