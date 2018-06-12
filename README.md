@@ -21,6 +21,7 @@ The demo uses the lastest version of Conjur v5
 
 1. Clone the repo.
 2. Obtain the latest Conjur tar file and place it within the cDemo directory named 'conjur.tar'.
+    * If no tar file is located then a check for conjur docker registry access happens. If regsitry access comes back as successful then the latest version is pulled directly from the registry.
 3. Run installAnsible.sh.
 4. Change directory to conjurDemo.
 5. Edit inventory.yml to include any machines to be stood up as demo machines.
@@ -62,29 +63,19 @@ The tools installed have a web interfaces that is made accessible to the host ma
 * AWX - U: admin P: password
 * GitLab - U: root P: Cyberark1
 
-#### Things to do!
+### Gitlab and Jenkins Jobs
+Jenkins and Gitlab are connected via an internal docker network. Updating a job in Gitlab will be reflected in the subsequent Jenkins job at runtime.
 
-* ~~Refactor jenkinsConfig role to assign an identity through environment variables when container is started.~~
-* ~~Create Jenkins Jobs~~
-    1. ~~Scalability Demo~~
-        * ~~Build docker container that writes secret to log file. Stores in local docker registry~~
-        * ~~Stands up x number of tomcat host containers~~
-        * ~~stands up x number of webapp host containers~~
-        * ~~shared volume between all like containers~~
-    2. Spring integration.
-        * Add in https://github.com/conjurinc/summon-spring-demo
-    3.  Quincy's demo
-        * https://github.com/quincycheng/cicd
-* ~~Refactor playbooks~~
-    1. ~~Create Defaults~~
-    2. ~~Create variables~~
-    3. ~~Changes roles to account for:~~
-        * ~~YUM distros~~
-        * ~~Debian distros~~
-        * ~~macOS distros~~
-* Create global menu that will step through set up
-* Create checks in apiInteraction scripts
-    1. Identity script should check for existence of hostfactory token file first. If unavailable then it runs the hostfactory creation script
-    2. Pull password script checksf or identity file first. If unavailable then it runs the identity script first.
-    3. Move functions from each api script into the utils.sh and reduce what each script is doing. 
-* Replace AWX with Ansible Tower
+1. JOB1_Summon - This job uses summon and the jenkins identity to pull a password with a simplified script
+2. JOB2_Containers - This job spins up 5 webapp and 5 tomcat containers that are all pulling back a password. Jenkins generates a hostfactory token for each set of containers and then passes through an identity through container environment variables. Each container will then pull a password every 5 seconds.
+3. JOB2_Rotation - This job rotates the secret being pulled by the containers.
+4. JOB2_StopContainers - This job kills all of the tomcat and webapp containers.
+
+### API Scripts
+There are scripts that are copied into the CONJUR-CLI container that will interact with Conjur via rest calls to step through
+1. Hostfactory creation
+2. Identity creation using hostfactory token
+3. Pull password using identity
+
+The scripts are located in /scripts.  You can connect to the CONJUR-CLI container with:
+* docker exec -it conjur-cli bash
