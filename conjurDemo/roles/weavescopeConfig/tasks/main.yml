@@ -3,9 +3,9 @@
   docker_container:
     name: weavescope
     image: weaveworks/scope:1.9.0
-    network_mode: host
     pid_mode: host
     privileged: yes
+    restart_policy: always
     published_ports:
      - "4040:4040"
     labels:
