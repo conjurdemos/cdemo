@@ -55,8 +55,8 @@ remove_docker(){
     yum remove docker-ce -y &> /dev/null
     rm -f /etc/yum.repos.d/docker-ce.repo &> /dev/null
   elif [[ $(cat /etc/*-release | grep -w ID) == 'ID=debian' ]]; then
-    apt-get remove docker -y
-    apt-get remove docker-ce -y
+    apt-get remove docker -y &> /dev/null
+    apt-get remove docker-ce -y &> /dev/null
   else
     printf "\nCouldn't figure out OS"
     exit
