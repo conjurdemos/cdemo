@@ -15,3 +15,5 @@ conjur_url: "https://{{ conjur_container_name }}"
 
 conjur_EE_port: '443'
 conjur_OSS_port: '81'
+
+conjur_OSS_url: "http://{{ ansible_default_ipv4.address }}:{{ conjur_OSS_port }}"
