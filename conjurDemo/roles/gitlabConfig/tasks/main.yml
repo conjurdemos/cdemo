@@ -1,6 +1,2 @@
 ---
-- include_tasks: gitlabEE.yml
-  when: conjur_version == EE
-
-- include_tasks: gitlabOSS.yml
-  when: conjur_version == OSS
+- include_tasks: gitlab.yml
