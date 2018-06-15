@@ -1,0 +1,40 @@
+---
+
+- name: Load root Policy
+  shell: |
+    docker exec {{ conjur_cli_container_name }} bash -c "conjur policy load --replace root /policy/root.yml > /identity/personas"
+
+- name: Set user login passwords and set mike as the logged in user
+  shell: |
+    docker exec {{ conjur_cli_container_name }} conjur authn logout
+    docker exec {{ conjur_cli_container_name }} cat /identity/personas | jq .created_roles.\"{{ conjur_account }}:user:{{ item }}\".api_key | tr -d '"' > {{ item }}.cliidentity
+    docker exec {{ conjur_cli_container_name }} conjur authn login -u {{ item }} -p $(cat {{ item }}.cliidentity)
+    docker exec {{ conjur_cli_container_name }} conjur user update_password -p {{ conjur_admin_password }}
+    rm -f {{ item }}.cliidentity
+  with_items:
+    - john
+    - paul
+    - cindy
+    - mike
+
+- name: Load app policies
+  shell: |
+    docker exec {{ conjur_cli_container_name }} bash -c "conjur policy load {{ item }} /policy/{{ item }}.yml"
+  with_items:
+   - jenkins
+   - tomcat
+   - webapp
+   - secrets
+
+- name: randomizing variables
+  shell: |
+    docker exec {{ conjur_cli_container_name }} conjur variable values add {{ item }} $(openssl rand -hex 12)
+  with_items:
+     - secrets/frontend/helloworld_secret
+     - secrets/frontend/database_password
+     - secrets/frontend/web_config_password
+     - secrets/frontend/systema_root_sshkey
+     - secrets/frontend/systemb_root_sshkey
+     - secrets/frontend/aws_access_key
+     - secrets/frontend/aws_secret_key
+     - secrets/frontend/sql_password
