@@ -1,25 +1,4 @@
 ---
-- name: Build conjur-cli
-  docker_image:
-    name: "{{ conjur_cli_image_name }}"
-    path: "{{ role_path }}/files/conjur_cli_image/"
-    state: present
-    force: yes
-
-- name: createConjurNetwork
-  docker_network:
-    name: "{{ conjur_network_name }}"
-    state: present
-
-- name: createConjurVolume
-  docker_volume:
-    name: "{{ item }}"
-    state: present
-  with_items:
-   - conjur_cert
-   - hostfactoryTokens
-   - identity
-
 - name: Start conjur container
   docker_container:
     name: "{{ conjur_container_name }}"
@@ -31,67 +10,15 @@
      - name: "{{ conjur_network_name }}"
     published_ports:
      - "{{ conjur_EE_port }}:443"
-    volumes:
-     - "conjur_cert:/opt/conjur/etc/ssl"
     restart_policy: always
-
-- name: Start Conjur CLI
-  docker_container:
-    name: "{{ conjur_cli_container_name }}"
-    image: "{{ conjur_cli_image_name }}"
-    state: started
-    volumes:
-     - "hostfactoryTokens:/hostfactoryTokens"
-     - "conjur_cert:/conjur_cert"
-     - "identity:/identity"
-    restart_policy: always
-    networks:
-     - name: "{{ conjur_network_name }}"
-    recreate: yes
-    entrypoint: []
-    command: ["sleep", "infinity"]
 
 - name: configure conjur container
   shell: |
     docker exec {{ conjur_container_name }} evoke configure master -h {{ conjur_container_name }} -p {{ conjur_admin_password }} {{ conjur_account }}
 
-- name: configure cli and load root policy
+- name: configure cli for EE
   shell: |
     docker exec {{ conjur_cli_container_name }} bash -c "conjur init -u https://{{ conjur_container_name }} -a {{ conjur_account }} <<< yes"
     docker exec {{ conjur_cli_container_name }} conjur authn login -u admin -p {{ conjur_admin_password }}
-    docker exec {{ conjur_cli_container_name }} bash -c "conjur policy load --replace root /policy/root.yml > /identity/personas"
 
-- name: Set user login passwords and set mike as the logged in user
-  shell: |
-    docker exec {{ conjur_cli_container_name }} conjur authn logout
-    docker exec {{ conjur_cli_container_name }} cat /identity/personas | jq .created_roles.\"{{ conjur_account }}:user:{{ item }}\".api_key | tr -d '"' > {{ item }}.cliidentity
-    docker exec {{ conjur_cli_container_name }} conjur authn login -u {{ item }} -p $(cat {{ item }}.cliidentity)
-    docker exec {{ conjur_cli_container_name }} conjur user update_password -p {{ conjur_admin_password }}
-    rm -f {{ item }}.cliidentity
-  with_items:
-    - john
-    - paul
-    - cindy
-    - mike
-
-- name: Load app policies
-  shell: |
-    docker exec {{ conjur_cli_container_name }} bash -c "conjur policy load {{ item }} /policy/{{ item }}.yml"
-  with_items:
-   - jenkins
-   - tomcat
-   - webapp
-   - secrets
-
-- name: randomizing variables
-  shell: |
-    docker exec {{ conjur_cli_container_name }} conjur variable values add {{ item }} $(openssl rand -hex 12)
-  with_items:
-     - secrets/frontend/helloworld_secret
-     - secrets/frontend/database_password
-     - secrets/frontend/web_config_password
-     - secrets/frontend/systema_root_sshkey
-     - secrets/frontend/systemb_root_sshkey
-     - secrets/frontend/aws_access_key
-     - secrets/frontend/aws_secret_key
-     - secrets/frontend/sql_password
+- include_tasks: conjurFramework.yml
