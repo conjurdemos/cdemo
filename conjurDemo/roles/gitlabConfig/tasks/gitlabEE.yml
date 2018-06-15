@@ -14,6 +14,7 @@
     env:
       GITLAB_ROOT_PASSWORD: "{{ gitlab_root_password }}"
       GITLAB_ROOT_EMAIL: "{{ gitlab_root_email }}"
+      GITLAB_OMNIBUS_CONFIG: unicorn['worker_processes'] = 2; postgresql['shared_buffers'] = "256MB";
 
 - name: Wait for gitlab to come up
   uri:
