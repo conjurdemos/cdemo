@@ -1,0 +1,35 @@
+---
+- name: Build conjur-cli
+  docker_image:
+    name: "{{ conjur_cli_image_name }}"
+    path: "{{ role_path }}/files/conjur_cli_image/"
+    state: present
+    force: yes
+
+- name: createConjurNetwork
+  docker_network:
+    name: "{{ conjur_network_name }}"
+    state: present
+
+- name: createConjurVolume
+  docker_volume:
+    name: "{{ item }}"
+    state: present
+  with_items:
+   - hostfactoryTokens
+   - identity
+
+- name: Start Conjur CLI
+  docker_container:
+    name: "{{ conjur_cli_container_name }}"
+    image: "{{ conjur_cli_image_name }}"
+    state: started
+    volumes:
+     - "hostfactoryTokens:/hostfactoryTokens"
+     - "identity:/identity"
+    restart_policy: always
+    networks:
+     - name: "{{ conjur_network_name }}"
+    recreate: yes
+    entrypoint: []
+    command: ["sleep", "infinity"]
