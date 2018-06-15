@@ -18,6 +18,8 @@
     timeout: 120
   when: (conjurRegistry.stdout.find('registry2.itci.conjur.net') == -1) and (conjurTar.stat.exists == True)
 
+- include_tasks: conjurCLI.yml
+
 - include_tasks: conjurEE.yml
   when: ((conjurRegistry.stdout.find('registry2.itci.conjur.net') != -1) or (conjurTar.stat.exists == True)) and conjur_version == 'EE'
 
