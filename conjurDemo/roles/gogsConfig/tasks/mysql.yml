@@ -1,0 +1,18 @@
+- name: createGOGSnetwork
+  docker_network:
+    name: gogs
+    state: present
+
+- name: Start MySQL
+  docker_container:
+    name: gogs-database
+    image: mysql
+    state: started
+    restart_policy: always
+    networks:
+     - name: "{{ conjur_network_name }}"
+     - name: gogs
+    recreate: yes
+    env:
+      MYSQL_ROOT_PASSWORD: Cyberark1
+      MYSQL_DB: gogs
