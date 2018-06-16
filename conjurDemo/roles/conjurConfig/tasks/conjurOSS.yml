@@ -53,6 +53,8 @@
     networks:
      - name: "{{ conjur_network_name }}"
     state: started
+    volumes:
+     - "tls:/tls"
     published_ports:
      - 8443:443
     recreate: yes
