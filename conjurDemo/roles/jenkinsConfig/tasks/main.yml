@@ -1,6 +1,2 @@
 ---
-- include_tasks: jenkinsEE.yml
-  when: conjur_version == EE
-
-- include_tasks: jenkinsOSS.yml
-  when: conjur_version == OSS
+- include_tasks: jenkins.yml
