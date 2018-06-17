@@ -1,3 +1,2 @@
 ---
-include_tasks: mysql.yml
-include_tasks: gogs.yml
+- include_tasks: gogs.yml

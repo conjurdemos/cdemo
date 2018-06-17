@@ -1,0 +1,48 @@
+---
+- name: start gogs
+  docker_container:
+    name: "{{ gogs_container_name }}"
+    image: "{{ gogs_image_name }}"
+    state: started
+    restart_policy: always
+    recreate: yes
+    hostname: "{{ gogs_container_name }}"
+    networks:
+     - name: "{{ conjur_network_name }}"
+    published_ports:
+     - "{{ gogs_external_port }}:{{ gogs_internal_port }}"
+
+- name: Wait for gogs to start
+  uri:
+    url: "{{ gogs_external_url }}/install"
+    return_content: yes
+  register: webpage
+  until: '"Install Steps For First-time Run" in webpage.content'
+  retries: 60
+  delay: 3
+
+- name: configure gogs user
+  shell: |
+    docker cp "{{ role_path }}/files/{{ item }}" {{ conjur_cli_container_name }}:/{{ item }}
+    docker exec {{ conjur_cli_container_name }} bash -c "cd / && curl -X POST '{{ gogs_internal_url }}/install' -d @{{ item }}"
+  with_items:
+   - gogs_preseed_installer.properties
+
+- name: Wait for configured gogs to start
+  uri:
+    url: "{{ gogs_external_url }}"
+    return_content: yes
+  register: webpage
+  until: '"Gogs is a painless self-hosted Git service" in webpage.content'
+  retries: 60
+  delay: 3
+
+- name: copy files into {{ conjur_cli_container_name }} for {{ gogs_container_name }}
+  shell: |
+    docker cp "{{ role_path }}/files/{{ item }}" {{ conjur_cli_container_name }}:/
+    docker exec {{ conjur_cli_container_name }} bash -c "cd /{{ item }} && git init && git add --all && git -c user.name={{ gogs_account }} -c user.email={{ gogs_account_email }} commit -m 'Initial Commit' && git -c user.name={{ gogs_account }} -c user.email={{ gogs_account_email }} push --set-upstream http://{{ gogs_account }}:{{ gogs_account_password }}@{{ gogs_container_name }}:{{ gogs_internal_port }}/cyber_dev/{{ item }}.git master"
+  with_items:
+    - LAB1_Summon
+    - LAB2_Containers
+    - LAB2_Rotation
+    - LAB2_StopContainers

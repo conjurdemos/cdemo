@@ -13,10 +13,13 @@ conjur_admin_password: 'Cyberark1'
 conjur_EE_port: '443'
 conjur_OSS_port: '81'
 
-gitlab_container_name: 'gitlab'
-gitlab_image_name: gitlab/gitlab-ce:latest
-gitlab_root_password: 'Cyberark1'
-gitlab_account: 'root'
-gitlab_root_email: 'admin@cyberark.com'
-gitlab_port: 7070
-gitlab_url: "http://{{ ansible_default_ipv4.address }}:{{ gitlab_port }}"
+gogs_internal_port: '3000'
+gogs_external_port: '10080'
+gogs_container_name: 'gogs'
+gogs_image_name: 'gogs/gogs'
+gogs_internal_url: "http://{{ gogs_container_name }}:{{ gogs_internal_port }}"
+gogs_external_url: "http://{{ ansible_default_ipv4.address }}:{{ gogs_external_port }}"
+
+gogs_account: 'cyber_dev'
+gogs_account_email: 'cyber_dev@cyberark.com'
+gogs_account_password: 'Cyberark1'
