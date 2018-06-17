@@ -4,3 +4,8 @@
 
 - include_tasks: debian.yml
   when: ansible_os_family == 'Debian'
+
+- name: Initialize docker networking
+  shell: |
+    docker network create test
+    docker network rm test
