@@ -11,3 +11,4 @@
     systemctl start docker
     docker network create test
     docker network rm test
+  ignore_errors: yes
