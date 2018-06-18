@@ -1,34 +1,59 @@
 ---
-# defaults file for jenkinsConfig
+# defaults file for machinePrep
 
+# defaults file for dockerConfig
+docker_edition: 'ce'
+docker_package: "docker-{{ docker_edition }}"
+
+#docker redhat/centos repo
+docker_yum_repo_url: https://download.docker.com/linux/{{ (ansible_distribution == "Fedora") | ternary("fedora","centos") }}/docker-{{ docker_edition }}.repo
+
+#docker debian repo
+docker_apt_release_channel: stable
+docker_apt_arch: amd64
+docker_apt_repository: "deb [arch={{ docker_apt_arch }}] https://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} {{ docker_apt_release_channel }}"
+
+# defaults file for conjurConfig
 conjur_version: 'EE'
-
 conjur_container_name: 'conjur-master'
 conjur_EE_image_name: 'registry2.itci.conjur.net/conjur-appliance:5.0-stable'
-conjur_OSS_image_name: 'cyberark/conjur'
 conjur_network_name: conjur
+conjur_https_port: '443'
 conjur_cli_container_name: 'conjur-cli'
 conjur_cli_image_name: 'cdemo/conjur-cli:latest'
 conjur_account: 'cyberark'
 conjur_admin_password: 'Cyberark1'
+conjur_url: "https://{{ conjur_container_name }}"
 
-conjur_EE_port: '443'
+conjur_OSS_image_name: 'cyberark/conjur'
 conjur_OSS_port: '81'
+conjur_OSS_url: "http://{{ ansible_default_ipv4.address }}:{{ conjur_OSS_port }}"
+conjur_OSS_container_name: 'conjur-oss'
+conjur_nginx_image_name: 'cdemo/conjur-nginx:latest'
 
-gitlab_container_name: 'gitlab'
-gitlab_image_name: gitlab/gitlab-ce:latest
-gitlab_root_password: 'Cyberark1'
-gitlab_account: 'root'
-gitlab_root_email: 'admin@cyberark.com'
-gitlab_port: 7070
-gitlab_url: "http://{{ ansible_default_ipv4.address }}:{{ gitlab_port }}"
+# defaults file for weavescopeConfig
 
+# defaults file for gogsconfig
+gogs_internal_port: '3000'
+gogs_external_port: '10080'
+gogs_container_name: 'gogs'
+gogs_image_name: 'gogs/gogs'
+gogs_internal_url: "http://{{ gogs_container_name }}:{{ gogs_internal_port }}"
+gogs_external_url: "http://{{ ansible_default_ipv4.address }}:{{ gogs_external_port }}"
+
+gogs_account: 'cyber_dev'
+gogs_account_email: 'cyber_dev@cyberark.com'
+gogs_account_password: 'Cyberark1'
+
+# defaults file for jenkinsConfig
 jenkins_port: '8080'
 jenkins_url: "http://{{ ansible_default_ipv4.address }}:{{ jenkins_port }}"
 jenkins_image_name: 'conjur_jenkins:latest'
 jenkins_container_name: 'jenkins'
-
 job1_config: "{{ lookup('file','files/LAB1_Summon/config.xml') }}"
 job2_config: "{{ lookup('file', 'files/LAB2_Containers/config.xml') }}"
 job2_rotation: "{{lookup('file', 'files/LAB2_Rotation/config.xml') }}"
 job2_StopContainers: "{{lookup('file', 'files/LAB2_StopContainers/config.xml') }}"
+
+# defaults file for awxConfig
+awx_url: 'http://{{ ansible_default_ipv4.address }}/#/login'

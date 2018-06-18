@@ -56,7 +56,7 @@
     volumes:
      - "tls:/tls"
     published_ports:
-     - 8443:443
+     - "{{ conjur_https_port }}:443"
     recreate: yes
     restart_policy: always
 

@@ -4,3 +4,11 @@
 
 - include_tasks: debian.yml
   when: ansible_os_family == 'Debian'
+
+- name: Initialize docker networking
+  shell: |
+    systemctl enable docker
+    systemctl start docker
+    docker network create test
+    docker network rm test
+  ignore_errors: yes
