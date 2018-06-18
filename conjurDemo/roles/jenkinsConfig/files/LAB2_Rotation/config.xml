@@ -20,7 +20,7 @@
             <configVersion>2</configVersion>
             <userRemoteConfigs>
                 <hudson.plugins.git.UserRemoteConfig>
-                    <url>http://gitlab/root/LAB2_Rotation.git</url>
+                    <url>http://gogs:3000/cyber_dev/LAB2_Rotation.git</url>
                     <credentialsId>gitlabcred</credentialsId>
                 </hudson.plugins.git.UserRemoteConfig>
             </userRemoteConfigs>
