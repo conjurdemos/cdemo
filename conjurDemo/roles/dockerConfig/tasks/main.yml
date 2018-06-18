@@ -7,5 +7,7 @@
 
 - name: Initialize docker networking
   shell: |
+    systemctl enable docker
+    systemctl start docker
     docker network create test
     docker network rm test
