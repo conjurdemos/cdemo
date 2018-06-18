@@ -9,7 +9,7 @@
     networks:
      - name: "{{ conjur_network_name }}"
     published_ports:
-     - "{{ conjur_EE_port }}:443"
+     - "{{ conjur_https_port }}:443"
     restart_policy: always
 
 - name: configure conjur container

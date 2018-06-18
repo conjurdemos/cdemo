@@ -11,7 +11,7 @@ The demo uses the lastest version of Conjur v5
 * Docker
 * Ansible
 * Jenkins
-* GitLab
+* Gogs
 * AWX
 * Conjur CLI 
 * Conjur Enterprise v5
@@ -48,7 +48,7 @@ The tools installed have a web interfaces that is made accessible to the host ma
 |    Tool    	| Port 	|
 |:----------:	|------	|
 |   Jenkins  	| 8080 	|
-|   GitLab   	| 7070 	|
+|   Gogs       	| 10080	|
 |     AWX    	| 80   	|
 | Conjur     	| 443  	|
 | Weavescope 	| 4040 	|
@@ -61,10 +61,10 @@ The tools installed have a web interfaces that is made accessible to the host ma
 * Conjur - U: cindy P: Cyberark1
 * Conjur - U: john P: Cyberark1
 * AWX - U: admin P: password
-* GitLab - U: root P: Cyberark1
+* Gogs - U: cyber_dev P: Cyberark1
 
-### Gitlab and Jenkins Jobs
-Jenkins and Gitlab are connected via an internal docker network. Updating a job in Gitlab will be reflected in the subsequent Jenkins job at runtime.
+### Gogs and Jenkins Jobs
+Jenkins and Gogs are connected via an internal docker network. Updating a job in Gitlab will be reflected in the subsequent Jenkins job at runtime.
 
 1. JOB1_Summon - This job uses summon and the jenkins identity to pull a password with a simplified script
 2. JOB2_Containers - This job spins up 5 webapp and 5 tomcat containers that are all pulling back a password. Jenkins generates a hostfactory token for each set of containers and then passes through an identity through container environment variables. Each container will then pull a password every 5 seconds.
