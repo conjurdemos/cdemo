@@ -1,5 +1,5 @@
 ---
-- hosts: localhost
+- hosts: aimMachines
   tasks:
     - name: passing options to the lookup
       debug: msg={{ lookup("cyberarkpassword", cyquery)}}
