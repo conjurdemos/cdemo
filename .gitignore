@@ -7,3 +7,4 @@ conjur.tar
 *.swp
 *.DS_Store
 *.cliidentity
+tar.conjur
