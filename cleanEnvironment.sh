@@ -69,6 +69,7 @@ remove_weavescope(){
 
 remove_awx(){
   rm -Rf /opt/awx &> /dev/null
+  rm -Rf /tmp/pgdata &> /dev/null
 }
 
 remove_gitlab(){
