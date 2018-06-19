@@ -16,6 +16,7 @@
     - paul
     - cindy
     - mike
+    - eva
 
 - name: Load app policies
   shell: |
