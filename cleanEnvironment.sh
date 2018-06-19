@@ -16,7 +16,7 @@ main(){
   remove_docker
   printf '\nRemoving Weavescope'
   remove_weavescope
-  printf '\nRemoving AWX directory'
+  printf '\nRemoving AWX directory\n'
   remove_awx
 }
 
@@ -66,7 +66,7 @@ remove_weavescope(){
 
 remove_awx(){
   rm -Rf /opt/awx &> /dev/null
-  rm -Rf /tmp/pgdata &> /dev/null
+  rm -Rf /tmp/pgdocker &> /dev/null
 }
 main
 
