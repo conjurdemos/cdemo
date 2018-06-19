@@ -7,7 +7,7 @@
 
 - !user paul
 
-- !user cindy
+- !user eva
 
 - !group admins
 
@@ -19,7 +19,7 @@
   role: !group admins
   members:
    - !user mike
-   - !user cindy
+   - !user eva
 
 - !grant
   role: !group devops

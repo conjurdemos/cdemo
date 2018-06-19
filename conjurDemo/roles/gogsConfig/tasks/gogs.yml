@@ -41,9 +41,9 @@
   shell: |
     docker exec "{{ gogs_container_name }}" bash -c "touch /data/gogs/conf/readme && echo "{Name}" > /data/gogs/conf/readme"
     docker exec {{ conjur_cli_container_name }} curl -u "{{ gogs_account }}:{{ gogs_account_password }}" -X POST -H 'Content-Type: application/json' {{ gogs_internal_url }}/api/v1/user/repos -d '{"name":"{{ item }}", "description":"{{ item }}","private":false,"auto_init":true, "gitignores":"macOS","license":"MIT License"}'
-    docker exec {{ conjur_cli_container_name }} bash -c "cd / && git clone {{ gogs_internal_url }}/cyber_dev/{{ item }}.git"
+    docker exec {{ conjur_cli_container_name }} bash -c "cd / && git clone {{ gogs_internal_url }}/{{ gogs_account }}/{{ item }}.git"
     docker cp "{{ role_path }}/files/{{ item }}/." {{ conjur_cli_container_name }}:/{{ item }}
-    docker exec {{ conjur_cli_container_name }} bash -c "cd /{{ item }} && git add --all && git -c user.name={{ gogs_account }} -c user.email={{ gogs_account_email }} commit -m 'Uploading files.' && git -c user.name={{ gogs_account }} -c user.email={{ gogs_account_email }} push http://{{ gogs_account }}:{{ gogs_account_password }}@{{ gogs_container_name }}:{{ gogs_internal_port }}/cyber_dev/{{ item }}.git"
+    docker exec {{ conjur_cli_container_name }} bash -c "cd /{{ item }} && git add --all && git -c user.name={{ gogs_account }} -c user.email={{ gogs_account_email }} commit -m 'Uploading files.' && git -c user.name={{ gogs_account }} -c user.email={{ gogs_account_email }} push http://{{ gogs_account }}:{{ gogs_account_password }}@{{ gogs_container_name }}:{{ gogs_internal_port }}/{{ gogs_account }}/{{ item }}.git"
   with_items:
     - LAB1_Summon
     - LAB2_Containers

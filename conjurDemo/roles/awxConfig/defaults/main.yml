@@ -41,8 +41,8 @@ gogs_image_name: 'gogs/gogs'
 gogs_internal_url: "http://{{ gogs_container_name }}:{{ gogs_internal_port }}"
 gogs_external_url: "http://{{ ansible_default_ipv4.address }}:{{ gogs_external_port }}"
 
-gogs_account: 'cyber_dev'
-gogs_account_email: 'cyber_dev@cyberark.com'
+gogs_account: 'eva'
+gogs_account_email: 'eva@cyberark.com'
 gogs_account_password: 'Cyberark1'
 
 # defaults file for jenkinsConfig
@@ -59,4 +59,4 @@ job2_StopContainers: "{{lookup('file', 'files/LAB2_StopContainers/config.xml') }
 awx_port: '6060'
 awx_url: 'http://{{ ansible_default_ipv4.address }}:{{ awx_port }}/#/login'
 awx_password: 'Cyberark1'
-awx_user: cyber_AWX
+awx_user: eva
