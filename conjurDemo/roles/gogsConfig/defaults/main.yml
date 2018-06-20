@@ -56,7 +56,8 @@ job2_rotation: "{{lookup('file', 'files/LAB2_Rotation/config.xml') }}"
 job2_StopContainers: "{{lookup('file', 'files/LAB2_StopContainers/config.xml') }}"
 
 # defaults file for awxConfig
-awx_port: '6060'
-awx_url: 'http://{{ ansible_default_ipv4.address }}:{{ awx_port }}/#/login'
-awx_password: 'Cyberark1'
-awx_user: eva
+ansible_port: '6060'
+ansible_url: 'http://{{ ansible_default_ipv4.address }}:{{ ansible_port }}'
+ansible_url_login: "{{ ansible_url }}/#/login"
+ansible_password: 'Cyberark1'
+ansible_user: eva
