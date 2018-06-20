@@ -20,8 +20,8 @@
 
 - include_tasks: conjurCLI.yml
 
+- include_tasks: conjurOSS.yml
+  when: ((conjurTar.stat.exists == False and (conjurRegistry.stdout.find('registry2.itci.conjur.net') == -1)) or conjur_version == 'OSS')
+
 - include_tasks: conjurEE.yml
   when: ((conjurRegistry.stdout.find('registry2.itci.conjur.net') != -1) or (conjurTar.stat.exists == True)) and conjur_version == 'EE'
-
-- include_tasks: conjurOSS.yml
-  when: conjurTar.stat.exists == False or conjur_version == 'OSS'
