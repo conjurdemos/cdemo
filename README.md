@@ -25,7 +25,7 @@ The demo uses the lastest version of Conjur v5
 3. Run installAnsible.sh.
 4. Change directory to conjurDemo.
 5. Edit inventory.yml to include any machines to be stood up as demo machines.
-6. Run ansible-playbook -i inventory.yml site.yml to install conjur and it's tools.
+6. Run sudo ansible-playbook -i inventory.yml site.yml to install conjur and it's tools.
     * Conjur alone can be configured by running ansible-playbook -i inventory.yml conjurSetup.yml
 
 ## Conjur CLI information
@@ -49,7 +49,7 @@ The tools installed have a web interfaces that is made accessible to the host ma
 |:----------:	|------	|
 |   Jenkins  	| 8080 	|
 |   Gogs       	| 10080	|
-|     AWX    	| 80   	|
+|     AWX    	| 6060   	|
 | Conjur     	| 443  	|
 | Weavescope 	| 4040 	|
 
@@ -60,8 +60,9 @@ The tools installed have a web interfaces that is made accessible to the host ma
 * Conjur - U: paul P: Cyberark1
 * Conjur - U: cindy P: Cyberark1
 * Conjur - U: john P: Cyberark1
-* AWX - U: admin P: password
-* Gogs - U: cyber_dev P: Cyberark1
+* Conjur - U: eva P: Cyberark1
+* AWX - U: eva P: Cyberark1
+* Gogs - U: eva P: Cyberark1
 
 ### Gogs and Jenkins Jobs
 Jenkins and Gogs are connected via an internal docker network. Updating a job in Gitlab will be reflected in the subsequent Jenkins job at runtime.
