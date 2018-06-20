@@ -8,9 +8,9 @@
 - name: configure AWX
   shell: |
     cd /opt/awx/installer
-    sed -i "s,host_port=80,host_port={{ awx_port }},g" ./inventory
-    sed -i "s,.*default_admin_password=.*,default_admin_password={{ awx_password }},g" ./inventory
-    sed -i "s,# default_admin_user=admin,default_admin_user={{ awx_user }},g" ./inventory
+    sed -i "s,host_port=80,host_port={{ ansible_port }},g" ./inventory
+    sed -i "s,.*default_admin_password=.*,default_admin_password={{ ansible_password }},g" ./inventory
+    sed -i "s,# default_admin_user=admin,default_admin_user={{ ansible_user }},g" ./inventory
 
 - name: start up awx
   shell: ansible-playbook -i inventory install.yml
@@ -19,7 +19,7 @@
 
 - name: Wait for AWX
   uri:
-    url: "{{ awx_url }}"
+    url: "{{ ansible_url_login }}"
     return_content: yes
   register: webpage
   until: '"working..." in webpage.content'
@@ -31,3 +31,19 @@
     docker network connect conjur awx_web
     docker network connect conjur awx_task
   ignore_errors: yes
+
+- pause:
+    seconds: 10
+
+- name: Create authentication for Ansible
+  shell: |
+    echo -n {{ gogs_account }}:{{ gogs_account_password }} | base64
+  register: auth
+
+- name: Create Jobs in Ansible
+  shell: |
+    curl -k -s -X POST -H "Authorization: Basic {{ auth.stdout }}" -H 'Content-Type: application/json' -d '{"name":"{{ item }}","description":"{{ item }}","local_path":"","scm_type":"git","scm_url":"{{ gogs_internal_url }}/{{ gogs_account }}/{{ item }}.git","scm_branch":"master","scm_clean": false,"scm_delete_on_update": false,"credential": null,"timeout":0,"organization":null,"scm_update_on_launch": false,"scm_update_cache_timeout":0,"custom_virtualenv": null}' {{ ansible_url }}/api/v2/projects/
+  with_items:
+   - LAB3_AnsibleCCPaim
+   - LAB3_AnsibleConjurIdentity
+   - LAB3_AnsibleConjurLookup
