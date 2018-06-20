@@ -24,7 +24,7 @@
   register: webpage
   until: '"working..." in webpage.content'
   retries: 60
-  delay: 3
+  delay: 5
 
 - name: connect instances to docker network
   shell: |
