@@ -1,0 +1,8 @@
+- hosts: newMachines
+  roles:
+    - role: cyberark.conjur
+      conjur_appliance_url: 'https://conjur-master/api',
+      conjur_account: 'Cyberark',
+      conjur_host_factory_token: "",
+      conjur_host_name: "{{inventory_hostname}}",
+      conjur_validate_certs: false
