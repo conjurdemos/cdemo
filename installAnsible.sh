@@ -15,16 +15,16 @@ main(){
 
 install_ansible_yum(){
   printf '\nUpdating yum\n'
-  yum update -y &> /dev/null
+  sudo yum update -y &> /dev/null
   printf '\nUpgrading system\n'
-  yum upgrade -y &> /dev/null
+  sudo yum upgrade -y &> /dev/null
   printf '\nInstalling EPEL repo\n'
-  yum install epel-release -y &> /dev/null
+  sudo yum install epel-release -y &> /dev/null
   printf '\nUpdating Repolist\n'
-  yum repolist &> /dev/null
-  yum update -y &> /dev/null
+  sudo yum repolist &> /dev/null
+  sudo yum update -y &> /dev/null
   printf '\nInstalling Ansible\n'
-  yum install ansible -y &> /dev/null
+  sudo yum install ansible -y &> /dev/null
 }
 
 install_ansible_apt(){
