@@ -16,6 +16,15 @@
   shell: |
     docker exec {{ conjur_container_name }} evoke configure master -h {{ conjur_container_name }} -p {{ conjur_admin_password }} {{ conjur_account }}
 
+- name: Wait for Conjur
+  uri:
+    url: "{{ conjur_external_url }}/ui"
+    return_content: yes
+  register: webpage
+  until: '"Conjur" in webpage.content'
+  retries: 60
+  delay: 5
+
 - name: configure cli for EE
   shell: |
     docker exec {{ conjur_cli_container_name }} bash -c "conjur init -u https://{{ conjur_container_name }} -a {{ conjur_account }} <<< yes"
