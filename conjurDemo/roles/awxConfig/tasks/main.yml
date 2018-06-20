@@ -92,8 +92,13 @@
   with_items:
    - { name: 'localhost', description: 'Uses Localhost' }
 
-- pause:
-    seconds: 60
+- name: check that LAB3_AnsibleCCPaim project has been updated.
+  shell: |
+    curl -k -s -X GET -H "Authorization: Basic {{ auth.stdout }}" -H 'Content-Type: application/json' {{ ansible_url }}/api/v2/projects/ | jq '.results[] | {name: .name, id: .id, status: .summary_fields.last_update.status} | select(.name=="LAB3_AnsibleCCPaim") | .status'
+  register: status
+  until: '"successful" in status.stdout'
+  retries: 60
+  delay: 3
 
 - name: Create job template for CCP AIM
   shell: |
@@ -101,8 +106,24 @@
   with_items:
   - { name: 'aimCCP', description: 'Pulls password from AIM CCP' }
 
+- name: check that LAB3_AnsibleConjurIdentity project has been updated.
+  shell: |
+    curl -k -s -X GET -H "Authorization: Basic {{ auth.stdout }}" -H 'Content-Type: application/json' {{ ansible_url }}/api/v2/projects/ | jq '.results[] | {name: .name, id: .id, status: .summary_fields.last_update.status} | select(.name=="LAB3_AnsibleConjurIdentity") | .status'
+  register: status
+  until: '"successful" in status.stdout'
+  retries: 60
+  delay: 3
+
 - name: Create job template for Conjur identity
   shell: |
     curl -k -s -X POST -H "Authorization: Basic {{ auth.stdout }}" -H 'Content-Type: application/json' -d '{"name":"{{ item.name }}","description":"{{ item.description }}","job_type":"run","inventory":{{ conjurIdentity_inventory_id.stdout }},"project":{{ project_id_lab3.stdout }},"playbook":"createIdentity.yml","forks":0,"limit":"","verbosity":0,"extra_vars":"","job_tags":"","force_handlers":false,"skip_tags":"","start_at_task":"","timeout":0,"use_fact_cache":false,"host_config_key":"","ask_diff_mode_on_launch":false,"ask_variables_on_launch":false,"ask_limit_on_launch":false,"ask_tags_on_launch":false,"ask_skip_tags_on_launch":false,"ask_job_type_on_launch":false,"ask_verbosity_on_launch":false,"ask_inventory_on_launch":false,"ask_credential_on_launch":false,"survey_enabled":false,"become_enabled":false,"diff_mode":false,"allow_simultaneous":false,"custom_virtualenv":null,"credential":null,"vault_credential":null}' {{ ansible_url }}/api/v2/job_templates/
   with_items:
   - { name: 'conjurIdentityPush', description: 'Pushes a conjur identity to the machine' }
+
+- name: check that LAB3_AnsibleConjurlookup project has been updated.
+  shell: |
+    curl -k -s -X GET -H "Authorization: Basic {{ auth.stdout }}" -H 'Content-Type: application/json' {{ ansible_url }}/api/v2/projects/ | jq '.results[] | {name: .name, id: .id, status: .summary_fields.last_update.status} | select(.name=="LAB3_AnsibleConjurLookup") | .status'
+  register: status
+  until: '"successful" in status.stdout'
+  retries: 60
+  delay: 3
