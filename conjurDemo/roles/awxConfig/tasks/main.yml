@@ -40,10 +40,26 @@
     echo -n {{ gogs_account }}:{{ gogs_account_password }} | base64
   register: auth
 
-- name: Create Jobs in Ansible
+- name: Create Organization in Ansible
   shell: |
-    curl -k -s -X POST -H "Authorization: Basic {{ auth.stdout }}" -H 'Content-Type: application/json' -d '{"name":"{{ item }}","description":"{{ item }}","local_path":"","scm_type":"git","scm_url":"{{ gogs_internal_url }}/{{ gogs_account }}/{{ item }}.git","scm_branch":"master","scm_clean": false,"scm_delete_on_update": false,"credential": null,"timeout":0,"organization":null,"scm_update_on_launch": false,"scm_update_cache_timeout":0,"custom_virtualenv": null}' {{ ansible_url }}/api/v2/projects/
+    curl -k -s -X POST -H "Authorization: Basic {{ auth.stdout }}" -H 'Content-Type: application/json' -d '{"name":"{{ ansible_organization }}","description":"Main Organization","custom_virtualenv":null}' {{ ansible_url }}/api/v2/organizations/ | jq .id
+  register: org_id
+
+- name: Create Projects in Ansible
+  shell: |
+    curl -k -s -X POST -H "Authorization: Basic {{ auth.stdout }}" -H 'Content-Type: application/json' -d '{"name":"{{ item.name }}","description":"{{ item.description }}","local_path":"","scm_type":"git","scm_url":"{{ gogs_internal_url }}/{{ gogs_account }}/{{ item.name }}.git","scm_branch":"master","scm_clean": false,"scm_delete_on_update": false,"credential": null,"timeout":0,"organization":{{ org_id.stdout }},"scm_update_on_launch": false,"scm_update_cache_timeout":0,"custom_virtualenv": null}' {{ ansible_url }}/api/v2/projects/
   with_items:
-   - LAB3_AnsibleCCPaim
-   - LAB3_AnsibleConjurIdentity
-   - LAB3_AnsibleConjurLookup
+   - { name: 'LAB3_AnsibleCCPaim', description: 'This project will use the Cyberark CCP to pull a password and print it to log.' }
+   - { name: 'LAB3_AnsibleConjurIdentity', description: 'This project will deploy a conjur identity to a remote machine.' }
+   - { name: 'LAB3_AnsibleConjurLookup', description: 'This project will look up a secret from Conjur.' }
+
+- name: Get project id for LAB3_AnsibleConjurIdentity
+  shell: |
+    curl -k -s -X GET -H "Authorization: Basic {{ auth.stdout }}" -H 'Content-Type: application/json' {{ ansible_url }}/api/v2/projects/ | jq .
+  register: project_id_lab3
+
+- name: Create Inventory
+  shell: |
+    curl -k -s -X POST -H "Authorization: Basic {{ auth.stdout }}" -H 'Content-Type: application/json' -d '{"name":"{{ item.name }}","description":"{{ item.description }}","organization":{{ org_id.stdout }},"kind":"","host_filter":null,"variables":"","insight_credentials":null}' {{ ansible_url }}/api/v2/inventories/
+  with_items:
+   - { name: 'conjurIdentity', description: 'This inventory will pull new machines to grant a conjur identity from the source project.' }
