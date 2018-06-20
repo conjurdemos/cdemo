@@ -20,7 +20,7 @@
             <configVersion>2</configVersion>
             <userRemoteConfigs>
                 <hudson.plugins.git.UserRemoteConfig>
-                    <url>http://gogs:3000/cyber_dev/LAB1_Summon.git</url>
+                    <url>http://gogs:3000/eva/LAB1_Summon.git</url>
                     <credentialsId>gogscred</credentialsId>
                 </hudson.plugins.git.UserRemoteConfig>
             </userRemoteConfigs>
