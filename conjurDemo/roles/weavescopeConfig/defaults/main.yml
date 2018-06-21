@@ -60,3 +60,4 @@ ansible_url_login: "{{ ansible_url }}/#/login"
 ansible_password: 'Cyberark1'
 ansible_user: eva
 ansible_organization: 'Cyberark'
+ansible_pas: 'NO'
