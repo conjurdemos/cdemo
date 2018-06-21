@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-RUN apt-get update && apt-get install -y openssh-server locales python-simplejson
+RUN apt-get update && apt-get install -y openssh-server locales python-simplejson vim
 RUN mkdir /var/run/sshd
 RUN echo 'root:screencast' | chpasswd
 RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
@@ -12,6 +12,12 @@ ENV NOTVISIBLE "in users profile"
 RUN echo "export VISIBLE=now" >> /etc/profile
 
 RUN locale-gen en_US.UTF-8
+
+VOLUME /scripts
+
+COPY ./files /scripts
+
+WORKDIR /scripts
 
 EXPOSE 22
 CMD ["/usr/sbin/sshd", "-D"]
