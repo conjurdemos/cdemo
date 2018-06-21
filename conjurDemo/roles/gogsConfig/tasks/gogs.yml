@@ -43,6 +43,7 @@
     docker exec {{ conjur_cli_container_name }} curl -u "{{ gogs_account }}:{{ gogs_account_password }}" -X POST -H 'Content-Type: application/json' {{ gogs_internal_url }}/api/v1/user/repos -d '{"name":"{{ item.name }}", "description":"{{ item.description }}","private":false,"auto_init":true, "gitignores":"macOS","license":"MIT License"}'
     docker exec {{ conjur_cli_container_name }} bash -c "cd / && git clone {{ gogs_internal_url }}/{{ gogs_account }}/{{ item.name }}.git"
     docker cp "{{ role_path }}/files/{{ item.name }}/." {{ conjur_cli_container_name }}:/{{ item.name }}
+    docker exec {{ conjur_cli_container_name }} bash -c "cp /root/*.pem /{{ item.name }}"
     docker exec {{ conjur_cli_container_name }} bash -c "cd /{{ item.name }} && git add --all && git -c user.name={{ gogs_account }} -c user.email={{ gogs_account_email }} commit -m 'Uploading files.' && git -c user.name={{ gogs_account }} -c user.email={{ gogs_account_email }} push http://{{ gogs_account }}:{{ gogs_account_password }}@{{ gogs_container_name }}:{{ gogs_internal_port }}/{{ gogs_account }}/{{ item.name }}.git"
   with_items:
     - { name: 'LAB1_Summon', description: 'This job uses summon with the jenkins identity to pull a password from Conjur' }

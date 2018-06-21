@@ -1,1 +1,2 @@
 [newMachines]
+cdemo-ansible ansible_port=22 ansible_user=root ansible_password=screencast
