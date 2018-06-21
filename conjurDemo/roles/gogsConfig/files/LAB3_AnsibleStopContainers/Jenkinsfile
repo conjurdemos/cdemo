@@ -2,25 +2,15 @@ pipeline {
     agent any
    
     stages {
-        stage ('Create Identity for tomcat containers') {
+        stage ('Stop Ansible containers') {
             steps {
-                sh "cd bin && bash hfToken.sh tomcat"
+                sh 'docker container rm -f $(docker container ls -f name=cdemo-ansible* -q)'
             }
         }
-		stage ('Create Identity for webapp containers') {
-			steps {
-				sh "cd bin && bash hfToken.sh webapp"
-			}
-		}
-		stage ('Create tomcat containers') {
-			steps {
-				sh "cd bin && bash startContainers.sh tomcat 'secrets/frontend/aws_access_key' 5"
-			}
-		}
-		stage ('Create webapp containers') {
-			steps {
-				sh "cd bin && bash startContainers.sh webapp 'secrets/frontend/aws_access_key' 5"
-			}
-		}
+        stage ('Remove host from awx') {
+        	steps {
+            	sh 'docker exec awx_task ssh-keygen -R cdemo-ansible'
+            }
+        }
     }
 }
