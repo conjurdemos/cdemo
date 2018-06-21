@@ -2,25 +2,10 @@ pipeline {
     agent any
    
     stages {
-        stage ('Create Identity for tomcat containers') {
+		stage ('Create containers for Ansible') {
             steps {
-                sh "cd bin && bash hfToken.sh tomcat"
+                sh "docker build -t cdemo/ansible:latest . && docker container run -d --name cdemo-ansible --network conjur -p 10022:22 cdemo/ansible:latest"
             }
         }
-		stage ('Create Identity for webapp containers') {
-			steps {
-				sh "cd bin && bash hfToken.sh webapp"
-			}
-		}
-		stage ('Create tomcat containers') {
-			steps {
-				sh "cd bin && bash startContainers.sh tomcat 'secrets/frontend/aws_access_key' 5"
-			}
-		}
-		stage ('Create webapp containers') {
-			steps {
-				sh "cd bin && bash startContainers.sh webapp 'secrets/frontend/aws_access_key' 5"
-			}
-		}
     }
 }
