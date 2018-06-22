@@ -45,7 +45,7 @@
   register: status
   until: '"successful" in status.stdout'
   retries: 60
-  delay: 3
+  delay: 10
 
 - name: Create job template for Conjur identity
   shell: |
@@ -59,7 +59,7 @@
   register: status
   until: '"successful" in status.stdout'
   retries: 60
-  delay: 3
+  delay: 10
 
 - name: Create job template for Conjur lookup plugin
   shell: |
