@@ -26,7 +26,8 @@ The demo uses the lastest version of Conjur v5
 4. Change directory to conjurDemo.
 5. Edit inventory.yml to include any machines to be stood up as demo machines.
 6. Run sudo ansible-playbook -i inventory.yml site.yml to install conjur and it's tools.
-    * Conjur alone can be configured by running ansible-playbook -i inventory.yml conjurSetup.yml
+    * Conjur alone can be configured by running sudo ansible-playbook -i inventory.yml conjurSetup.yml
+    * Ansible with PAS jobs can be deployed by running: sudo ansible-playbook -i inventory.yml --extra-vars "ansible_pas=YES" site.yml
 
 ## Conjur CLI information
 
@@ -71,6 +72,14 @@ Jenkins and Gogs are connected via an internal docker network. Updating a job in
 2. JOB2_Containers - This job spins up 5 webapp and 5 tomcat containers that are all pulling back a password. Jenkins generates a hostfactory token for each set of containers and then passes through an identity through container environment variables. Each container will then pull a password every 5 seconds.
 3. JOB2_Rotation - This job rotates the secret being pulled by the containers.
 4. JOB2_StopContainers - This job kills all of the tomcat and webapp containers.
+
+### AWX , Gogs, and Jenkins Jobs
+AWX and Gogs are connected via an internal docker network. All projects in AWX have source code in Gogs.
+
+1. LAB3_AnsibleBuildContainers (Jenkins) - Creates target for Ansible job.
+2. LAB3_AnsibleConjurIdentity - Pushes a conjur identity to a remote machine that is set up with the job above.
+3. LAB3_AnsibleConjurLookup - Returns a value from conjur is the ansible node has a conjur identity.
+4. LAB3_AnsibleStopContainers (Jenkins) - Removes target and clears awx known_hosts.
 
 ### API Scripts
 There are scripts that are copied into the CONJUR-CLI container that will interact with Conjur via rest calls to step through
