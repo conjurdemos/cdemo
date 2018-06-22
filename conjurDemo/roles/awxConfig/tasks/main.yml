@@ -20,6 +20,7 @@
 - name: Wait for AWX
   uri:
     url: "{{ ansible_url_login }}"
+    validate_certs: no
     return_content: yes
   register: webpage
   until: '"working..." in webpage.content'
