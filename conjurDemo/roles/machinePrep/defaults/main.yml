@@ -23,7 +23,9 @@ conjur_cli_container_name: 'conjur-cli'
 conjur_cli_image_name: 'cdemo/conjur-cli:latest'
 conjur_account: 'cyberark'
 conjur_admin_password: 'Cyberark1'
-conjur_url: "https://{{ conjur_container_name }}"
+conjur_internal_url: "https://{{ conjur_container_name }}"
+conjur_external_url: "https://{{ ansible_default_ipv4.address }}"
+
 
 conjur_OSS_image_name: 'cyberark/conjur'
 conjur_OSS_port: '81'
@@ -41,8 +43,8 @@ gogs_image_name: 'gogs/gogs'
 gogs_internal_url: "http://{{ gogs_container_name }}:{{ gogs_internal_port }}"
 gogs_external_url: "http://{{ ansible_default_ipv4.address }}:{{ gogs_external_port }}"
 
-gogs_account: 'cyber_dev'
-gogs_account_email: 'cyber_dev@cyberark.com'
+gogs_account: 'eva'
+gogs_account_email: 'eva@cyberark.com'
 gogs_account_password: 'Cyberark1'
 
 # defaults file for jenkinsConfig
@@ -50,10 +52,12 @@ jenkins_port: '8080'
 jenkins_url: "http://{{ ansible_default_ipv4.address }}:{{ jenkins_port }}"
 jenkins_image_name: 'conjur_jenkins:latest'
 jenkins_container_name: 'jenkins'
-job1_config: "{{ lookup('file','files/LAB1_Summon/config.xml') }}"
-job2_config: "{{ lookup('file', 'files/LAB2_Containers/config.xml') }}"
-job2_rotation: "{{lookup('file', 'files/LAB2_Rotation/config.xml') }}"
-job2_StopContainers: "{{lookup('file', 'files/LAB2_StopContainers/config.xml') }}"
 
 # defaults file for awxConfig
-awx_url: 'http://{{ ansible_default_ipv4.address }}/#/login'
+ansible_port: '6060'
+ansible_url: 'http://{{ ansible_default_ipv4.address }}:{{ ansible_port }}'
+ansible_url_login: "{{ ansible_url }}/#/login"
+ansible_password: 'Cyberark1'
+ansible_user: eva
+ansible_organization: 'Cyberark'
+ansible_pas: 'NO'

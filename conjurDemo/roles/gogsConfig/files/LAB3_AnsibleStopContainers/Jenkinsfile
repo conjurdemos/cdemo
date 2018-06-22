@@ -1,0 +1,16 @@
+pipeline {
+    agent any
+   
+    stages {
+        stage ('Stop Ansible containers') {
+            steps {
+                sh 'docker container rm -f $(docker container ls -f name=cdemo-ansible* -q)'
+            }
+        }
+        stage ('Remove host from awx') {
+        	steps {
+            	sh 'docker exec awx_task ssh-keygen -R cdemo-ansible'
+            }
+        }
+    }
+}

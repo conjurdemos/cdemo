@@ -16,11 +16,8 @@ main(){
   remove_docker
   printf '\nRemoving Weavescope'
   remove_weavescope
-  printf '\nRemoving AWX directory'
+  printf '\nRemoving AWX directory\n'
   remove_awx
-  printf '\nRemoving GitLab data directory'
-  remove_gitlab
-  printf '\n-----\n'
 }
 
 stop_containers(){
@@ -69,10 +66,7 @@ remove_weavescope(){
 
 remove_awx(){
   rm -Rf /opt/awx &> /dev/null
-}
-
-remove_gitlab(){
-  rm -Rf /srv &> /dev/null
+  rm -Rf /tmp/pgdocker &> /dev/null
 }
 main
 

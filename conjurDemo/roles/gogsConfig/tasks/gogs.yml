@@ -40,12 +40,18 @@
 - name: Create jobs for gogs
   shell: |
     docker exec "{{ gogs_container_name }}" bash -c "touch /data/gogs/conf/readme && echo "{Name}" > /data/gogs/conf/readme"
-    docker exec {{ conjur_cli_container_name }} curl -u "{{ gogs_account }}:{{ gogs_account_password }}" -X POST -H 'Content-Type: application/json' {{ gogs_internal_url }}/api/v1/user/repos -d '{"name":"{{ item }}", "description":"{{ item }}","private":false,"auto_init":true, "gitignores":"macOS","license":"MIT License"}'
-    docker exec {{ conjur_cli_container_name }} bash -c "cd / && git clone {{ gogs_internal_url }}/cyber_dev/{{ item }}.git"
-    docker cp "{{ role_path }}/files/{{ item }}/." {{ conjur_cli_container_name }}:/{{ item }}
-    docker exec {{ conjur_cli_container_name }} bash -c "cd /{{ item }} && git add --all && git -c user.name={{ gogs_account }} -c user.email={{ gogs_account_email }} commit -m 'Uploading files.' && git -c user.name={{ gogs_account }} -c user.email={{ gogs_account_email }} push http://{{ gogs_account }}:{{ gogs_account_password }}@{{ gogs_container_name }}:{{ gogs_internal_port }}/cyber_dev/{{ item }}.git"
+    docker exec {{ conjur_cli_container_name }} curl -u "{{ gogs_account }}:{{ gogs_account_password }}" -X POST -H 'Content-Type: application/json' {{ gogs_internal_url }}/api/v1/user/repos -d '{"name":"{{ item.name }}", "description":"{{ item.description }}","private":false,"auto_init":true, "gitignores":"macOS","license":"MIT License"}'
+    docker exec {{ conjur_cli_container_name }} bash -c "cd / && git clone {{ gogs_internal_url }}/{{ gogs_account }}/{{ item.name }}.git"
+    docker cp "{{ role_path }}/files/{{ item.name }}/." {{ conjur_cli_container_name }}:/{{ item.name }}
+    docker exec {{ conjur_cli_container_name }} bash -c "cp /root/*.pem /{{ item.name }}"
+    docker exec {{ conjur_cli_container_name }} bash -c "cd /{{ item.name }} && git add --all && git -c user.name={{ gogs_account }} -c user.email={{ gogs_account_email }} commit -m 'Uploading files.' && git -c user.name={{ gogs_account }} -c user.email={{ gogs_account_email }} push http://{{ gogs_account }}:{{ gogs_account_password }}@{{ gogs_container_name }}:{{ gogs_internal_port }}/{{ gogs_account }}/{{ item.name }}.git"
   with_items:
-    - LAB1_Summon
-    - LAB2_Containers
-    - LAB2_Rotation
-    - LAB2_StopContainers
+    - { name: 'LAB1_Summon', description: 'This job uses summon with the jenkins identity to pull a password from Conjur' }
+    - { name: 'LAB2_Containers', description: 'This job will spin up 5 tomcat and 5 webapp containers. Each container will pull back a password every couple of seconds. The output will be printed to the cc.log or to the stdout of the docker container.' }
+    - { name: 'LAB2_Rotation', description: 'This job will rotate the secret used in LAB2_Containers' }
+    - { name: 'LAB2_StopContainers', description: 'This job will destroy all of the tomcat and webapp containers' }
+    - { name: 'LAB3_AnsibleCCPaim', description: 'This job uses the Cyberark CCP to pull a password' }
+    - { name: 'LAB3_AnsibleConjurIdentity', description: 'This job pushes a Conjur identity using a hostfactory token.' }
+    - { name: 'LAB3_AnsibleConjurLookup', description: 'This job gets a secret from Conjur.' }
+    - { name: 'LAB3_AnsibleBuildContainers', description: 'This job builds containers which ansible can use as new machines.' } 
+    - { name: 'LAB3_AnsibleStopContainers', description: 'This job breaks down any containers created for use with Ansible.' } 

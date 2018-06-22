@@ -1,0 +1,20 @@
+---
+- hosts: aimMachines
+  tasks:
+    - name: Pull password from CCP
+      uri: 
+        url: https://{{ ccp_ip }}/aimwebservice/api/Accounts?AppID={{ ccp_app_id }}&Safe={{ ccp_safe }}&Object={{ ccp_object_name }}
+        method: GET
+        headers:
+          Content-Type: "application/json"
+        return_content: yes
+        validate_certs: no
+        body_format: json
+      register: response
+      vars:
+        ccp_ip: "10.0.2.12"
+        ccp_app_id: "AIM_ACCESS"
+        ccp_safe: "AIM_ACCESS"
+        ccp_folder: 'root'
+        ccp_object_name: "AIM_USER"
+    - debug: msg="{{ response }}"  

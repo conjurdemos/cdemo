@@ -5,6 +5,13 @@
     clone: yes
     repo: https://github.com/ansible/awx.git
 
+- name: configure AWX
+  shell: |
+    cd /opt/awx/installer
+    sed -i "s,host_port=80,host_port={{ ansible_port }},g" ./inventory
+    sed -i "s,.*default_admin_password=.*,default_admin_password={{ ansible_password }},g" ./inventory
+    sed -i "s,# default_admin_user=admin,default_admin_user={{ ansible_user }},g" ./inventory
+
 - name: start up awx
   shell: ansible-playbook -i inventory install.yml
   args:
@@ -12,15 +19,23 @@
 
 - name: Wait for AWX
   uri:
-    url: "{{ awx_url }}"
+    url: "{{ ansible_url_login }}"
     return_content: yes
   register: webpage
   until: '"working..." in webpage.content'
   retries: 60
-  delay: 3
+  delay: 5
 
 - name: connect instances to docker network
   shell: |
     docker network connect conjur awx_web
     docker network connect conjur awx_task
   ignore_errors: yes
+
+- pause:
+    seconds: 10
+
+- include_tasks: awx.yml
+
+- include_tasks: pas.yml
+  when: ansible_pas == 'YES'

@@ -38,9 +38,10 @@ function menu(){
 identity_interactive(){
   printf "\nPlease select hostfactory token to use for identity generation:\n"
   local hftoken=$(menu)
+  local conjurCert="/root/conjur-cyberark.pem"
   local id="$hftoken-$(openssl rand -hex 2)"
   local token=$(cat /hostfactoryTokens/"$hftoken"_hostfactory | jq '.[0] | {token}' | awk '{print $2}' | tr -d '"\n\r')
-  local newidentity=$(curl -k -X POST -s -H "Authorization: Token token=\"$token\"" --data-urlencode id=$id https://conjur-master/host_factories/hosts)
+  local newidentity=$(curl -X POST -s --cacert $conjurCert -H "Authorization: Token token=\"$token\"" --data-urlencode id=$id https://conjur-master/host_factories/hosts)
   printf "\nHostfactory token: $token"
   printf "\nNew host name in Conjur: $id"
   printf "\n"
@@ -54,8 +55,9 @@ identity_interactive(){
 identity_jenkins(){
   local hftoken=jenkins
   local id="$hftoken-$(openssl rand -hex 2)"
+  local conjurCert="/root/conjur-cyberark.pem"
   local token=$(cat /hostfactoryTokens/"$hftoken"_hostfactory | jq '.[0] | {token}' | awk '{print $2}' | tr -d '"\n\r')
-  local newidentity=$(curl -k -X POST -s -H "Authorization: Token token=\"$token\"" --data-urlencode id=$id https://conjur-master/host_factories/hosts)
+  local newidentity=$(curl -X POST -s --cacert $conjurCert -H "Authorization: Token token=\"$token\"" --data-urlencode id=$id https://conjur-master/host_factories/hosts)
   local hostname=$(echo $newidentity | jq -r '.id' | awk -F: '{print $NF}')
   local api=$(echo $newidentity | jq -r '.api_key')
   cp /root/*.pem /identity/

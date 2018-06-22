@@ -4,7 +4,7 @@
   shell: |
     docker exec {{ conjur_cli_container_name }} bash -c "conjur policy load --replace root /policy/root.yml > /identity/personas"
 
-- name: Set user login passwords and set mike as the logged in user
+- name: Set user login passwords and set eva as the logged in user
   shell: |
     docker exec {{ conjur_cli_container_name }} conjur authn logout
     docker exec {{ conjur_cli_container_name }} cat /identity/personas | jq .created_roles.\"{{ conjur_account }}:user:{{ item }}\".api_key | tr -d '"' > {{ item }}.cliidentity
@@ -16,6 +16,7 @@
     - paul
     - cindy
     - mike
+    - eva
 
 - name: Load app policies
   shell: |

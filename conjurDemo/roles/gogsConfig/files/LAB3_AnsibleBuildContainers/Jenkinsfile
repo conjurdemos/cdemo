@@ -1,0 +1,11 @@
+pipeline {
+    agent any
+   
+    stages {
+		stage ('Create containers for Ansible') {
+            steps {
+                sh "docker build -t cdemo/ansible:latest . && docker container run -d --name cdemo-ansible --network conjur -p 10022:22 cdemo/ansible:latest"
+            }
+        }
+    }
+}

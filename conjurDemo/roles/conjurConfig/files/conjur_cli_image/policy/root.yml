@@ -7,6 +7,8 @@
 
 - !user paul
 
+- !user eva
+
 - !group admins
 
 - !group devops
@@ -17,6 +19,7 @@
   role: !group admins
   members:
    - !user mike
+   - !user eva
 
 - !grant
   role: !group devops

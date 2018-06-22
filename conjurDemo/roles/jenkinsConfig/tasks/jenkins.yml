@@ -58,32 +58,18 @@
 
 - name: Create gogs creds in Jenkins
   shell: |
-    curl -s -X POST 'http://localhost:8080/credentials/store/system/domain/_/createCredentials' --data-urlencode 'json={"": "0","credentials": {"scope": "GLOBAL","id": "gogscred","username": "cyber_dev", "password": "Cyberark1", "description": "", "$class": "com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl"}}'
+    curl -s -X POST '{{ jenkins_url }}/credentials/store/system/domain/_/createCredentials' --data-urlencode 'json={"": "0","credentials": {"scope": "GLOBAL","id": "gogscred","username": "{{ gogs_account }}", "password": "{{ gogs_account_password }}", "description": "", "$class": "com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl"}}'
 
-- name: Set Up Lab1_Summon
+- name: Set up Jenkins Labs
   jenkins_job:
-    name: LAB1_Summon
-    config: "{{ job1_config }}"
+    name: "{{ item.name }}"
+    config: "{{ item.config }}"
     url: "{{ jenkins_url }}"
     state: present
-
-- name: Set up Lab2_Containers
-  jenkins_job:
-    name: LAB2_Containers
-    config: "{{ job2_config }}"
-    url: "{{ jenkins_url }}"
-    state: present
-
-- name: Set up Lab2_Rotation
-  jenkins_job:
-    name: LAB2_Rotation
-    config: "{{ job2_rotation }}"
-    url: "{{ jenkins_url }}"
-    state: present
-
-- name: Set up Lab2_StopContainers
-  jenkins_job:
-    name: LAB2_StopContainers
-    config: "{{ job2_StopContainers }}"
-    url: "{{ jenkins_url }}"
-    state: present
+  with_items:
+   - { name: 'LAB1_Summon', config: "{{ lookup('file','files/LAB1_Summon/config.xml') }}"}
+   - { name: 'LAB2_Containers', config: "{{ lookup('file', 'files/LAB2_Containers/config.xml') }}"}
+   - { name: 'LAB2_Rotation', config: "{{lookup('file', 'files/LAB2_Rotation/config.xml') }}"}
+   - { name: 'LAB2_StopContainers', config: "{{lookup('file', 'files/LAB2_StopContainers/config.xml') }}"}
+   - { name: 'LAB3_AnsibleBuildContainers', config: "{{lookup('file', 'files/LAB3_AnsibleBuildContainers/config.xml') }}"}
+   - { name: 'LAB3_AnsibleStopContainers', config: "{{lookup('file', 'files/LAB3_AnsibleStopContainers/config.xml') }}"}

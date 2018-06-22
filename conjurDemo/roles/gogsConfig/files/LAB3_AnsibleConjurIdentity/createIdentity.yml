@@ -1,0 +1,9 @@
+- hosts: newMachines
+  roles:
+    - role: cyberark.conjur-host-identity
+      conjur_appliance_url: 'https://conjur-master'
+      conjur_account: 'Cyberark'
+      conjur_host_factory_token: ""
+      conjur_host_name: "{{inventory_hostname}}"
+      conjur_validate_certs: true
+      conjur_ssl_certificate: "{{ lookup('file','conjur-cyberark.pem') }}"
