@@ -14,7 +14,7 @@ The demo uses the lastest version of Conjur v5
 * Gogs
 * AWX
 * Conjur CLI 
-* Conjur Enterprise v5
+* Conjur Enterprise v5 of Conjur OSS
 * Weavescope
 
 ## How to use
