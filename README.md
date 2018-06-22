@@ -49,7 +49,7 @@ The tools installed have a web interfaces that is made accessible to the host ma
 |:----------:	|------	|
 |   Jenkins  	| 8080 	|
 |   Gogs       	| 10080	|
-|     AWX    	| 6060   	|
+|     AWX    	| 6060  |
 | Conjur     	| 443  	|
 | Weavescope 	| 4040 	|
 
