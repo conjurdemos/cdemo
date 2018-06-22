@@ -37,7 +37,7 @@ The cli has been configured to work with the Conjur container.  It has the scrip
 1. Centos 7 OS
 2. Internet Connection
 3. 4 vCPU
-4. 8 GB Ram
+4. 4 GB Ram
 5. 32 GB hdd space at minimum
 6. Ansible v2.5
 
