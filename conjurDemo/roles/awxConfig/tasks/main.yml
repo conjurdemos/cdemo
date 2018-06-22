@@ -24,8 +24,8 @@
     return_content: yes
   register: webpage
   until: '"working..." in webpage.content'
-  retries: 60
-  delay: 10
+  retries: 240
+  delay: 2
 
 - name: connect instances to docker network
   shell: |

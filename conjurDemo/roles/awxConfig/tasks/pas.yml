@@ -37,8 +37,8 @@
     curl -k -s -X GET -H "Authorization: Basic {{ auth.stdout }}" -H 'Content-Type: application/json' {{ ansible_url }}/api/v2/projects/ | jq '.results[] | {name: .name, id: .id, status: .summary_fields.last_update.status} | select(.name=="LAB3_AnsibleCCPaim") | .status'
   register: status
   until: '"successful" in status.stdout'
-  retries: 60
-  delay: 10
+  retries: 240
+  delay: 2
 
 - name: Create job template for CCP AIM
   shell: |
