@@ -27,7 +27,7 @@ The demo uses the lastest version of Conjur v5
 5. Edit inventory.yml to include any machines to be stood up as demo machines.
 6. Run sudo ansible-playbook -i inventory.yml site.yml to install conjur and it's tools.
     * Conjur alone can be configured by running sudo ansible-playbook -i inventory.yml conjurSetup.yml
-    * Ansible with PAS jobs can be deployed by running: sudo ansible-playbook -i inventory.yml --extra-vars "ansible_pas=YES" site.yml
+    * Ansible with PAS jobs can be deployed by running: sudo ansible-playbook -i inventory.yml site.yml --extra-vars "ansible_pas=YES"
 
 ## Conjur CLI information
 
