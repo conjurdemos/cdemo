@@ -56,3 +56,7 @@
 - !policy
   id: webapp
   owner: !group admins
+
+- !policy
+  id: ansible
+  owner: !group admins
