@@ -56,9 +56,19 @@
   retries: 60
   delay: 3
 
+- name: get api user password
+  shell: |
+    docker exec {{ conjur_cli_container_name }} conjur variable value secrets/backend/gogs_secure_user_password
+  register: password
+
+- name: get api username
+  shell: |
+    docker exec {{ conjur_cli_container_name }} conjur variable value secrets/backend/gogs_secure_user
+  register: username
+
 - name: Create gogs creds in Jenkins
   shell: |
-    curl -s -X POST '{{ jenkins_url }}/credentials/store/system/domain/_/createCredentials' --data-urlencode 'json={"": "0","credentials": {"scope": "GLOBAL","id": "gogscred","username": "{{ gogs_account }}", "password": "{{ gogs_account_password }}", "description": "", "$class": "com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl"}}'
+    curl -s -X POST '{{ jenkins_url }}/credentials/store/system/domain/_/createCredentials' --data-urlencode 'json={"": "0","credentials": {"scope": "GLOBAL","id": "gogscred","username": "{{ username.stdout }}", "password": "{{ password.stdout }}", "description": "", "$class": "com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl"}}'
 
 - name: Set up Jenkins Labs
   jenkins_job:

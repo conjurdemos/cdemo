@@ -9,9 +9,24 @@
     curl -k -s -X POST -H "Authorization: Basic {{ auth.stdout }}" -H 'Content-Type: application/json' {{ ansible_external_url }}/api/v2/organizations/ -d '{"name":"{{ ansible_organization }}","description":"Main Organization","custom_virtualenv":null}' | jq .id
   register: org_id
 
+- name: get api user password
+  shell: |
+    docker exec {{ conjur_cli_container_name }} conjur variable value secrets/backend/gogs_secure_user_password
+  register: password
+
+- name: get api username
+  shell: |
+    docker exec {{ conjur_cli_container_name }} conjur variable value secrets/backend/gogs_secure_user
+  register: username
+
+- name: Create credentials for gogs
+  shell: |
+    curl -k -s -X POST -H "Authorization: Basic {{ auth.stdout }}" -H 'Content-Type: application/json' -d '{"name":"gogscred","description":"gogs","organization":{{ org_id.stdout }},"credential_type":2,"inputs":{"username":"{{ username.stdout }}","password":"{{ password.stdout }}"}}' {{ ansible_external_url }}/api/v2/credentials/ | jq .id
+  register: cred_id
+
 - name: Create Projects in Ansible
   shell: |
-    curl -k -s -X POST -H "Authorization: Basic {{ auth.stdout }}" -H 'Content-Type: application/json' -d '{"name":"{{ item.name }}","description":"{{ item.description }}","local_path":"","scm_type":"git","scm_url":"{{ gogs_internal_url }}/{{ gogs_organization }}/{{ item.name }}.git","scm_branch":"master","scm_clean": false,"scm_delete_on_update": false,"credential": null,"timeout":0,"organization":{{ org_id.stdout }},"scm_update_on_launch": true,"scm_update_cache_timeout":0,"custom_virtualenv":null}' {{ ansible_external_url }}/api/v2/projects/
+    curl -k -s -X POST -H "Authorization: Basic {{ auth.stdout }}" -H 'Content-Type: application/json' -d '{"name":"{{ item.name }}","description":"{{ item.description }}","local_path":"","scm_type":"git","scm_url":"{{ gogs_internal_url }}/{{ gogs_organization }}/{{ item.name }}.git","scm_branch":"master","scm_clean": false,"scm_delete_on_update": false,"credential":{{ cred_id.stdout }},"timeout":0,"organization":{{ org_id.stdout }},"scm_update_on_launch": true,"scm_update_cache_timeout":0,"custom_virtualenv":null}' {{ ansible_external_url }}/api/v2/projects/
   with_items:
    - { name: 'LAB3_AnsibleConjurIdentity', description: 'This project will deploy a conjur identity to a remote machine.' }
    - { name: 'LAB3_AnsibleConjurLookup', description: 'This project will look up a secret from Conjur.' }
