@@ -47,6 +47,8 @@ gogs_account: 'eva'
 gogs_account_email: 'eva@cyberark.com'
 gogs_account_password: 'Cyberark1'
 
+gogs_organization: 'Cyberark'
+
 # defaults file for jenkinsConfig
 jenkins_port: '8080'
 jenkins_url: "http://{{ ansible_default_ipv4.address }}:{{ jenkins_port }}"
