@@ -17,7 +17,6 @@ secret_pull(){
   local api=$(cat /identity/"$identity"_identity | jq -r '.api_key')
   local hostname=$(cat /identity/"$identity"_identity | jq -r '.id' | awk -F: '{print $NF}')
   local secret_name="secrets/frontend/aws_access_key"
-  local secret_url=$(urlify $secret_name) 
   printf "\nPulling secret: $secret_name"
   printf "\nUsing Conjur hostname: $hostname"
   printf "\nUsing API key: $api"
