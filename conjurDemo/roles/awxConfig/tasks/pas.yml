@@ -6,7 +6,7 @@
 
 - name: Create Projects in Ansible
   shell: |
-    curl -k -s -X POST -H "Authorization: Basic {{ auth.stdout }}" -H 'Content-Type: application/json' -d '{"name":"{{ item.name }}","description":"{{ item.description }}","local_path":"","scm_type":"git","scm_url":"{{ gogs_internal_url }}/{{ gogs_account }}/{{ item.name }}.git","scm_branch":"master","scm_clean": false,"scm_delete_on_update": false,"credential": null,"timeout":0,"organization":{{ org_id.stdout }},"scm_update_on_launch": true,"scm_update_cache_timeout":0,"custom_virtualenv": null}' {{ ansible_external_url }}/api/v2/projects/
+    curl -k -s -X POST -H "Authorization: Basic {{ auth.stdout }}" -H 'Content-Type: application/json' -d '{"name":"{{ item.name }}","description":"{{ item.description }}","local_path":"","scm_type":"git","scm_url":"{{ gogs_internal_url }}/{{ gogs_organization }}/{{ item.name }}.git","scm_branch":"master","scm_clean": false,"scm_delete_on_update": false,"credential": null,"timeout":0,"organization":{{ org_id.stdout }},"scm_update_on_launch": true,"scm_update_cache_timeout":0,"custom_virtualenv": null}' {{ ansible_external_url }}/api/v2/projects/
   with_items:
    - { name: 'LAB3_AnsibleCCPaim', description: 'This project will use the Cyberark CCP to pull a password and print it to log.' }
 
