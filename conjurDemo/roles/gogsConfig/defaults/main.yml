@@ -47,6 +47,8 @@ gogs_account: 'eva'
 gogs_account_email: 'eva@cyberark.com'
 gogs_account_password: 'Cyberark1'
 
+gogs_organization: 'Cyberark'
+
 # defaults file for jenkinsConfig
 jenkins_port: '8080'
 jenkins_url: "http://{{ ansible_default_ipv4.address }}:{{ jenkins_port }}"
@@ -55,8 +57,10 @@ jenkins_container_name: 'jenkins'
 
 # defaults file for awxConfig
 ansible_port: '6060'
-ansible_url: 'http://{{ ansible_default_ipv4.address }}:{{ ansible_port }}'
-ansible_url_login: "{{ ansible_url }}/#/login"
+ansible_internal_port: '8052'
+ansible_external_url: "http://{{ ansible_default_ipv4.address }}:{{ ansible_port }}"
+ansible_external_url_login: "{{ ansible_external_url }}/#/login"
+ansible_internal_url: "http://awx_web:{{ ansible_internal_port }}"
 ansible_password: 'Cyberark1'
 ansible_user: eva
 ansible_organization: 'Cyberark'

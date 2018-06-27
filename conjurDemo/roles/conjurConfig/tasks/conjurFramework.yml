@@ -25,6 +25,7 @@
    - jenkins
    - tomcat
    - webapp
+   - ansible
    - secrets
 
 - name: randomizing variables
@@ -39,3 +40,17 @@
      - secrets/frontend/aws_access_key
      - secrets/frontend/aws_secret_key
      - secrets/frontend/sql_password
+
+- name: Setting Passwords for Secure users
+  shell: |
+    docker exec {{ conjur_cli_container_name }} conjur variable values add {{ item }} $(openssl rand -hex 12)
+  with_items:
+     - secrets/backend/gogs_secure_user_password
+     - secrets/backend/ansible_secure_user_password
+
+- name: Setting Usernames for Secure users
+  shell: |
+    docker exec {{ conjur_cli_container_name }} conjur variable values add {{ item.conjur_name }} {{ item.username }}
+  with_items:
+     - { conjur_name: 'secrets/backend/gogs_secure_user', username: 'gogs_machine' }
+     - { conjur_name: 'secrets/backend/ansible_secure_user', username: 'ansible_machine' }

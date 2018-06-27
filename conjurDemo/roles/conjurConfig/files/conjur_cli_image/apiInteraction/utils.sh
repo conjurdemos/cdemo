@@ -14,7 +14,7 @@ function urlify(){
 
 function menu(){
   PS3='Please enter your choice: '
-  options=("Jenkins" "Webapp" "Tomcat")
+  options=("Jenkins" "Webapp" "Tomcat" "Ansible")
   select opt in "${options[@]}"
   do
     case $opt in
@@ -28,6 +28,10 @@ function menu(){
         ;;
       "Tomcat")
         id=tomcat
+        break
+        ;;
+      "Ansible")
+        id=ansible
         break
         ;;
     esac

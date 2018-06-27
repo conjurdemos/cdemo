@@ -4,37 +4,42 @@
     echo -n {{ gogs_account }}:{{ gogs_account_password }} | base64
   register: auth
 
+- name: Get cred id for gogscred
+  shell: |
+    curl -k -s -X GET -H "Authorization: Basic {{ auth.stdout }}" -H 'Content-Type: application/json' {{ ansible_external_url }}/api/v2/credentials/ | jq '.results[] | {name: .name, id: .id} | select(.name=="gogscred") | .id'
+  register: cred_id
+
 - name: Create Projects in Ansible
   shell: |
-    curl -k -s -X POST -H "Authorization: Basic {{ auth.stdout }}" -H 'Content-Type: application/json' -d '{"name":"{{ item.name }}","description":"{{ item.description }}","local_path":"","scm_type":"git","scm_url":"{{ gogs_internal_url }}/{{ gogs_account }}/{{ item.name }}.git","scm_branch":"master","scm_clean": false,"scm_delete_on_update": false,"credential": null,"timeout":0,"organization":{{ org_id.stdout }},"scm_update_on_launch": true,"scm_update_cache_timeout":0,"custom_virtualenv": null}' {{ ansible_url }}/api/v2/projects/
+    curl -k -s -X POST -H "Authorization: Basic {{ auth.stdout }}" -H 'Content-Type: application/json' -d '{"name":"{{ item.name }}","description":"{{ item.description }}","local_path":"","scm_type":"git","scm_url":"{{ gogs_internal_url }}/{{ gogs_organization }}/{{ item.name }}.git","scm_branch":"master","scm_clean": false,"scm_delete_on_update": false,"credential":{{ cred_id.stdout }},"timeout":0,"organization":{{ org_id.stdout }},"scm_update_on_launch": true,"scm_update_cache_timeout":0,"custom_virtualenv": null}' {{ ansible_external_url }}/api/v2/projects/
   with_items:
    - { name: 'LAB3_AnsibleCCPaim', description: 'This project will use the Cyberark CCP to pull a password and print it to log.' }
 
 - name: Get project id for LAB3_AnsibleCCPaim
   shell: |
-    curl -k -s -X GET -H "Authorization: Basic {{ auth.stdout }}" -H 'Content-Type: application/json' {{ ansible_url }}/api/v2/projects/ | jq '.results[] | {name: .name, id: .id} | select(.name=="LAB3_AnsibleCCPaim") | .id'
+    curl -k -s -X GET -H "Authorization: Basic {{ auth.stdout }}" -H 'Content-Type: application/json' {{ ansible_external_url }}/api/v2/projects/ | jq '.results[] | {name: .name, id: .id} | select(.name=="LAB3_AnsibleCCPaim") | .id'
   register: project_id_lab3_ccp
 
 - name: Create Inventories
   shell: |
-    curl -k -s -X POST -H "Authorization: Basic {{ auth.stdout }}" -H 'Content-Type: application/json' -d '{"name":"{{ item.name }}","description":"{{ item.description }}","organization":{{ org_id.stdout }},"kind":"","host_filter":null,"variables":"","insight_credentials":null}' {{ ansible_url }}/api/v2/inventories/
+    curl -k -s -X POST -H "Authorization: Basic {{ auth.stdout }}" -H 'Content-Type: application/json' -d '{"name":"{{ item.name }}","description":"{{ item.description }}","organization":{{ org_id.stdout }},"kind":"","host_filter":null,"variables":"","insight_credentials":null}' {{ ansible_external_url }}/api/v2/inventories/
   with_items:
    - { name: 'localhost', description: 'This points to localhost.'}
 
 - name: Get id for localhost inventory
   shell: |
-    curl -k -s -X GET -H "Authorization: Basic {{ auth.stdout }}" -H 'Content-Type: application/json' {{ ansible_url }}/api/v2/inventories/ | jq '.results[] | {name: .name, id: .id} | select(.name=="localhost") | .id'
+    curl -k -s -X GET -H "Authorization: Basic {{ auth.stdout }}" -H 'Content-Type: application/json' {{ ansible_external_url }}/api/v2/inventories/ | jq '.results[] | {name: .name, id: .id} | select(.name=="localhost") | .id'
   register: localhost_inventory_id
 
 - name: Create host for inventory
   shell: |
-    curl -k -s -X POST -H "Authorization: Basic {{ auth.stdout }}" -H 'Content-Type: application/json' -d '{"name":"{{ item.name }}","description":"{{ item.description }}","inventory":{{ localhost_inventory_id.stdout }},"enabled":true,"instance_id":"","variables":"ansible_connection: local"}' {{ ansible_url }}/api/v2/hosts/
+    curl -k -s -X POST -H "Authorization: Basic {{ auth.stdout }}" -H 'Content-Type: application/json' -d '{"name":"{{ item.name }}","description":"{{ item.description }}","inventory":{{ localhost_inventory_id.stdout }},"enabled":true,"instance_id":"","variables":"ansible_connection: local"}' {{ ansible_external_url }}/api/v2/hosts/
   with_items:
    - { name: 'localhost', description: 'Uses Localhost' }
 
 - name: check that LAB3_AnsibleCCPaim project has been updated.
   shell: |
-    curl -k -s -X GET -H "Authorization: Basic {{ auth.stdout }}" -H 'Content-Type: application/json' {{ ansible_url }}/api/v2/projects/ | jq '.results[] | {name: .name, id: .id, status: .summary_fields.last_update.status} | select(.name=="LAB3_AnsibleCCPaim") | .status'
+    curl -k -s -X GET -H "Authorization: Basic {{ auth.stdout }}" -H 'Content-Type: application/json' {{ ansible_external_url }}/api/v2/projects/ | jq '.results[] | {name: .name, id: .id, status: .summary_fields.last_update.status} | select(.name=="LAB3_AnsibleCCPaim") | .status'
   register: status
   until: '"successful" in status.stdout'
   retries: 240
@@ -42,6 +47,6 @@
 
 - name: Create job template for CCP AIM
   shell: |
-    curl -k -s -X POST -H "Authorization: Basic {{ auth.stdout }}" -H 'Content-Type: application/json' -d '{"name":"{{ item.name }}","description":"{{ item.description }}","job_type":"run","inventory":{{ localhost_inventory_id.stdout }},"project":{{ project_id_lab3_ccp.stdout }},"playbook":"aimCCP.yml","forks":0,"limit":"","verbosity":0,"extra_vars":"","job_tags":"","force_handlers":false,"skip_tags":"","start_at_task":"","timeout":0,"use_fact_cache":false,"host_config_key":"","ask_diff_mode_on_launch":false,"ask_variables_on_launch":false,"ask_limit_on_launch":false,"ask_tags_on_launch":false,"ask_skip_tags_on_launch":false,"ask_job_type_on_launch":false,"ask_verbosity_on_launch":false,"ask_inventory_on_launch":false,"ask_credential_on_launch":false,"survey_enabled":false,"become_enabled":false,"diff_mode":false,"allow_simultaneous":false,"custom_virtualenv":null,"credential":null,"vault_credential":null}' {{ ansible_url }}/api/v2/job_templates/
+    curl -k -s -X POST -H "Authorization: Basic {{ auth.stdout }}" -H 'Content-Type: application/json' -d '{"name":"{{ item.name }}","description":"{{ item.description }}","job_type":"run","inventory":{{ localhost_inventory_id.stdout }},"project":{{ project_id_lab3_ccp.stdout }},"playbook":"aimCCP.yml","forks":0,"limit":"","verbosity":0,"extra_vars":"","job_tags":"","force_handlers":false,"skip_tags":"","start_at_task":"","timeout":0,"use_fact_cache":false,"host_config_key":"","ask_diff_mode_on_launch":false,"ask_variables_on_launch":false,"ask_limit_on_launch":false,"ask_tags_on_launch":false,"ask_skip_tags_on_launch":false,"ask_job_type_on_launch":false,"ask_verbosity_on_launch":false,"ask_inventory_on_launch":false,"ask_credential_on_launch":false,"survey_enabled":false,"become_enabled":false,"diff_mode":false,"allow_simultaneous":false,"custom_virtualenv":null,"credential":null,"vault_credential":null}' {{ ansible_external_url }}/api/v2/job_templates/
   with_items:
   - { name: 'aimCCP', description: 'Pulls password from AIM CCP' }
