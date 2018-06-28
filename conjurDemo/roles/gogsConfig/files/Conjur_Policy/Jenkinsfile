@@ -5,6 +5,11 @@ pipeline {
         stage ('Upload new policy') {
             steps {
                 sh "docker exec conjur-cli bash -c 'cd /Conjur_Policy && git pull && conjur policy load --replace root root.yml'"
+                sh "docker exec conjur-cli bash -c 'cd /Conjur_Policy && git pull && conjur policy load --replace jenkins jenkins.yml'"
+                sh "docker exec conjur-cli bash -c 'cd /Conjur_Policy && git pull && conjur policy load --replace tomcat tomcat.yml'"
+                sh "docker exec conjur-cli bash -c 'cd /Conjur_Policy && git pull && conjur policy load --replace webapp webapp.yml'"
+                sh "docker exec conjur-cli bash -c 'cd /Conjur_Policy && git pull && conjur policy load --replace ansible ansible.yml'"
+                sh "docker exec conjur-cli bash -c 'cd /Conjur_Policy && git pull && conjur policy load --replace secrets secrets.yml'"
             }
         }
     }
