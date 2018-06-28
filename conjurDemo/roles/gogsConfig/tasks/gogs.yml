@@ -83,6 +83,16 @@
     - { name: 'LAB3_AnsibleBuildContainers', description: 'This job builds containers which ansible can use as new machines.' } 
     - { name: 'LAB3_AnsibleStopContainers', description: 'This job breaks down any containers created for use with Ansible.' } 
 
+- name: create gogs repo for policy
+  shell: |
+    docker exec {{ conjur_cli_container_name }} curl -s -u "{{ gogs_account }}:{{ gogs_account_password }}" -X POST -H 'Content-Type: application/json' {{ gogs_internal_url }}/api/v1/org/{{ gogs_organization }}/repos -d '{"name":"{{ item.name }}", "description":"{{ item.description }}","private":true,"auto_init":true, "gitignores":"macOS","license":"MIT License"}'
+    docker exec {{ conjur_cli_container_name }} bash -c "cd / && git clone http://{{ gogs_account }}:{{ gogs_account_password }}@{{ gogs_container_name }}:{{ gogs_internal_port }}/{{ gogs_organization }}/{{ item.name }}.git"
+    docker exec {{ conjur_cli_container_name }} bash -c "cp -R /policy/* /{{ item.name }}/"
+    docker cp "{{ role_path }}/files/{{ item.name }}/." "{{ conjur_cli_container_name }}:/{{ item.name }}"
+    docker exec {{ conjur_cli_container_name }} bash -c "cd /{{ item.name }} && git add --all && git -c user.name={{ gogs_account }} -c user.email={{ gogs_account_email }} commit -m 'Uploading files.' && git -c user.name={{ gogs_account }} -c user.email={{ gogs_account_email }} push http://{{ gogs_account }}:{{ gogs_account_password }}@{{ gogs_container_name }}:{{ gogs_internal_port }}/{{ gogs_organization }}/{{ item.name }}.git"    
+  with_items:
+    - { name: 'Conjur_Policy', description: 'This is the conjur policy that is loaded.' }
+    
 - name: Add repositories to Team
   shell: |
     docker exec {{ conjur_cli_container_name }} curl -s -u "{{ gogs_account }}:{{ gogs_account_password }}" -X PUT "{{ gogs_internal_url }}/api/v1/admin/teams/{{ team_id.stdout }}/repos/{{ item.name }}"
@@ -96,3 +106,4 @@
     - { name: 'LAB3_AnsibleConjurLookup', description: 'This job gets a secret from Conjur.' }
     - { name: 'LAB3_AnsibleBuildContainers', description: 'This job builds containers which ansible can use as new machines.' } 
     - { name: 'LAB3_AnsibleStopContainers', description: 'This job breaks down any containers created for use with Ansible.' } 
+    - { name: 'Conjur_Policy', description: 'This is the conjur policy that is loaded.' } 
