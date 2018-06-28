@@ -107,3 +107,9 @@
     - { name: 'LAB3_AnsibleBuildContainers', description: 'This job builds containers which ansible can use as new machines.' } 
     - { name: 'LAB3_AnsibleStopContainers', description: 'This job breaks down any containers created for use with Ansible.' } 
     - { name: 'Conjur_Policy', description: 'This is the conjur policy that is loaded.' } 
+
+- name: Create webhooks for jenkins
+  shell: |
+    docker exec {{ conjur_cli_container_name }} curl -s -u "{{ gogs_account }}:{{ gogs_account_password }}" -X POST -H 'Content-Type: application/json' {{ gogs_internal_url }}/api/v1/repos/{{ gogs_organization }}/{{ item.name }}/hooks -d '{"type":"gogs","config":{"url":"http://jenkins:8080/gogs-webhook/?job={{ item.name }}","content_type":"json"},"events":["push"],"active":true}'
+  with_items:
+    - { name: 'Conjur_Policy', description: 'This is the conjur policy that is loaded.' }
