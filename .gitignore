@@ -8,3 +8,4 @@ conjur.tar
 *.DS_Store
 *.cliidentity
 tar.conjur
+.vagrant
