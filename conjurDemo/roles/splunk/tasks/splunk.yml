@@ -13,8 +13,9 @@
     volumes:
      - audit:/conjur
     env:
-      SPLUNK_START_ARGS=--accept-license
+      SPLUNK_START_ARGS="--answer-yes --no-prompt --accept-license"
       SPLUNK_USER=root
       SPLUNK_ADD='monitor /conjur/audit.json'
-      SPLUNK_CMD='edit user admin -password Cyberark1 -role admin -auth admin:changeme'
+      SPLUNK_CMD='edit user admin -password {{ splunk_account_password }} -role admin -auth admin:changeme'
+      SPLUNK_CMD_1='add user eva -password {{ splunk_account_password }} -role admin -auth admin:{{ splunk_account_password }}'
     restart_policy: always
