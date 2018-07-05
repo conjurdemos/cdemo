@@ -4,7 +4,7 @@ pipeline {
     stages {
 		stage ('Create containers for Ansible') {
             steps {
-                sh "docker build -t cdemo/ansible:latest . && docker container run -d --name cdemo-ansible --network conjur -p 10022:22 cdemo/ansible:latest"
+                sh "docker build -t cdemo/ansible:latest . && docker container run -d --name cdemo-ansible --restart always --network conjur -p 10022:22 cdemo/ansible:latest"
             }
         }
     }

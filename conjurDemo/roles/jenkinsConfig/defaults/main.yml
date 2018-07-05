@@ -14,7 +14,7 @@ docker_apt_arch: amd64
 docker_apt_repository: "deb [arch={{ docker_apt_arch }}] https://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} {{ docker_apt_release_channel }}"
 
 # defaults file for conjurConfig
-conjur_version: 'EE'
+conjur_version: 'OSS'
 conjur_container_name: 'conjur-master'
 conjur_EE_image_name: 'registry2.itci.conjur.net/conjur-appliance:5.0-stable'
 conjur_network_name: conjur
@@ -26,7 +26,6 @@ conjur_admin_password: 'Cyberark1'
 conjur_internal_url: "https://{{ conjur_container_name }}"
 conjur_external_url: "https://{{ ansible_default_ipv4.address }}"
 
-
 conjur_OSS_image_name: 'cyberark/conjur'
 conjur_OSS_port: '81'
 conjur_OSS_url: "http://{{ ansible_default_ipv4.address }}:{{ conjur_OSS_port }}"
@@ -34,8 +33,10 @@ conjur_OSS_container_name: 'conjur-oss'
 conjur_nginx_image_name: 'cdemo/conjur-nginx:latest'
 
 # defaults file for weavescopeConfig
+weavescope_install: 'NO'
 
 # defaults file for gogsconfig
+gogs_install: 'NO'
 gogs_internal_port: '3000'
 gogs_external_port: '10080'
 gogs_container_name: 'gogs'
@@ -50,12 +51,14 @@ gogs_account_password: 'Cyberark1'
 gogs_organization: 'Cyberark'
 
 # defaults file for jenkinsConfig
+jenkins_install: 'NO'
 jenkins_port: '8080'
 jenkins_url: "http://{{ ansible_default_ipv4.address }}:{{ jenkins_port }}"
 jenkins_image_name: 'conjur_jenkins:latest'
 jenkins_container_name: 'jenkins'
 
 # defaults file for awxConfig
+ansible_install: 'NO'
 ansible_port: '6060'
 ansible_internal_port: '8052'
 ansible_external_url: "http://{{ ansible_default_ipv4.address }}:{{ ansible_port }}"
@@ -65,3 +68,12 @@ ansible_password: 'Cyberark1'
 ansible_user: eva
 ansible_organization: 'Cyberark'
 ansible_pas: 'NO'
+
+# defaults file for splunk
+splunk_install: 'NO'
+splunk_container_name: 'splunk'
+splunk_image_name: "{{ splunk_container_name }}/{{ splunk_container_name }}"
+splunk_hostname: "{{ splunk_container_name }}"
+splunk_external_port: "8000"
+splunk_internal_port: "8000"
+splunk_account_password: "{{ gogs_account_password }}"

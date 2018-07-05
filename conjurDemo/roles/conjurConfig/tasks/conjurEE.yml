@@ -1,4 +1,11 @@
 ---
+- name: create volume for audit data
+  docker_volume:
+    name: "{{ item }}"
+    state: present
+  with_items:
+   - audit
+
 - name: Start conjur container
   docker_container:
     name: "{{ conjur_container_name }}"
@@ -10,6 +17,8 @@
      - name: "{{ conjur_network_name }}"
     published_ports:
      - "{{ conjur_https_port }}:443"
+    volumes:
+     - audit:/var/log/conjur
     restart_policy: always
 
 - name: configure conjur container

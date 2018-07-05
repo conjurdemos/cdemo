@@ -1,0 +1,20 @@
+---
+- name: Start splunk container
+  docker_container:
+    name: "{{ splunk_container_name }}"
+    image: "{{ splunk_image_name }}"
+    state: started
+    recreate: yes
+    hostname: "{{ splunk_hostname }}"
+    networks:
+     - name: "{{ conjur_network_name }}"
+    published_ports:
+     - "{{ splunk_external_port}}:{{ splunk_internal_port }}"
+    volumes:
+     - audit:/conjur
+    env:
+      SPLUNK_START_ARGS=--accept-license
+      SPLUNK_USER=root
+      SPLUNK_ADD='monitor /conjur/audit.json'
+      SPLUNK_CMD='edit user admin -password Cyberark1 -role admin -auth admin:changeme'
+    restart_policy: always

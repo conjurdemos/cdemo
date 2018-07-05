@@ -1,4 +1,13 @@
 ---
 - import_playbook: machineSetup.yml
 - import_playbook: conjurSetup.yml
+  vars:
+    conjur_version: 'OSS'
 - import_playbook: toolSetup.yml
+  vars:
+   weavescope_install: 'YES'
+   gogs_install: 'YES'
+   jenkins_install: 'YES'
+   ansible_install: 'YES'
+   ansible_pas: 'NO'
+   splunk_install: 'YES'
