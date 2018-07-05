@@ -1,15 +1,3 @@
 ---
-- name: Start Weavescope container
-  docker_container:
-    name: weavescope
-    image: weaveworks/scope:1.9.0
-    pid_mode: host
-    privileged: yes
-    restart_policy: always
-    published_ports:
-     - "4040:4040"
-    labels:
-       "works.weaves.role=system"
-    volumes:
-     - "/var/run/docker.sock:/var/run/docker.sock:rw"
-    command: ["--probe.docker=true"]
+- include_tasks: weavescope.yml
+  when: weavescope_install == 'YES'

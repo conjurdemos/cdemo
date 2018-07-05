@@ -10,6 +10,11 @@
      path: ../conjur.tar
   register: conjurTar
 
+- name: Set varilables
+  set_fact:
+    conjur_version: 'EE'
+  when: conjurTar.stat.exists == True
+  
 - name: Load Conjur tar
   docker_image:
     name: conjur-appliance
