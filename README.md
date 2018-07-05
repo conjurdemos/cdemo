@@ -16,6 +16,7 @@ The demo uses the lastest version of Conjur v5
 * Conjur CLI 
 * Conjur Enterprise v5 or Conjur OSS
 * Weavescope
+* Splunk (Requires Conjur Enterprise v5)
 
 ## How to use
 
@@ -25,9 +26,10 @@ The demo uses the lastest version of Conjur v5
 3. Run installAnsible.sh.
 4. Change directory to conjurDemo.
 5. Edit inventory.yml to include any machines to be stood up as demo machines.
-6. Run sudo ansible-playbook -i inventory.yml site.yml to install conjur and it's tools.
+6. Edit site.yml to change which tools are installed. Set each tool variable to 'YES' for it to be installed automatically. Set to 'NO' for it to be skipped.
+7. Run sudo ansible-playbook -i inventory.yml site.yml to install conjur and it's tools.
     * Conjur alone can be configured by running sudo ansible-playbook -i inventory.yml conjurSetup.yml
-    * Ansible with PAS jobs can be deployed by running: sudo ansible-playbook -i inventory.yml site.yml --extra-vars "ansible_pas=YES"
+    * Ansible with PAS jobs can be deployed by setting the variable "ansible_pas: 'YES'" in site.yml
 
 ## Conjur CLI information
 
