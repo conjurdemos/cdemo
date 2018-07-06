@@ -23,6 +23,7 @@ The demo uses the lastest version of Conjur v5
 1. Clone the repo.
 2. Obtain the latest Conjur tar file and place it within the cDemo directory named 'conjur.tar'.
     * If no tar file is located then a check for conjur docker registry access happens. If regsitry access comes back as successful then the latest version is pulled directly from the registry.
+    * Conjur OSS will automatically be pulled if there is no tar file or Conjur docker registry access.
 3. Run installAnsible.sh.
 4. Change directory to conjurDemo.
 5. Edit inventory.yml to include any machines to be stood up as demo machines.
