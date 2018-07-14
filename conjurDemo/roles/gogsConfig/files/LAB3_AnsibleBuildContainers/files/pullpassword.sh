@@ -1,2 +1,4 @@
 #!/bin/bash
- printf "\nGrabbing secret database password: $db_password"
+
+echo "Using Summon to grab secret database password..."
+summon sh -c "echo Done: password is \$db_password"
