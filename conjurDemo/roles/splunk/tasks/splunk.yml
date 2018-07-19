@@ -4,6 +4,7 @@
     name: "{{ splunk_container_name }}"
     image: "{{ splunk_image_name }}"
     state: started
+    user: root
     recreate: yes
     hostname: "{{ splunk_hostname }}"
     networks:
@@ -13,9 +14,8 @@
     volumes:
      - audit:/conjur
     env:
-      SPLUNK_START_ARGS="--accept-license"
-      SPLUNK_USER=root
-      SPLUNK_ADD='monitor /conjur/audit.json'
-      SPLUNK_CMD='edit user admin -password {{ splunk_account_password }} -role admin -auth admin:changeme'
-      SPLUNK_CMD_1='add user eva -password {{ splunk_account_password }} -role admin -auth admin:{{ splunk_account_password }}'
+      SPLUNK_START_ARGS="--accept-license --seed-passwd "{{ splunk_account_password }}""
+      SPLUNK_USER="root"
+      SPLUNK_CMD="add user eva -password {{ splunk_account_password }} -role admin -auth admin:{{ splunk_account_password }}"
+      SPLUNK_CMD_1="add monitor /conjur/audit.json"
     restart_policy: always
