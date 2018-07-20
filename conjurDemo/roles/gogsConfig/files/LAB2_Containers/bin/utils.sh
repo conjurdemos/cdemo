@@ -51,5 +51,38 @@ create_identity(){
   local hostname=$(echo $newidentity | jq -r '.id' | awk -F: '{print $NF}')
   local api=$(echo $newidentity | jq -r '.api_key')
   echo $( echo $newidentity | jq .) > "./$2.identity"
+  echo "Revoking token $token"
+  echo "grabbing api key"
+  local api=$(cat ~/.netrc | grep password | awk '{print $2}')
+  echo "api key is $api"
+  echo "Grabbing account name"
+  local account=$(cat ~/.conjurrc | grep account | awk '{print $2}')
+  echo "Account name is $account"
+  echo "grabbing certification"
+  local conjurCert="/root/conjur-cyberark.pem"
+  echo "certifcate is $conjurCert"
+  echo "grabbing login name"
+  local host_login=$(cat ~/.netrc | grep login | awk '{print $2}')
+  echo "login name from file is $host_login"
+  local login=$(echo $host_login | sed 's=/=%2F=g')
+  echo "Login name is $login"
+  echo "getting auth token"
+  local auth=$(curl -s --cacert $conjurCert -H "Content-Type: text/plain" -X POST -d "$api" https://conjur-master/authn/$account/$login/authenticate)
+  echo "preformatted auth token is"
+  echo "====="
+  echo "$auth"
+  echo "====="
+  local auth_token=$(echo -n $auth | base64 | tr -d '\r\n')
+  echo "====="
+  echo "formatted auth token is:"
+  echo "====="
+  echo "$auth_token"
+  echo "====="
+  local revocation=$(curl -s -i --cacert $conjurCert --request DELETE -H "Authorization: Token token=\"$auth_token\"" https://conjur-master/host_factory_tokens/$token)
+  echo "Status of revocation"
+  echo "====="
+  echo "$revocation"
+  echo "====="
+  echo "Revoked token $token"
 }
 
