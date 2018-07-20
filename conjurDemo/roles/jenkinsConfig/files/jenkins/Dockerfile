@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:2.133
+FROM jenkins/jenkins:2.133-slim
 
 USER root
 
@@ -20,7 +20,7 @@ RUN apt-get update &&\
 	usermod -aG docker jenkins &&\
     curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose &&\
     chmod +x /usr/local/bin/docker-compose &&\
-    xargs /usr/local/bin/install-plugins.sh < /plugins/plugins.txt || true &&\
+    /usr/local/bin/install-plugins.sh < /plugins/plugins.txt &&\
 	apt-get clean &&\
 	rm -rf \
 	/tmp/* \
