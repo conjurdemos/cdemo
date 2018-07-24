@@ -4,7 +4,7 @@
     name: "{{ item }}"
     state: present
   with_items:
-   - audit
+   - "{{ conjur_audit_volume }}"
 
 - name: Start conjur container
   docker_container:
@@ -18,7 +18,7 @@
     published_ports:
      - "{{ conjur_https_port }}:443"
     volumes:
-     - audit:/var/log/conjur
+     - "{{ conjur_audit_volume }}:{{ conjur_audit_directory }}"
     restart_policy: always
 
 - name: configure conjur container

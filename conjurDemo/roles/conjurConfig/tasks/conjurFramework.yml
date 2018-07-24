@@ -16,7 +16,7 @@
     - paul
     - cindy
     - mike
-    - eva
+    - "{{ conjur_devops_admin_account }}"
 
 - name: Load app policies
   shell: |
