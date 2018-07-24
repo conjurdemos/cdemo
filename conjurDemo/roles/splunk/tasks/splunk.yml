@@ -23,4 +23,4 @@
 
 - name: Create conjur dashboard
   shell: |
-    curl -k -u "{{ splunk_account }}:{{ splunk_account_password }}" https://{{ ansible_default_ipv4.address }}:{{ splunk_rest_port }}/servicesNS/{{ splunk_account }}/search/data/ui/views -d "name=Conjur&eai:data={{ lookup('file','files/conjur_dashoard.xml') }}"
+    curl -k -u "{{ splunk_account }}:{{ splunk_account_password }}" https://{{ ansible_default_ipv4.address }}:{{ splunk_rest_port }}/servicesNS/{{ splunk_account }}/search/data/ui/views -d "name=Conjur&eai:data={{ lookup('file','files/conjur_dashboard.xml') }}"
