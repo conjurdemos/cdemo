@@ -11,11 +11,16 @@
      - name: "{{ conjur_network_name }}"
     published_ports:
      - "{{ splunk_external_port}}:{{ splunk_internal_port }}"
+     - "{{ splunk_rest_port }}:{{ splunk_rest_port }}"
     volumes:
-     - audit:/conjur
+     - "{{ splunk_audit_volume }}:{{ splunk_audit_directory }}"
     env:
       SPLUNK_START_ARGS="--accept-license --seed-passwd "{{ splunk_account_password }}""
       SPLUNK_USER="root"
-      SPLUNK_CMD="add user eva -password {{ splunk_account_password }} -role admin -auth admin:{{ splunk_account_password }}"
+      SPLUNK_CMD="add user {{ splunk_account }} -password {{ splunk_account_password }} -role admin -auth admin:{{ splunk_account_password }}"
       SPLUNK_CMD_1="add monitor /conjur/audit.json"
     restart_policy: always
+
+- name: Create conjur dashboard
+  shell: |
+    curl -k -u "{{ splunk_account }}:{{ splunk_account_password }}" https://{{ ansible_default_ipv4.address }}:{{ splunk_rest_port }}/servicesNS/{{ splunk_account }}/search/data/ui/views -d "name=Conjur&eai:data={{ lookup('file','files/conjur_dashoard.xml') }}"
