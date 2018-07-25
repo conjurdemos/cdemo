@@ -21,6 +21,21 @@
       SPLUNK_CMD_1="add monitor /conjur/audit.json"
     restart_policy: always
 
-- name: Create conjur dashboard
-  shell: |
-    curl -k -u "{{ splunk_account }}:{{ splunk_account_password }}" https://{{ ansible_default_ipv4.address }}:{{ splunk_rest_port }}/servicesNS/{{ splunk_account }}/search/data/ui/views -d "name=Conjur&eai:data={{ lookup('file','files/conjur_dashboard.xml') }}"
+- name: Wait for Splunk to start
+  uri:
+    url: "http://localhost:8000/en-US/account/login?return_to=%2Fen-US%2F"
+    return_content: yes
+  register: webpage
+  until: '"Splunk Inc" in webpage.content'
+  retries: 60
+  delay: 3
+
+- name: Create Conjur Dashboard
+  uri:
+    url: "https://localhost:{{ splunk_rest_port }}/servicesNS/{{ splunk_account }}/search/data/ui/views"
+    user: "{{ splunk_account }}"
+    password: "{{ splunk_account_password }}"
+    status_code: 201
+    method: POST
+    body: "name=conjur&eai:data={{ lookup('file','files/conjur_dashboard.xml') }}"
+    validate_certs: no
