@@ -61,6 +61,18 @@ have one of these names:
 
 *Any other archive file(s) will be ignored.*
 
+### Use case: I have Conjur Enterprise in a local registry & don't want to mess with creating archive files
+
+In this case, you can enable Conjur Enterprise with these steps:
+1. edit `cdemo/conjurDemo/roles/conjurConfig/defaults/main.yml`
+2. change `conjur_version` to `EE`
+3. change `conjur_EE_image_name` to the fully qualified name of the Conjur
+   Enterprise appliance image in your local registry. (by default this refers to
+   its name in CyberArk's local registry, so if you're a CyberArk employee you
+   don't have to do anything.)
+
+Now cdemo will use Conjur Enterprise without requiring an archive file.
+
 ## Conjur CLI information
 
 The Conjur CLI will be pre-configured to work with the Conjur container. Inside
