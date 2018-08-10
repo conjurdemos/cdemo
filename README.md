@@ -20,18 +20,25 @@ The demo uses the lastest version of Conjur v5
 
 ## How to use
 
-1. Clone the repo.
-2. Obtain the latest Conjur tar file and place it within the cDemo directory named 'conjur.tar'.
-    * If no tar file is located then a check for conjur docker registry access happens. If regsitry access comes back as successful then the latest version is pulled directly from the registry.
-    * Conjur OSS will automatically be pulled if there is no tar file or Conjur docker registry access.
-3. Run installAnsible.sh.
-   * Verify that ansible 2.5.x has been installed by running "ansible --version". 
-4. Change directory to conjurDemo.
-5. Edit inventory.yml to include any machines to be stood up as demo machines.
-6. Edit site.yml to change which tools are installed. Set each tool variable to 'YES' for it to be installed automatically. Set to 'NO' for it to be skipped.
-7. Run sudo ansible-playbook -i inventory.yml site.yml to install conjur and it's tools.
-    * Conjur alone can be configured by running sudo ansible-playbook -i inventory.yml conjurSetup.yml
-    * Ansible with PAS jobs can be deployed by setting the variable "ansible_pas: 'YES'" in site.yml
+1. Clone this repo.
+2. Optional: obtain the latest Conjur appliance archive file and place it within
+   this directory. (see [here](#using-cdemo-with-conjur-enterprise) for more.)
+    * Conjur Open Source will automatically be substituted if you skip this
+      optional step.
+3. Run `installAnsible.sh`.
+   * Verify that ansible 2.5.x has been installed by running `ansible --version`. 
+4. Change directory to `conjurDemo`.
+5. Optional: edit `inventory.yml` to include any machines to be configured by
+   Ansible as demo machines.
+6. Optional: edit `site.yml` to change which tools are installed. Set each tool
+   variable to `YES` for it to be installed automatically. Set to `NO` for it to
+   be skipped.
+7. Run `sudo ansible-playbook -i inventory.yml site.yml` to install conjur and
+   its tools.
+    * Conjur alone can be configured by running `sudo ansible-playbook -i
+      inventory.yml conjurSetup.yml`
+    * Ansible with PAS jobs can be deployed by setting the variable
+      `ansible_pas: 'YES'` in `site.yml`
 
 ## Using cdemo with Conjur Enterprise
 
