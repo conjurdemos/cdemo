@@ -33,9 +33,38 @@ The demo uses the lastest version of Conjur v5
     * Conjur alone can be configured by running sudo ansible-playbook -i inventory.yml conjurSetup.yml
     * Ansible with PAS jobs can be deployed by setting the variable "ansible_pas: 'YES'" in site.yml
 
+## Using cdemo with Conjur Enterprise
+
+By default, cdemo will build with Conjur Open Source which is available to
+everyone as LGPL software. However, if you have access to Conjur Enterprise,
+cdemo can use that instead.
+
+In order to enable Conjur Enterprise, you need an archive containing the Conjur
+Enterprise appliance image in the root directory of cdemo (same as this readme.)
+
+If you have access to a Docker registry containing Conjur Enterprise you can
+create the acrhive yourself like so:
+
+```sh-session
+$ docker image save registry.local/conjur-appliance:5.0-stable | gzip -c >conjur.tgz
+```
+
+If you don't have access, you can download the archive file from your CyberArk
+support vault or contact CyberArk sales to get access. After downloading the
+arcvhive file, move it to this folder.
+
+Note: in order to be recognized as a Conjur Enterprise archive file, it must
+have one of these names:
+* `conjur.tar`
+* `conjur.tar.gz`
+* `conjur.tgz`
+
+*Any other archive file(s) will be ignored.*
+
 ## Conjur CLI information
 
-The cli has been configured to work with the Conjur container.  It has the scripts folder mapped to /scripts.
+The Conjur CLI will be pre-configured to work with the Conjur container. Inside
+the CLI container, the scripts folder is mounted to `/scripts`.
 
 ## Requirements
 
