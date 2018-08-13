@@ -18,7 +18,7 @@
 
 - name: Load Conjur tar
   docker_image:
-    name: conjur-appliance
+    name: "{{ conjur_EE_image_name }}"
     load_path: "{{ conjur_tar_path }}"
     state: present
     timeout: 120
