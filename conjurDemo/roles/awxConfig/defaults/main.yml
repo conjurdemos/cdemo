@@ -16,7 +16,6 @@ docker_apt_repository: "deb [arch={{ docker_apt_arch }}] https://download.docker
 # defaults file for conjurConfig
 conjur_version: 'OSS'
 conjur_container_name: 'conjur-master'
-conjur_EE_image_name: 'registry2.itci.conjur.net/conjur-appliance:5.0-stable'
 conjur_network_name: conjur
 conjur_https_port: '443'
 conjur_cli_container_name: 'conjur-cli'

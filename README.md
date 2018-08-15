@@ -67,9 +67,7 @@ In this case, you can enable Conjur Enterprise with these steps:
 1. edit `cdemo/conjurDemo/roles/conjurConfig/defaults/main.yml`
 2. change `conjur_version` to `EE`
 3. change `conjur_EE_image_name` to the fully qualified name of the Conjur
-   Enterprise appliance image in your local registry. (by default this refers to
-   its name in CyberArk's local registry, so if you're a CyberArk employee you
-   don't have to do anything.)
+   Enterprise appliance image in your local registry.
 
 Now cdemo will use Conjur Enterprise without requiring an archive file.
 
