@@ -6,7 +6,24 @@
   with_items:
    - "{{ conjur_audit_volume }}"
 
-- name: Start conjur container
+- name: Load Conjur appliance image from archive
+  docker_image:
+    name: "{{ conjur_EE_image_name }}"
+    load_path: "{{ conjur_tar_path }}"
+    state: present
+    timeout: 120
+
+- name: Get facts of loaded images
+  docker_image_facts:
+  register: loaded
+
+- name: Get full name of conjur-appliance image
+  set_fact:
+    conjur_EE_image_name: "{{ item }}"
+  with_items: "{{ loaded.images | json_query('[].RepoTags[0]') }}"
+  when: ('conjur-appliance' in item)
+
+- name: Start Conjur appliance
   docker_container:
     name: "{{ conjur_container_name }}"
     image: "{{ conjur_EE_image_name }}"
@@ -21,11 +38,11 @@
      - "{{ conjur_audit_volume }}:{{ conjur_audit_directory }}"
     restart_policy: always
 
-- name: configure conjur container
+- name: Configure Conjur container
   shell: |
     docker exec {{ conjur_container_name }} evoke configure master -h {{ conjur_container_name }} -p {{ conjur_admin_password }} {{ conjur_account }}
 
-- name: configure cli for EE
+- name: Configure CLI for EE
   shell: |
     docker exec {{ conjur_cli_container_name }} bash -c "conjur init -u https://{{ conjur_container_name }} -a {{ conjur_account }} <<< yes"
     docker exec {{ conjur_cli_container_name }} conjur authn login -u admin -p {{ conjur_admin_password }}
