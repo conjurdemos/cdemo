@@ -97,6 +97,12 @@ The tools installed have a web interfaces that is made accessible to the host ma
 | Conjur     	| 443  	|
 | Weavescope 	| 4040 	|
 
+_If using v5 Enterprise Edition:_
+
+|    Tool    	| Port 	|
+|:----------:	|------	|
+|   Splunk  	| 8000 	|
+
 ## Default Credentials
 * Jenkins - No credentials needed right now
 * Conjur - U: admin P: Cyberark1
@@ -107,6 +113,7 @@ The tools installed have a web interfaces that is made accessible to the host ma
 * Conjur - U: eva P: Cyberark1
 * AWX - U: eva P: Cyberark1
 * Gogs - U: eva P: Cyberark1
+* Splunk - U: eva P: Cyberark1
 
 ### Gogs and Jenkins Jobs
 Jenkins and Gogs are connected via an internal docker network. Updating a job in Gitlab will be reflected in the subsequent Jenkins job at runtime.
