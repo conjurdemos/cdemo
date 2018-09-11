@@ -1,0 +1,36 @@
+#!/bin/bash
+
+set -u
+
+function check() {
+    local url="$1"
+    echo -n "  $url... "
+    curl -sSf "$url" >/dev/null
+    if [[ $? == 0 ]]; then
+        echo "✓"
+        return 0
+    else
+        return 1
+    fi
+}
+
+URLs=(
+    'https://hub.docker.com'
+    'https://github.com'
+    'https://plugins.jenkins.io'
+)
+
+echo "Checking network connectivity:"
+
+total=0
+for url in "${URLs[@]}"; do
+    check "$url"
+    total="$((($total + $?)))"
+done
+
+if [[ $total > 0 ]]; then
+    echo "❌ connectivity insufficient to install cdemo ❌"
+    exit 1
+else
+    exit 0
+fi
