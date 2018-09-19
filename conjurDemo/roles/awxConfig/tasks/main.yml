@@ -3,6 +3,7 @@
   git:
     dest: /opt/awx
     clone: yes
+    force: yes
     repo: https://github.com/ansible/awx.git
   when: ansible_install == 'YES'
 
