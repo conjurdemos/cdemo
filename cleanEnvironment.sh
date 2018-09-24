@@ -40,6 +40,7 @@ remove_volume(){
   docker volume rm conjur_cert &> /dev/null
   docker volume rm jenkins_api &> /dev/null
   docker volume prune -f &> /dev/null
+  rm -rf /tmp/pgdocker &> /dev/null
 }
 
 remove_docker(){

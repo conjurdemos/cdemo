@@ -1,30 +1,40 @@
-#!/bin/bash
+#!/bin/bash 
 
 main(){
   printf '\n-----'
   printf '\nInstalling dependencies'
-  if [[ $(cat /etc/*-release | grep -w ID_LIKE) == 'ID_LIKE="rhel fedora"' ]]; then
+  id_string=$(cat /etc/*-release | grep -w ID_LIKE)
+  case $id_string in
+  'ID_LIKE="fedora"')
+    # this case is for RHEL7
+    sudo subscription-manager repos --enable rhel-7-server-extras-rpms
     install_ansible_yum
-  elif [[ $(cat /etc/*-release | grep -w ID) == 'ID=debian' ]]; then
+    ;;
+  'ID_LIKE="rhel fedora"')
+    # this case is for CentOS
+    install_ansible_yum
+    ;;
+  'ID=debian')
     install_ansible_apt
-  else
+    ;;
+  *)
     printf "\nCouldn't figure out OS"
-  fi
+  esac
   printf '\n-----\n'
 }
 
 install_ansible_yum(){
   printf '\nUpdating yum\n'
-  sudo yum update -y &> /dev/null
+  sudo yum update -y 
   printf '\nUpgrading system\n'
-  sudo yum upgrade -y &> /dev/null
+  sudo yum upgrade -y 
   printf '\nInstalling EPEL repo\n'
-  sudo yum install epel-release -y &> /dev/null
+  sudo yum install epel-release -y 
   printf '\nUpdating Repolist\n'
-  sudo yum repolist &> /dev/null
-  sudo yum update -y &> /dev/null
+  sudo yum repolist 
+  sudo yum update -y 
   printf '\nInstalling Ansible\n'
-  sudo yum install ansible -y &> /dev/null
+  sudo yum install ansible -y 
 }
 
 install_ansible_apt(){

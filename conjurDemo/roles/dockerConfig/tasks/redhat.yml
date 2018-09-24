@@ -30,4 +30,4 @@
     state: latest
     extra_args: --ignore-installed
   with_items:
-   - docker
+   - docker==2.7.0

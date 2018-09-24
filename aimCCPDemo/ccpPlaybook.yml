@@ -12,9 +12,9 @@
         body_format: json
       register: response
       vars:
-        ccp_ip: "10.0.2.12"
+        ccp_ip: "192.168.2.133"
         ccp_app_id: "AIM_ACCESS"
-        ccp_safe: "AIM_ACCESS"
+        ccp_safe: "CICD_Secrets"
         ccp_folder: 'root'
-        ccp_object_name: "AIM_USER"
+        ccp_object_name: "Database-Oracle-OracleDBuser"
     - debug: msg="{{ response }}"  

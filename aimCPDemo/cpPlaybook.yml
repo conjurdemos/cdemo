@@ -6,7 +6,7 @@
       vars:
         cyquery:
           appid: "AIM_ACCESS"
-          query: "safe=AIM_ACCESS;folder=root;object=AIM_USER"
+          query: "safe=CICD_Secrets;folder=root;object=Database-Oracle-OracleDBuser"
           output: "Password,PassProps.UserName,PassProps.Address,PasswordChangeInProcess"
 
 
@@ -14,5 +14,5 @@
       debug: msg={{item}}
       with_cyberarkpassword:
           appid: 'AIM_ACCESS'
-          query: 'safe=AIM_ACCESS;folder=root;object=AIM_USER'
+          query: 'safe=CICD_Secrets;folder=root;object=Database-Oracle-OracleDBuser'
           output: 'Password,PassProps.UserName,PassProps.Address,PasswordChangeInProcess'

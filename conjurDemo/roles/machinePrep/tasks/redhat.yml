@@ -11,7 +11,9 @@
     - lvm2
     - git
     - make
-    - jq
+
+- name: install jq
+  shell: "cd /usr/bin; wget -O jq https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64; chmod +x ./jq"
 
 - name: install PIP
   easy_install:
