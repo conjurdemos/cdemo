@@ -1,3 +1,8 @@
+# 1.0.2
+
+We now pin AWX to version 1.0.8. The next upgrade on this front will likely be
+to Tower andnot a newer version of AWX.
+
 # 1.0.1
 
 New script `bin/check-network` performs a pre-check for network connectivity.

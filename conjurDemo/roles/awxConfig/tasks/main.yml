@@ -5,6 +5,7 @@
     clone: yes
     force: yes
     repo: https://github.com/ansible/awx.git
+    version: 1.0.8
   when: ansible_install == 'YES'
 
 - name: configure AWX
