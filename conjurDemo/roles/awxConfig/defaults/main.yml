@@ -70,6 +70,7 @@ ansible_password: 'Cyberark1'
 ansible_user: "{{ conjur_devops_admin_account }}"
 ansible_organization: 'Cyberark'
 ansible_pas: 'NO'
+ansible_awx_data_dir: '/ansible/pgdocker'
 
 # defaults file for splunk
 splunk_install: 'NO'
