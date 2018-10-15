@@ -2,6 +2,9 @@
 
 set -eu
 
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+# from https://stackoverflow.com/questions/4774054/reliable-way-for-a-bash-script-to-get-the-full-path-to-itself
+
 function separator() {
     echo "-----"
 }
@@ -33,7 +36,7 @@ function install_ansible_apt() {
     sudo apt-get install ansible -y
 }
 
-bin/check-network
+$SCRIPTPATH/bin/check-network
 separator
 echo 'Installing dependencies'
 if [[ $(cat /etc/*-release | grep -w ID_LIKE) == 'ID_LIKE="rhel fedora"' ]]; then
