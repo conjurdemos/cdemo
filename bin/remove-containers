@@ -1,0 +1,47 @@
+#!/bin/bash
+
+set -eu
+
+function can_docker() {
+    if [[ -r /var/run/docker.sock ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+function join_by { local IFS="$1"; shift; echo "$*"; }
+# from https://stackoverflow.com/questions/1527049/join-elements-of-an-array
+
+cdemo_container_names=(
+    splunk
+    jenkins
+    gogs
+    conjur-master
+    conjur-cli
+    awx_task
+    awx_web
+    rabbitmq
+    memcached
+    postgres
+    weavescope
+)
+
+function cdemo_containers() {
+    docker ps -a \
+           --filter="name=$(join_by '|' ${cdemo_container_names[@]})" \
+           --format={{.Names}} \
+           | tr "\n" " "
+}
+
+if can_docker; then
+    targets=$(cdemo_containers)
+    if [[ -z $targets ]]; then
+        echo "remove-containers: no cdemo Docker containers to remove"
+        exit 0
+    fi
+    echo "Removing cdemo Docker containers..."
+    docker rm -f $targets
+else
+    echo "remove-containers: fatal: user \"$(whoami)\" lacks permission to use Docker"
+fi

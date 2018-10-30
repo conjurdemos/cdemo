@@ -1,3 +1,8 @@
+# 1.0.3
+
+New script `bin/remove-containers` removes all running cdemo Docker containers,
+if any. It will not remove containers that are not part of the cdemo cluster.
+
 # 1.0.2
 
 We now pin AWX to version 1.0.8. The next upgrade on this front will likely be
