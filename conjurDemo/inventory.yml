@@ -1,8 +1,5 @@
 [demoMachines]
 default ansible_connection=local
 
-[conjurMachines]
-default ansible_connection=local
-
 [toolMachines]
 default ansible_connection=local

@@ -1,22 +1,14 @@
 ---
 - import_playbook: machineSetup.yml
-- import_playbook: conjurSetup.yml
   vars:
-    conjur_version: 'OSS'
-- import_playbook: toolSetup.yml
-  vars:
-    weavescope_install: 'YES'
-    gogs_install: 'YES'
-    jenkins_install: 'YES'
-    ansible_install: 'YES'
-    ansible_pas: 'NO'
-    splunk_install: 'YES'
     docker_edition: 'ce'
     docker_package: "docker-{{ docker_edition }}"
     docker_yum_repo_url: https://download.docker.com/linux/{{ (ansible_distribution == "Fedora") | ternary("fedora","centos") }}/docker-{{ docker_edition }}.repo
     docker_apt_release_channel: stable
     docker_apt_arch: amd64
     docker_apt_repository: "deb [arch={{ docker_apt_arch }}] https://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} {{ docker_apt_release_channel }}"
+- import_playbook: toolSetup.yml
+  vars:
     conjur_version: 'OSS'
     conjur_container_name: 'conjur-master'
     conjur_EE_image_name: 'conjur-appliance'
@@ -36,6 +28,12 @@
     conjur_OSS_url: "http://{{ ansible_default_ipv4.address }}:{{ conjur_OSS_port }}"
     conjur_OSS_container_name: 'conjur-oss'
     conjur_nginx_image_name: 'cdemo/conjur-nginx:latest'
+    weavescope_install: 'YES'
+    gogs_install: 'YES'
+    jenkins_install: 'YES'
+    ansible_install: 'YES'
+    ansible_pas: 'NO'
+    splunk_install: 'YES'
     gogs_internal_port: '3000'
     gogs_external_port: '10080'
     gogs_container_name: 'gogs'
@@ -58,6 +56,7 @@
     ansible_password: 'Cyberark1'
     ansible_user: "{{ conjur_devops_admin_account }}"
     ansible_organization: 'Cyberark'
+    ansible_awx_data_dir: '/ansible/pgdocker'
     splunk_container_name: 'splunk'
     splunk_image_version: '7.1.2'
     splunk_image_name: "{{ splunk_container_name }}/{{ splunk_container_name }}:{{splunk_image_version}}"
