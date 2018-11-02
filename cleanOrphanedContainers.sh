@@ -1,0 +1,1 @@
+docker container rm -f $(docker container ls -a | grep "curl_image" | awk '{ print $1 }')

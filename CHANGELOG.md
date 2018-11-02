@@ -1,3 +1,8 @@
+# 1.0.4
+Combined all of the default variable files into the individual playbook files. Makes for much easier changes.
+Pin Splunk to 7.1.2
+New script " cleanOrphanedContainers.sh will clean up any leftover tomcat/webapp containers.
+
 # 1.0.3
 
 New script `bin/remove-containers` removes all running cdemo Docker containers,
