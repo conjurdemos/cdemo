@@ -5,7 +5,20 @@
 - include_tasks: debian.yml
   when: ansible_os_family == 'Debian'
 
-- name: Initialize docker networking
+- name: ensure Docker is installed
+  yum:
+    name: "{{ docker_package }}"
+    update_cache: yes
+    state: present
+  notify: "start docker"
+
+- name: ensure docker-python is installed
+  pip:
+    name: docker
+    state: latest
+    extra_args: --ignore-installed
+
+- name: ensure Docker network is available
   shell: |
     systemctl enable docker
     systemctl start docker

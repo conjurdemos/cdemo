@@ -1,4 +1,20 @@
 ---
+- name: Check for conjur.tar
+  stat:
+    path: ../conjur.{{item}}
+  with_items:
+    - "tar"
+    - "tar.gz"
+    - "tgz"
+  register: conjurTar
+
+- name: Inform about Enterprise availability
+  set_fact:
+    conjur_version: 'EE'
+    conjur_tar_path: "{{ item.stat.path }}"
+  when: item.stat.exists
+  with_items: "{{ conjurTar.results }}"
+
 - include_tasks: redhat.yml
   when: ansible_os_family == 'RedHat'
 

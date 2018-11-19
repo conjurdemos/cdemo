@@ -1,3 +1,11 @@
+# 1.1.1
+
+* Moves Conjur Enterprise detecting out of the Conjur role. This allows other
+  roles to discover whether we're using Conjur Enterprise, even if the Conjur
+  config role isn't included in the run. This is desirable when running only a
+  lean subset of the roles.
+* Refactors duplicate tasks in the machinePrep role.
+
 # 1.1.0
 This release includes breaking changes. Make special note of changes marked
 *[breaking]*, which may require you to update your understanding.

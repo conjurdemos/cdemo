@@ -1,12 +1,11 @@
 ---
-- name: Remove old versions of docker
+- name: Remove outdated Docker packages if any
   apt:
-    name: "{{ item }}"
+    name:
+      - docker
+      - docker-engine
+      - docker.io
     state: absent
-  with_items:
-   - docker
-   - docker-engine
-   - docker.io
 
 - name: Add docker GPG key
   apt_key:
@@ -19,19 +18,4 @@
     repo: "{{ docker_apt_repository }}"
     state: present
     update_cache: yes
-
-- name: Install docker
-  apt:
-    name: "{{ item }}"
-    state: latest
-  with_items:
-   - "{{ docker_package }}"
-  notify: "start docker"
-
-- name: Install docker for python
-  pip:
-    name: "{{ item }}"
-    state: latest
-    extra_args: --ignore-installed
-  with_items:
-   - docker
+ 
