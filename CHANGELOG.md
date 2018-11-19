@@ -1,7 +1,15 @@
-# 1.0.4
-Combined all of the default variable files into the individual playbook files. Makes for much easier changes.
-Pin Splunk to 7.1.2
-New script " cleanOrphanedContainers.sh will clean up any leftover tomcat/webapp containers.
+# 1.1.0
+This release includes breaking changes. Make special note of changes marked
+*[breaking]*, which may require you to update your understanding.
+
+* *[breaking]* Removed the default variable files in each role, moving the
+  variables into `conjurDemo/site.yml` for easy changes in a single place.
+* Pinned Splunk to 7.1.2
+* *[breaking]* Deprecated Splunk user `eva` (login as `admin` with password
+  `Cyberark1`)
+* New script: `bin/clean-orphaned-containers` cleans up tomcat/webapp containers
+  left over from demo runs.
+
 
 # 1.0.3
 

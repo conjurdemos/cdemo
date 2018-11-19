@@ -17,8 +17,7 @@
     env:
       SPLUNK_START_ARGS="--accept-license --seed-passwd "{{ splunk_account_password }}""
       SPLUNK_USER="root"
-      SPLUNK_CMD="add user {{ splunk_account }} -password {{ splunk_account_password }} -role admin -auth admin:{{ splunk_account_password }}"
-      SPLUNK_CMD_1="add monitor /conjur/audit.json"
+      SPLUNK_ADD="monitor /conjur/audit.json"
     restart_policy: always
 
 - name: Wait for Splunk to start
@@ -27,13 +26,13 @@
     return_content: yes
   register: webpage
   until: '"Splunk Inc" in webpage.content'
-  retries: 60
-  delay: 3
+  retries: 36
+  delay: 5
 
 - name: Create Conjur Dashboard
   uri:
-    url: "https://localhost:{{ splunk_rest_port }}/servicesNS/{{ splunk_account }}/search/data/ui/views"
-    user: "{{ splunk_account }}"
+    url: "https://localhost:{{ splunk_rest_port }}/servicesNS/admin/search/data/ui/views"
+    user: admin
     password: "{{ splunk_account_password }}"
     status_code: 201
     method: POST
