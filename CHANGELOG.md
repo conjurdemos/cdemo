@@ -5,6 +5,8 @@
   config role isn't included in the run. This is desirable when running only a
   lean subset of the roles.
 * Refactors duplicate tasks in the machinePrep role.
+* Uses the `shell` command with the Splunk CLI to add a monitor for Conjur audit
+  data, instead of the unreliable `SPLUNK_ADD` environment variable.
 
 # 1.1.0
 This release includes breaking changes. Make special note of changes marked

@@ -17,7 +17,6 @@
     env:
       SPLUNK_START_ARGS="--accept-license --seed-passwd "{{ splunk_account_password }}""
       SPLUNK_USER="root"
-      SPLUNK_ADD="monitor /conjur/audit.json"
     restart_policy: always
 
 - name: Wait for Splunk to start
@@ -28,6 +27,11 @@
   until: '"Splunk Inc" in webpage.content'
   retries: 36
   delay: 5
+
+- name: Add monitor for Conjur audit file
+  shell: |
+    sudo docker exec splunk \
+    bin/splunk add monitor /conjur/audit.json -auth admin:{{ splunk_account_password }}
 
 - name: Create Conjur Dashboard
   uri:
