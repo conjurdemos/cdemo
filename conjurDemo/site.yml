@@ -23,7 +23,7 @@
     conjur_external_url: "https://{{ ansible_default_ipv4.address }}"
     conjur_audit_volume: "audit"
     conjur_audit_directory: '/var/log/conjur'
-    conjur_devops_admin_account: "eva"
+    conjur_devops_admin_account: 'eva'
     conjur_OSS_image_name: 'cyberark/conjur'
     conjur_OSS_port: '81'
     conjur_OSS_url: "http://{{ ansible_default_ipv4.address }}:{{ conjur_OSS_port }}"
@@ -39,6 +39,7 @@
     gogs_external_port: '10080'
     gogs_container_name: 'gogs'
     gogs_image_name: 'gogs/gogs'
+    gogs_version: '0.11.79'
     gogs_internal_url: "http://{{ gogs_container_name }}:{{ gogs_internal_port }}"
     gogs_external_url: "http://{{ ansible_default_ipv4.address }}:{{ gogs_external_port }}"
     gogs_account: "{{ conjur_devops_admin_account }}"
@@ -55,7 +56,7 @@
     ansible_external_url_login: "{{ ansible_external_url }}/#/login"
     ansible_internal_url: "http://awx_web:{{ ansible_internal_port }}"
     ansible_password: 'Cyberark1'
-    ansible_user: "{{ conjur_devops_admin_account }}"
+    ansible_awx_user: "{{ conjur_devops_admin_account }}"
     ansible_organization: 'Cyberark'
     ansible_awx_data_dir: '/ansible/pgdocker'
     splunk_container_name: 'splunk'

@@ -7,6 +7,7 @@
       - docker-common
       - docker-engine
     state: absent
+  become: true
 
 - name: add docker repository
   get_url:

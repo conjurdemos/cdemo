@@ -13,7 +13,7 @@
     cd /opt/awx/installer
     sed -i "s,host_port=80,host_port={{ ansible_port }},g" ./inventory
     sed -i "s,.*default_admin_password=.*,default_admin_password={{ ansible_password }},g" ./inventory
-    sed -i "s,# default_admin_user=admin,default_admin_user={{ ansible_user }},g" ./inventory
+    sed -i "s,# default_admin_user=admin,default_admin_user={{ ansible_awx_user }},g" ./inventory
     mkdir -p "{{ ansible_awx_data_dir }}"
     sed -i "s,.*postgres_data_dir=/tmp/pgdocker,postgres_data_dir={{ ansible_awx_data_dir }},g" ./inventory
   when: ansible_install == 'YES'

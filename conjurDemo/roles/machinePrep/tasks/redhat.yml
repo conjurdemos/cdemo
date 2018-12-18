@@ -1,5 +1,5 @@
 ---
-- name: installDependencies
+- name: Install dependencies
   yum:
     name:
       - curl
@@ -9,10 +9,11 @@
       - git
       - make
       - jq
-    update_cache: yes
-    state: latest
+    state: present
+  become: true
 
 - name: install PIP
   easy_install:
     name: pip
     state: latest
+  become: true

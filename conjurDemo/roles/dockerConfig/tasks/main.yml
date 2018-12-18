@@ -11,12 +11,14 @@
     update_cache: yes
     state: present
   notify: "start docker"
+  become: true
 
 - name: ensure docker-python is installed
   pip:
     name: docker
     state: latest
     extra_args: --ignore-installed
+  become: true
 
 - name: ensure Docker network is available
   shell: |
@@ -25,3 +27,4 @@
     docker network create test
     docker network rm test
   ignore_errors: yes
+  become: true
