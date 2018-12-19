@@ -1,17 +1,16 @@
 ---
 - name: installDependencies
   yum:
-    name: "{{ item }}"
+    name:
+      - curl
+      - yum-utils
+      - device-mapper-persistent-data
+      - lvm2
+      - git
+      - make
+      - jq
     update_cache: yes
     state: latest
-  with_items:
-    - curl
-    - yum-utils
-    - device-mapper-persistent-data
-    - lvm2
-    - git
-    - make
-    - jq
 
 - name: install PIP
   easy_install:

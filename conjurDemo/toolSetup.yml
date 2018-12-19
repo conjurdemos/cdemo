@@ -1,6 +1,7 @@
 ---
 - hosts: toolMachines
   roles:
+    - conjurConfig
     - weavescopeConfig
     - gogsConfig
     - jenkinsConfig

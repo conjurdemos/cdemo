@@ -1,13 +1,12 @@
 ---
-- name: removeDocker
+- name: remove outdated Docker packages if any
   yum:
-    name: "{{ item }}"
+    name:
+      - docker
+      - docker.io
+      - docker-common
+      - docker-engine
     state: absent
-  with_items:
-    - docker
-    - docker.io
-    - docker-common
-    - docker-engine
 
 - name: add docker repository
   get_url:
@@ -16,18 +15,3 @@
     owner: root
     group: root
   become: true
-
-- name: installDocker
-  yum:
-    name: "{{ docker_package }}"
-    update_cache: yes
-    state: present
-  notify: "start docker"
-
-- name: Install docker for python
-  pip:
-    name: "{{ item }}"
-    state: latest
-    extra_args: --ignore-installed
-  with_items:
-   - docker
