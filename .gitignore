@@ -1,4 +1,5 @@
 *.retry
+*.tar.gz
 *.bash_history
 *.cache
 *.netrc
