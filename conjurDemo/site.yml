@@ -37,7 +37,8 @@
     gogs_internal_port: '3000'
     gogs_external_port: '10080'
     gogs_container_name: 'gogs'
-    gogs_image_name: 'gogs/gogs'
+    gogs_image_version: '0.11.53'
+    gogs_image_name: "gogs/gogs:{{ gogs_image_version }}"
     gogs_internal_url: "http://{{ gogs_container_name }}:{{ gogs_internal_port }}"
     gogs_external_url: "http://{{ ansible_default_ipv4.address }}:{{ gogs_external_port }}"
     gogs_account: "{{ conjur_devops_admin_account }}"
