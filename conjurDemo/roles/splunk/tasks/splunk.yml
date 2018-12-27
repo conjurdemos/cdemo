@@ -17,8 +17,7 @@
     env:
       SPLUNK_START_ARGS="--accept-license --seed-passwd "{{ splunk_account_password }}""
       SPLUNK_USER="root"
-      SPLUNK_CMD="add user {{ splunk_account }} -password {{ splunk_account_password }} -role admin -auth admin:{{ splunk_account_password }}"
-      SPLUNK_CMD_1="add monitor /conjur/audit.json"
+      SPLUNK_CMD="add monitor /conjur/audit.json"
     restart_policy: always
 
 - name: Wait for Splunk to start
