@@ -73,5 +73,5 @@
     splunk_account_password: "{{ gogs_account_password }}"
     splunk_rest_port: "8089"
     splunk_audit_volume: "{{ conjur_audit_volume }}"
-    splunk_account: "{{ conjur_devops_admin_account }}"
+    splunk_account: "admin"
     splunk_audit_directory: '/conjur'
