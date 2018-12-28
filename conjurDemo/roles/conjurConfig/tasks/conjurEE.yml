@@ -47,8 +47,4 @@
     docker exec {{ conjur_cli_container_name }} bash -c "conjur init -u https://{{ conjur_container_name }} -a {{ conjur_account }} <<< yes"
     docker exec {{ conjur_cli_container_name }} conjur authn login -u admin -p {{ conjur_admin_password }}
 
-- name: Change permissions on audit.json
-  shell: |
-    docker exec {{ conjur_container_name }} chmod 777 {{ conjur_audit_directory }}/audit.json
-
 - include_tasks: conjurFramework.yml
