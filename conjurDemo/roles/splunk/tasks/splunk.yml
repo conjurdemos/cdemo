@@ -31,6 +31,10 @@
   retries: 60
   delay: 3
 
+- name: Change permissions on audit.json
+  shell: |
+    docker exec {{ conjur_container_name }} chmod 777 {{ conjur_audit_directory }}/audit.json
+
 - name: Add splunk monitor
   shell: |
     docker exec {{ splunk_container_name }} /opt/splunk/bin/splunk add monitor /conjur/audit.json -auth {{ splunk_account }}:{{ splunk_account_password }}
