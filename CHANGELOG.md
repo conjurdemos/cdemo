@@ -1,3 +1,7 @@
+## 1.2.0
+
+*   Modified idividual roles to use a single set of variables in the site.yml file. Pinned the versions of Gogs and splunk to known working versions
+
 ## 1.1.1
 
 *   Moves Conjur Enterprise detecting out of the Conjur role. This allows other
