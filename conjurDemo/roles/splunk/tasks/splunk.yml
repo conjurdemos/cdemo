@@ -15,16 +15,8 @@
     volumes:
      - "{{ splunk_audit_volume }}:{{ splunk_audit_directory }}"
     env:
-<<<<<<< HEAD
       SPLUNK_START_ARGS="--accept-license --seed-passwd "{{ splunk_account_password }}""
       SPLUNK_USER="root"
-=======
-      SPLUNK_START_ARGS="--accept-license"
-      SPLUNK_PASSWORD="{{ splunk_account_password }}"
-      DEBUG="true"
-      SPLUNK_HOME_OWNERSHIP_ENFORCEMENT="false"
-      SPLUNK_ADD="monitor /conjur/audit.json"
->>>>>>> fix-stuff
     restart_policy: always
 
 - name: Wait for Splunk to start
@@ -35,15 +27,6 @@
   until: '"Splunk Inc" in webpage.content'
   retries: 36
   delay: 5
-
-- name: Add monitor for Conjur audit file
-  shell: |
-    sudo docker exec splunk \
-    bin/splunk add monitor /conjur/audit.json -auth admin:{{ splunk_account_password }}
-
-- name: Change permissions on audit.json
-  shell: |
-    docker exec {{ conjur_container_name }} chmod 777 {{ conjur_audit_directory }}/audit.json
 
 - name: Add splunk monitor
   shell: |
