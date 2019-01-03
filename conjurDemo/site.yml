@@ -66,7 +66,7 @@
     ansible_awx_data_dir: '/ansible/pgdocker'
 #### Splunk set up options ####
     splunk_container_name: 'splunk'
-    splunk_image_version: '7.2.3'
+    splunk_image_version: '7.1.2'
     splunk_image_name: "{{ splunk_container_name }}/{{ splunk_container_name }}:{{ splunk_image_version }}"
     splunk_hostname: "{{ splunk_container_name }}"
     splunk_external_port: "8000"
@@ -76,4 +76,3 @@
     splunk_audit_volume: "{{ conjur_audit_volume }}"
     splunk_audit_directory: '/conjur'
     splunk_account: "admin"
-    splunk_audit_directory: '/conjur'
