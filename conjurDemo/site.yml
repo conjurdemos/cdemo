@@ -10,7 +10,15 @@
 
 - import_playbook: toolSetup.yml
   vars:
+  #### Select which components to install ####
     conjur_version: 'OSS'
+    weavescope_install: 'YES'
+    gogs_install: 'YES'
+    jenkins_install: 'YES'
+    ansible_install: 'YES'
+    ansible_pas: 'NO'
+    splunk_install: 'YES'
+ #### Conjur setup options ####
     conjur_container_name: 'conjur-master'
     conjur_EE_image_name: 'conjur-appliance'
     conjur_network_name: conjur
@@ -29,26 +37,24 @@
     conjur_OSS_url: "http://{{ ansible_default_ipv4.address }}:{{ conjur_OSS_port }}"
     conjur_OSS_container_name: 'conjur-oss'
     conjur_nginx_image_name: 'cdemo/conjur-nginx:latest'
-    weavescope_install: 'YES'
-    gogs_install: 'YES'
-    jenkins_install: 'YES'
-    ansible_install: 'YES'
-    ansible_pas: 'NO'
-    splunk_install: 'YES'
+#### Gogs set up options ####
     gogs_internal_port: '3000'
     gogs_external_port: '10080'
     gogs_container_name: 'gogs'
-    gogs_image_name: 'gogs/gogs'
+    gogs_image_version: '0.11.53'
+    gogs_image_name: "gogs/gogs:{{ gogs_image_version }}"
     gogs_internal_url: "http://{{ gogs_container_name }}:{{ gogs_internal_port }}"
     gogs_external_url: "http://{{ ansible_default_ipv4.address }}:{{ gogs_external_port }}"
     gogs_account: "{{ conjur_devops_admin_account }}"
     gogs_account_email: 'eva@cyberark.com'
     gogs_account_password: 'Cyberark1'
     gogs_organization: 'Cyberark'
+#### Jenkins set up options ####
     jenkins_port: '8080'
     jenkins_url: "http://{{ ansible_default_ipv4.address }}:{{ jenkins_port }}"
     jenkins_image_name: 'conjur_jenkins:latest'
     jenkins_container_name: 'jenkins'
+#### AWX set up options ####
     ansible_port: '6060'
     ansible_internal_port: '8052'
     ansible_external_url: "http://{{ ansible_default_ipv4.address }}:{{ ansible_port }}"
@@ -58,13 +64,19 @@
     ansible_user: "{{ conjur_devops_admin_account }}"
     ansible_organization: 'Cyberark'
     ansible_awx_data_dir: '/ansible/pgdocker'
+#### Splunk set up options ####
     splunk_container_name: 'splunk'
-    splunk_image_version: '7.1.2'
-    splunk_image_name: "{{ splunk_container_name }}/{{ splunk_container_name }}:{{splunk_image_version}}"
+    splunk_image_version: '7.2.3'
+    splunk_image_name: "{{ splunk_container_name }}/{{ splunk_container_name }}:{{ splunk_image_version }}"
     splunk_hostname: "{{ splunk_container_name }}"
     splunk_external_port: "8000"
     splunk_internal_port: "8000"
     splunk_account_password: "{{ gogs_account_password }}"
     splunk_rest_port: "8089"
     splunk_audit_volume: "{{ conjur_audit_volume }}"
+<<<<<<< HEAD
     splunk_audit_directory: '/conjur'
+=======
+    splunk_account: "admin"
+    splunk_audit_directory: '/conjur'
+>>>>>>> fix-stuff

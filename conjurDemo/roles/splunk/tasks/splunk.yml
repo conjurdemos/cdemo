@@ -4,8 +4,8 @@
     name: "{{ splunk_container_name }}"
     image: "{{ splunk_image_name }}"
     state: started
-    user: root
     recreate: yes
+    user: root
     hostname: "{{ splunk_hostname }}"
     networks:
      - name: "{{ conjur_network_name }}"
@@ -15,8 +15,16 @@
     volumes:
      - "{{ splunk_audit_volume }}:{{ splunk_audit_directory }}"
     env:
+<<<<<<< HEAD
       SPLUNK_START_ARGS="--accept-license --seed-passwd "{{ splunk_account_password }}""
       SPLUNK_USER="root"
+=======
+      SPLUNK_START_ARGS="--accept-license"
+      SPLUNK_PASSWORD="{{ splunk_account_password }}"
+      DEBUG="true"
+      SPLUNK_HOME_OWNERSHIP_ENFORCEMENT="false"
+      SPLUNK_ADD="monitor /conjur/audit.json"
+>>>>>>> fix-stuff
     restart_policy: always
 
 - name: Wait for Splunk to start
@@ -32,6 +40,14 @@
   shell: |
     sudo docker exec splunk \
     bin/splunk add monitor /conjur/audit.json -auth admin:{{ splunk_account_password }}
+
+- name: Change permissions on audit.json
+  shell: |
+    docker exec {{ conjur_container_name }} chmod 777 {{ conjur_audit_directory }}/audit.json
+
+- name: Add splunk monitor
+  shell: |
+    docker exec {{ splunk_container_name }} /opt/splunk/bin/splunk add monitor /conjur/audit.json -auth {{ splunk_account }}:{{ splunk_account_password }}
 
 - name: Create Conjur Dashboard
   uri:
