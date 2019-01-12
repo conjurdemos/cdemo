@@ -13,3 +13,18 @@
     sh setup.sh -e nginx_https_port={{ ansible_port }}
   args:
     chdir: "/opt/{{ ansible_download_directory }}"
+
+- name: Wait for Ansible tower web interface
+  pause:
+    seconds: 15
+  
+- name: Set license
+  uri:
+    url: "{{ ansible_external_url }}/api/v2/config/"
+    method: POST
+    validate_certs: NO
+    body_format: json
+    user: "admin"
+    password: "{{ ansible_password }}"
+    force_basic_auth: yes
+    body: "{{ lookup('file','license.json') }}"
