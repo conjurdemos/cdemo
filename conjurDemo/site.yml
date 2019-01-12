@@ -12,12 +12,13 @@
   vars:
   #### Select which components to install ####
     conjur_version: 'OSS'
-    weavescope_install: 'YES'
-    gogs_install: 'YES'
-    jenkins_install: 'YES'
+    conjur_install: 'NO'
+    weavescope_install: 'NO'
+    gogs_install: 'NO'
+    jenkins_install: 'NO'
     ansible_install: 'YES'
     ansible_pas: 'NO'
-    splunk_install: 'YES'
+    splunk_install: 'NO'
  #### Conjur setup options ####
     conjur_container_name: 'conjur-master'
     conjur_EE_image_name: 'conjur-appliance'
@@ -50,20 +51,20 @@
     gogs_account_password: 'Cyberark1'
     gogs_organization: 'Cyberark'
 #### Jenkins set up options ####
-    jenkins_port: '8080'
+    jenkins_port: '6060'
     jenkins_url: "http://{{ ansible_default_ipv4.address }}:{{ jenkins_port }}"
     jenkins_image_name: 'conjur_jenkins:latest'
     jenkins_container_name: 'jenkins'
-#### AWX set up options ####
-    ansible_port: '6060'
-    ansible_internal_port: '8052'
-    ansible_external_url: "http://{{ ansible_default_ipv4.address }}:{{ ansible_port }}"
-    ansible_external_url_login: "{{ ansible_external_url }}/#/login"
-    ansible_internal_url: "http://awx_web:{{ ansible_internal_port }}"
+#### Ansible Tower set up options ####
+    ansible_download_version: '3.4.0-2'
+    ansible_download_name: "ansible-tower-setup-{{ ansible_download_version }}.tar.gz"
+    ansible_download_directory: "ansible-tower-setup-{{ ansible_download_version }}"
+    ansible_download_url: "https://releases.ansible.com/ansible-tower/setup/{{ ansible_download_name }}"
+    ansible_port: '8080'
+    ansible_external_url: "https://{{ ansible_default_ipv4.address }}:{{ ansible_port }}"
     ansible_password: 'Cyberark1'
     ansible_user: "{{ conjur_devops_admin_account }}"
     ansible_organization: 'Cyberark'
-    ansible_awx_data_dir: '/ansible/pgdocker'
 #### Splunk set up options ####
     splunk_container_name: 'splunk'
     splunk_image_version: '7.1.2'
