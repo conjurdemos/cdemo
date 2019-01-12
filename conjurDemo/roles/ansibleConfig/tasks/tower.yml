@@ -7,9 +7,9 @@
 
 - name: Configure Ansible Tower
   shell: |
-    sed -i "s,admin_password=,admin_password={{ ansible_password }},g" ./inventory
-    sed -i "s,pg_password=,pg_password={{ ansible_password }},g" ./inventory
-    sed -i "s,rabbitmq_password,rabbitmq_password={{ ansible_password }},g" ./inventory
+    sed -i "s,admin_password='',admin_password={{ ansible_password }},g" ./inventory
+    sed -i "s,pg_password='',pg_password={{ ansible_password }},g" ./inventory
+    sed -i "s,rabbitmq_password='',rabbitmq_password={{ ansible_password }},g" ./inventory
     sh setup.sh -e nginx_https_port={{ ansible_port }}
   args:
     chdir: "/opt/{{ ansible_download_directory }}"
