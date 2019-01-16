@@ -4,6 +4,7 @@
     src: "{{ ansible_download_url }}"
     dest: "/opt"
     remote_src: yes
+  when: test == 'no'
 
 - name: Configure Ansible Tower
   shell: |
@@ -13,10 +14,12 @@
     sh setup.sh -e nginx_https_port={{ ansible_port }}
   args:
     chdir: "/opt/{{ ansible_download_directory }}"
+  when: test == 'no'
 
 - name: Wait for Ansible tower web interface
   pause:
     seconds: 15
+  when: test == 'no'
   
 - name: Set license
   uri:
@@ -28,3 +31,107 @@
     password: "{{ ansible_password }}"
     force_basic_auth: yes
     body: "{{ lookup('file','license.json') }}"
+  when: test == 'no'
+
+- name: Create user in Ansible
+  uri:
+    url: "{{ ansible_external_url }}/api/v2/users/"
+    body_format: json
+    user: "admin"
+    password: "{{ ansible_password }}"
+    method: POST
+    force_basic_auth: yes
+    validate_certs: NO
+    status_code: 201
+    body: ' {
+    "username": "{{ ansible_user }}",
+    "first_name": "{{ ansible_user }}",
+    "last_name": "litwak",
+    "email": "{{ ansible_user }}@cyberark.com",
+    "is_superuser": true,
+    "is_system_auditor": true,
+    "password": "{{ ansible_password }}"
+}'
+  register: eva_id
+  when: test == 'no'
+
+- name: Create Organization in Ansible
+  uri:
+    url: "{{ ansible_external_url }}/api/v2/organizations/1/"
+    body_format: json
+    user: "{{ ansible_user }}"
+    password: "{{ ansible_password }}"
+    force_basic_auth: yes
+    validate_certs: NO
+    method: PUT
+    body: ' {
+    "name": "{{ ansible_organization }}",
+    "description": "Main Organization",
+    "custom_virtualenv": null
+}'
+  register: org
+  when: test == 'no'
+
+- name: get gogs api user password
+  shell: |
+    docker exec {{ conjur_cli_container_name }} conjur variable value secrets/backend/gogs_secure_user_password
+  register: gogs_password
+  when: test == 'no'
+
+- name: get gogs api username
+  shell: |
+    docker exec {{ conjur_cli_container_name }} conjur variable value secrets/backend/gogs_secure_user
+  register: gogs_username
+  when: test == 'no'
+
+- name: Create credentials for gogs in Ansible
+  uri:
+    url: "{{ ansible_external_url }}/api/v2/credentials/"
+    body_format: json
+    user: "{{ ansible_user }}"
+    password: "{{ ansible_password }}"
+    force_basic_auth: yes
+    status_code: 201
+    validate_certs: NO
+    method: POST
+    body: ' {
+    "name": "gogscred",
+    "description": "gogs",
+    "organization": 1,
+    "user": null,
+    "team": null,
+    "credential_type": 2,
+    "inputs": {"username":"{{ gogs_username.stdout }}","password":"{{ gogs_password.stdout }}"}
+}'
+  register: gogs_cred
+  when: test == 'no'
+
+- name: Create Projects in Ansible
+  uri:
+    url: "{{ ansible_external_url }}/api/v2/projects/"
+    body_format: json
+    user: "{{ ansible_user }}"
+    password: "{{ ansible_password }}"
+    force_basic_auth: yes
+    status_code: 201
+    validate_certs: NO
+    method: POST
+    body: ' {
+    "name": "{{ item.name }}",
+    "description": "{{ item.description }}",
+    "local_path": "",
+    "scm_type": "git",
+    "scm_url": "{{ gogs_internal_url }}/{{ gogs_organization }}/{{ item.name }}.git",
+    "scm_branch": "master",
+    "scm_clean": false,
+    "scm_delete_on_update": false,
+    "credential": "{{ gogs_cred.json.id }}"",
+    "timeout": 0,
+    "organization": "{{ org.json.}}",
+    "scm_update_on_launch": false,
+    "scm_update_cache_timeout": 0,
+    "custom_virtualenv": null
+}'
+  with_items:
+   - { name: 'LAB3_AnsibleConjurIdentity', description: 'This project will deploy a conjur identity to a remote machine.' }
+   - { name: 'LAB3_AnsibleConjurLookup', description: 'This project will look up a secret from Conjur.' }
