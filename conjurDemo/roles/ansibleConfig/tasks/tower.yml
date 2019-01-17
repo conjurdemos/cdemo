@@ -112,7 +112,7 @@
     "description": "{{ item.description }}",
     "local_path": "",
     "scm_type": "git",
-    "scm_url": "{{ gogs_internal_url }}/{{ gogs_organization }}/{{ item.name }}.git",
+    "scm_url": "{{ gogs_external_url }}/{{ gogs_organization }}/{{ item.name }}.git",
     "scm_branch": "master",
     "scm_clean": false,
     "scm_delete_on_update": false,
