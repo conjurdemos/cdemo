@@ -19,7 +19,6 @@
     ansible_install: 'YES'
     ansible_pas: 'NO'
     splunk_install: 'NO'
-    test: 'yes'
  #### Conjur setup options ####
     conjur_container_name: 'conjur-master'
     conjur_EE_image_name: 'conjur-appliance'
