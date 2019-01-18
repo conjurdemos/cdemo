@@ -9,10 +9,10 @@ The demo uses the lastest version of Conjur v5
 ## DevOps tools
 
 * Docker
-* Ansible
+* Ansible Engine
 * Jenkins
 * Gogs
-* AWX
+* Ansible Tower
 * Conjur CLI 
 * Conjur Enterprise v5 or Conjur OSS
 * Weavescope
@@ -113,7 +113,7 @@ _If using v5 Enterprise Edition:_
 * Conjur - U: eva P: Cyberark1
 * AWX - U: eva P: Cyberark1
 * Gogs - U: eva P: Cyberark1
-* Splunk - U: eva P: Cyberark1
+* Splunk - U: admin P: Cyberark1
 
 ### Gogs and Jenkins Jobs
 Jenkins and Gogs are connected via an internal docker network. Updating a job in Gitlab will be reflected in the subsequent Jenkins job at runtime.
