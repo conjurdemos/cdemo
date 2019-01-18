@@ -1,2 +1,2 @@
 [newMachines]
-localhost ansible_port=10022 ansible_user=root ansible_password=screencast
+cdemo-ansible ansible_port=10022 ansible_user=root ansible_password=screencast
