@@ -16,8 +16,10 @@ main(){
   remove_docker
   printf '\nRemoving Weavescope'
   remove_weavescope
-  printf '\nRemoving Ansible Tower\n'
+  printf '\nRemoving Ansible Tower'
   remove_ansible
+  printf '\nRemoving hosts file changes\n'
+  remove_hosts
 }
 
 stop_containers(){
@@ -73,5 +75,10 @@ remove_ansible(){
   yum remove -y nginx*
   rm -rf /etc/nginx
   rm -rf /opt/ansible*
+}
+
+remove_hosts(){
+  sed -i '/cdemo/d' /etc/hosts
+  sed -i '/conjur/d' /etc/hosts
 }
 main
