@@ -1,0 +1,12 @@
+{
+    "eula_accepted": "true",
+    "company_name": "Cyberark",
+    "contact_email": "sales@cyberark.com",
+    "contact_name": "Demo User",
+    "hostname": "4be94852de604058b8f0028de32b1c15",
+    "instance_count": 10,
+    "license_date": 2115311474,
+    "license_key": "42d8e39360ba5a5d5134d1c5670119f2d8d27f2eb515fedbe1e1264d419f5359",
+    "license_type": "basic",
+    "subscription_name": "Red Hat Ansible Tower, Self-Support (10 Managed Nodes)"
+}

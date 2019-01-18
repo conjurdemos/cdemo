@@ -1,8 +1,9 @@
 ---
 - include_tasks: conjurCLI.yml
+  when: conjur_install == 'YES'
 
 - include_tasks: conjurOSS.yml
-  when: conjur_version == 'OSS'
+  when: conjur_version == 'OSS' and conjur_install == 'YES' 
 
 - include_tasks: conjurEE.yml
-  when: conjur_version == 'EE'
+  when: conjur_version == 'EE' and conjur_install == 'YES'

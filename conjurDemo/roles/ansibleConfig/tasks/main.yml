@@ -1,0 +1,4 @@
+---
+# tasks file for ansibleConfig
+- include_tasks: tower.yml
+  when: ansible_install == 'YES'

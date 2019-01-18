@@ -16,8 +16,10 @@ main(){
   remove_docker
   printf '\nRemoving Weavescope'
   remove_weavescope
-  printf '\nRemoving AWX directory\n'
-  remove_awx
+  printf '\nRemoving Ansible Tower'
+  remove_ansible
+  printf '\nRemoving hosts file changes\n'
+  remove_hosts
 }
 
 stop_containers(){
@@ -64,9 +66,19 @@ remove_weavescope(){
   rm -f /usr/local/bin/scope &> /dev/null
 }
 
-remove_awx(){
-  rm -Rf /opt/awx &> /dev/null
-  rm -Rf /tmp/pgdocker &> /dev/null
+remove_ansible(){
+  yum remove anisble-tower\*
+  yum -y remove rabbitmq-server
+  rm -rf /etc/tower /var/lib/{pgsql,awx,rabbitmq}
+  yum remove -y ansible-tower-*
+  yum remove -y postgresql*
+  yum remove -y nginx*
+  rm -rf /etc/nginx
+  rm -rf /opt/ansible*
+}
+
+remove_hosts(){
+  sed -i '/cdemo/d' /etc/hosts
+  sed -i '/conjur/d' /etc/hosts
 }
 main
-

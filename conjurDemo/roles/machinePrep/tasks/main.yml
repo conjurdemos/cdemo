@@ -20,3 +20,34 @@
 
 - include_tasks: debian.yml
   when: ansible_os_family == 'Debian'
+
+- name: ensure Docker is installed
+  yum:
+    name: "{{ docker_package }}"
+    update_cache: yes
+    state: present
+  notify: "start docker"
+
+- name: ensure docker-python is installed
+  pip:
+    name: docker
+    state: latest
+    extra_args: --ignore-installed
+
+- name: ensure Docker network is available
+  shell: |
+    systemctl enable docker
+    systemctl start docker
+    docker network create test
+    docker network rm test
+  ignore_errors: yes
+
+- name: set up host file to allow for host communication with Conjur
+  lineinfile:
+    path: /etc/hosts
+    state: present
+    insertafter: EOF
+    line: "{{ item.ip }} {{ item.hostname }}"
+  with_items:
+  - { ip: "{{ ansible_default_ipv4.address }}", hostname: "cdemo-ansible"}
+  - { ip: "{{ ansible_default_ipv4.address }}", hostname: "conjur-master"}

@@ -5,5 +5,5 @@
     - weavescopeConfig
     - gogsConfig
     - jenkinsConfig
-    - awxConfig
+    - ansibleConfig
     - splunk
