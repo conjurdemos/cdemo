@@ -206,10 +206,6 @@
   register: status
   until: '"successful" in status.json.status'
 
-- name: Show results of inventories
-  debug:
-    var: status
-
 - name: Create job template for conjurIdentity
   uri:
     url: "{{ ansible_external_url }}/api/v2/job_templates/"
