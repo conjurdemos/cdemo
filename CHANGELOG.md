@@ -1,6 +1,23 @@
+## 1.3.0
+
+*   *\[breaking]* Replaced AWX with Ansible Tower
+    
+    When we first created cdemo, we assumed that AWX, being a community-driven
+    development version of Ansible Tower and available as a container, was the
+    path of least resistance for including Tower-like functionality. We soon
+    learned that the development process of Tower allows for wild swings in
+    functionality and bold experimentation in AWX, after which features go
+    through careful planning and consideration for backwards compatability
+    before being merged into Tower proper. Therefore, for our purposes, AWX was
+    never really suitable and so we've changed to use Tower instead with the
+    gratis license from Red Hat.
+    
+*   Updated Ansible role to use URI module in many places instead of calling out
+    to inline curl scripts, to improve readability and maintainability.
+
 ## 1.2.0
 
-*   Modified idividual roles to use a single set of variables in the site.yml file. Pinned the versions of Gogs and splunk to known working versions
+*   *\[breaking]* Modified idividual roles to use a single set of variables in the site.yml file. Pinned the versions of Gogs and splunk to known working versions
 
 ## 1.1.1
 

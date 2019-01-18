@@ -89,13 +89,13 @@ the CLI container, the scripts folder is mounted to `/scripts`.
 
 The tools installed have a web interfaces that is made accessible to the host machine on the following network ports:
 
-|    Tool    	| Port 	|
-|:----------:	|------	|
-|   Jenkins  	| 8080 	|
-|   Gogs       	| 10080	|
-|     AWX    	| 6060  |
-| Conjur     	| 443  	|
-| Weavescope 	| 4040 	|
+| Tool          |   Port |
+| :----------:  | ------ |
+| Jenkins       |   6060 |
+| Gogs          |  10080 |
+| Ansible Tower |   8080 |
+| Conjur        |    443 |
+| Weavescope    |   4040 |
 
 _If using v5 Enterprise Edition:_
 
