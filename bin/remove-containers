@@ -19,11 +19,6 @@ cdemo_container_names=(
     gogs
     conjur-master
     conjur-cli
-    awx_task
-    awx_web
-    rabbitmq
-    memcached
-    postgres
     weavescope
 )
 
