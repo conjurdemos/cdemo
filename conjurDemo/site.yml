@@ -24,7 +24,7 @@
     conjur_EE_image_name: 'conjur-appliance'
     conjur_network_name: conjur
     conjur_https_port: '443'
-    conjur_postgres_rep_port: '5432'
+    conjur_postgres_rep_port: '54321'
     conjur_cli_container_name: 'conjur-cli'
     conjur_cli_image_name: 'cdemo/conjur-cli:latest'
     conjur_account: 'cyberark'
