@@ -34,6 +34,7 @@
      - name: "{{ conjur_network_name }}"
     published_ports:
      - "{{ conjur_https_port }}:443"
+     - "{{ conjur_postgres_rep_port }}:5432"
     volumes:
      - "{{ conjur_audit_volume }}:{{ conjur_audit_directory }}"
     restart_policy: always
