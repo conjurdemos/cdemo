@@ -1,20 +1,4 @@
 ---
-- name: Check for conjur.tar
-  stat:
-    path: ../conjur.{{item}}
-  with_items:
-    - "tar"
-    - "tar.gz"
-    - "tgz"
-  register: conjurTar
-
-- name: Inform about Enterprise availability
-  set_fact:
-    conjur_version: 'EE'
-    conjur_tar_path: "{{ item.stat.path }}"
-  when: item.stat.exists
-  with_items: "{{ conjurTar.results }}"
-
 - include_tasks: redhat.yml
   when: ansible_os_family == 'RedHat'
 
@@ -23,10 +7,15 @@
 
 - name: ensure Docker is installed
   yum:
-    name: "{{ docker_package }}"
+    name: docker
     update_cache: yes
     state: present
-  notify: "start docker"
+
+- name: start and enable docker service
+  service:
+    name: docker
+    state: restarted
+    enabled: yes
 
 - name: ensure docker-python is installed
   pip:
@@ -34,13 +23,6 @@
     state: latest
     extra_args: --ignore-installed
 
-- name: ensure Docker network is available
-  shell: |
-    systemctl enable docker
-    systemctl start docker
-    docker network create test
-    docker network rm test
-  ignore_errors: yes
 
 - name: set up host file to allow for host communication with Conjur
   lineinfile:
@@ -51,3 +33,4 @@
   with_items:
   - { ip: "{{ ansible_default_ipv4.address }}", hostname: "cdemo-ansible"}
   - { ip: "{{ ansible_default_ipv4.address }}", hostname: "conjur-master"}
+  - { ip: "{{ ansible_default_ipv4.address }}", hostname: "okd"}

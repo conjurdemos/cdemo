@@ -20,6 +20,7 @@ main(){
   remove_ansible
   printf '\nRemoving hosts file changes\n'
   remove_hosts
+  clean_yum
 }
 
 stop_containers(){
@@ -39,8 +40,10 @@ remove_network(){
 }
 
 remove_volume(){
-  docker volume rm conjur_cert &> /dev/null
-  docker volume rm jenkins_api &> /dev/null
+  docker volume rm audit &> /dev/null
+  docker volume rm hostfactorytokens &> /dev/null
+  docker volume rm identity &> /dev/null
+  docker volume rm tls &> /dev/null
   docker volume prune -f &> /dev/null
 }
 
@@ -50,17 +53,22 @@ remove_docker(){
   pip uninstall docker-pycreds -y &> /dev/null
   pip uninstall pip -y &> /dev/null
   if [[ $(cat /etc/*-release | grep -w ID_LIKE) == 'ID_LIKE="rhel fedora"' ]]; then
-    yum remove docker -y &> /dev/null
+    yum remove docker* -y &> /dev/null
     yum remove docker-ce -y &> /dev/null
     rm -f /etc/yum.repos.d/docker-ce.repo &> /dev/null
   elif [[ $(cat /etc/*-release | grep -w ID) == 'ID=debian' ]]; then
-    apt-get remove docker -y &> /dev/null
+    apt-get remove docker* -y &> /dev/null
     apt-get remove docker-ce -y &> /dev/null
   else
     printf "\nCouldn't figure out OS"
     exit
   fi
 } 
+
+clean_yum(){
+  yum clean all
+  yum-complete-transaction
+}
 
 remove_weavescope(){
   rm -f /usr/local/bin/scope &> /dev/null
@@ -80,5 +88,6 @@ remove_ansible(){
 remove_hosts(){
   sed -i '/cdemo/d' /etc/hosts
   sed -i '/conjur/d' /etc/hosts
+  sed -i '/okd/d' /etc/hosts
 }
 main

@@ -9,6 +9,7 @@
       - git
       - make
       - jq
+      - docker
     update_cache: yes
     state: latest
 
@@ -16,20 +17,3 @@
   easy_install:
     name: pip
     state: latest
-
-- name: remove outdated Docker packages if any
-  yum:
-    name:
-      - docker
-      - docker.io
-      - docker-common
-      - docker-engine
-    state: absent
-
-- name: add docker repository
-  get_url:
-    url: "{{ docker_yum_repo_url }}"
-    dest: /etc/yum.repos.d/docker-{{ docker_edition }}.repo
-    owner: root
-    group: root
-  become: true

@@ -24,7 +24,7 @@
     conjur_EE_image_name: 'conjur-appliance'
     conjur_network_name: conjur
     conjur_https_port: '443'
-    conjur_postgres_rep_port: '54321'
+    conjur_postgres_rep_port: '5432'
     conjur_cli_container_name: 'conjur-cli'
     conjur_cli_image_name: 'cdemo/conjur-cli:latest'
     conjur_account: 'cyberark'
@@ -62,6 +62,7 @@
     ansible_download_directory: "ansible-tower-setup-{{ ansible_download_version }}"
     ansible_download_url: "https://releases.ansible.com/ansible-tower/setup/{{ ansible_download_name }}"
     ansible_port: '8080'
+    ansible_postgres_port: '54321'
     ansible_external_url: "https://{{ ansible_default_ipv4.address }}:{{ ansible_port }}"
     ansible_password: 'Cyberark1'
     ansible_user: "{{ conjur_devops_admin_account }}"
