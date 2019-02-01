@@ -44,7 +44,7 @@
   - { ip: "{{ ansible_default_ipv4.address }}", hostname: "okd"}
   - { ip: "{{ ansible_default_ipv4.address }}", hostname: "okd.cyberark.local"}
 
-- name: Start OKD
-  shell: |
-    oc cluster up --public-hostname=okd.cyberark.local
-  rc: 1
+# - name: Start OKD
+#   shell: |
+#     oc cluster up --public-hostname=okd.cyberark.local
+#   rc: 1
