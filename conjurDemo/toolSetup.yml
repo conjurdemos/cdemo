@@ -7,3 +7,4 @@
     - jenkinsConfig
     - ansibleConfig
     - splunk
+    - openshiftConfig

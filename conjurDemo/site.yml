@@ -12,13 +12,14 @@
   vars:
   #### Select which components to install ####
     conjur_version: 'OSS'
-    conjur_install: 'YES'
-    weavescope_install: 'YES'
-    gogs_install: 'YES'
-    jenkins_install: 'YES'
-    ansible_install: 'YES'
+    conjur_install: 'NO'
+    weavescope_install: 'NO'
+    gogs_install: 'NO'
+    jenkins_install: 'NO'
+    ansible_install: 'NO'
     ansible_pas: 'NO'
-    splunk_install: 'YES'
+    splunk_install: 'NO'
+    openshift_install: 'YES'
  #### Conjur setup options ####
     conjur_container_name: 'conjur-master'
     conjur_EE_image_name: 'conjur-appliance'

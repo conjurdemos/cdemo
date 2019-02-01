@@ -1,0 +1,3 @@
+---
+- include_tasks: okd.yml
+  when: openshift_install == 'YES'
