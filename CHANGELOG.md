@@ -1,3 +1,12 @@
+## UNRELEASED
+
+*   Updates Jenkins minor version
+
+    The Jenkins declarative policy pipeline plugin, which we use in our labs,
+    got an update that dropped support for the version of Jenkins we had pinned,
+    specifically `2.133`. We upgraded the pinned version to `2.163`, which is
+    still supported by the plugin.
+
 ## 1.3.0
 
 *   *\[breaking]* Replaced AWX with Ansible Tower
