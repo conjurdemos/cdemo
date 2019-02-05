@@ -22,6 +22,10 @@ cdemo_container_names=(
     weavescope
 )
 
+# NOTE <2019-02-05 Fri>: `awx_task` and `awx_web` containers are no longer part
+# of cdemo, but they should stay in this script for some time (until March or
+# so?) in case people update & use this script clean up old containers.
+
 function cdemo_containers() {
     docker ps -a \
            --filter="name=$(join_by '|' ${cdemo_container_names[@]})" \
