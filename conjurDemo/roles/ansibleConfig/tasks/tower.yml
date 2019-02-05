@@ -4,6 +4,7 @@
     src: "{{ ansible_download_url }}"
     remote_src: yes
     dest: "/opt"
+    creates: "/opt/ansible-tower-setup-*/"
 
 - name: Configure Ansible Tower
   shell: |
@@ -29,7 +30,17 @@
     force_basic_auth: yes
     body: "{{ lookup('file','license.json') }}"
 
-- name: Create user in Ansible
+- name: Check for Ansible Tower DevOps user
+  uri:
+    url: "{{ ansible_external_url }}/api/v2/users/{{ ansible_user }}/"
+    method: GET
+    user: "admin"
+    password: "{{ ansible_password }}"
+    force_basic_auth: yes
+    validate_certs: NO
+  register: eva_id
+
+- name: Ensure DevOps user exists in Ansible Tower
   uri:
     url: "{{ ansible_external_url }}/api/v2/users/"
     body_format: json
@@ -40,16 +51,20 @@
     force_basic_auth: yes
     validate_certs: NO
     status_code: 201
-    body: {
-    "username": "{{ ansible_user }}",
-    "first_name": "{{ ansible_user }}",
-    "last_name": "litwak",
-    "email": "{{ ansible_user }}@cyberark.com",
-    "is_superuser": true,
-    "is_system_auditor": true,
-    "password": "{{ ansible_password }}"
-}
-  register: eva_id
+    body: |
+      {
+        "username": "{{ ansible_user }}",
+        "first_name": "{{ ansible_user }}",
+        "last_name": "litwak",
+        "email": "{{ ansible_user }}@cyberark.com",
+        "is_superuser": true,
+        "is_system_auditor": true,
+        "password": "{{ ansible_password }}"
+      }
+  register: eva_id_new
+
+- set_fact: eva_id="{{ eva_id_new }}"
+  when: eva_id_new.changed
 
 - name: Create Organization in Ansible
   uri:
@@ -61,11 +76,12 @@
     force_basic_auth: yes
     validate_certs: NO
     method: PUT
-    body: ' {
-    "name": "{{ ansible_organization }}",
-    "description": "Main Organization",
-    "custom_virtualenv": null
-}'
+    body: |
+      {
+        "name": "{{ ansible_organization }}",
+        "description": "Main Organization",
+        "custom_virtualenv": null
+      }
   register: org
 
 - name: get gogs api user password
@@ -78,7 +94,7 @@
     docker exec {{ conjur_cli_container_name }} conjur variable value secrets/backend/gogs_secure_user
   register: gogs_username
 
-- name: Create credentials for gogs in Ansible
+- name: Ensure credential for Gogs exists in Ansible Tower
   uri:
     url: "{{ ansible_external_url }}/api/v2/credentials/"
     body_format: json
@@ -88,17 +104,23 @@
     status_code: 201
     return_content: yes
     validate_certs: NO
-    method: POST
-    body: ' {
-    "name": "gogscred",
-    "description": "gogs",
-    "organization": "{{ org.json.id }}",
-    "user": null,
-    "team": null,
-    "credential_type": 2,
-    "inputs": {"username":"{{ gogs_username.stdout }}","password":"{{ gogs_password.stdout }}"}
-}'
+    method: PUT
+    body: |
+      {
+        "name": "gogscred",
+        "description": "gogs",
+        "organization": "{{ org.json.id }}",
+        "user": null,
+        "team": null,
+        "credential_type": 2,
+        "inputs": {"username":"{{ gogs_username.stdout }}","password":"{{ gogs_password.stdout }}"}
+      }
   register: gogs_cred
+
+- debug:
+    var: gogs_cred
+- debug:
+    var: org
 
 - name: Create LAB3_AnsibleConjurIdentity project in Ansible
   uri:
@@ -110,23 +132,24 @@
     status_code: 201
     return_content: yes
     validate_certs: NO
-    method: POST
-    body: ' {
-    "name": "{{ item.name }}",
-    "description": "{{ item.description }}",
-    "local_path": "",
-    "scm_type": "git",
-    "scm_url": "{{ gogs_external_url }}/{{ gogs_organization }}/{{ item.name }}.git",
-    "scm_branch": "master",
-    "scm_clean": false,
-    "scm_delete_on_update": false,
-    "credential": "{{ gogs_cred.json.id }}",
-    "timeout": 0,
-    "organization": "{{ org.json.id }}",
-    "scm_update_on_launch": false,
-    "scm_update_cache_timeout": 0,
-    "custom_virtualenv": null
-}'
+    method: PUT
+    body: |
+      {
+        "name": "{{ item.name }}",
+        "description": "{{ item.description }}",
+        "local_path": "",
+        "scm_type": "git",
+        "scm_url": "{{ gogs_external_url }}/{{ gogs_organization }}/{{ item.name }}.git",
+        "scm_branch": "master",
+        "scm_clean": false,
+        "scm_delete_on_update": false,
+        "credential": "{{ gogs_cred.json.id }}",
+        "timeout": 0,
+        "organization": "{{ org.json.id }}",
+        "scm_update_on_launch": false,
+        "scm_update_cache_timeout": 0,
+        "custom_virtualenv": null
+      }
   with_items:
    - { name: 'LAB3_AnsibleConjurIdentity', description: 'This project will deploy a conjur identity to a remote machine.' }
   register: LAB3_AnsibleConjurIdentity
@@ -141,16 +164,17 @@
     status_code: 201
     return_content: yes
     validate_certs: NO
-    method: POST
-    body: ' {
-    "name": "{{ item.name }}",
-    "description": "{{ item.description }}",
-    "organization": "{{ org.json.id }}",
-    "kind": "",
-    "host_filter": null,
-    "variables": "",
-    "insights_credential": null
-}'
+    method: PUT
+    body: |
+      {
+        "name": "{{ item.name }}",
+        "description": "{{ item.description }}",
+        "organization": "{{ org.json.id }}",
+        "kind": "",
+        "host_filter": null,
+        "variables": "",
+        "insights_credential": null
+      }
   with_items:
    - { name: 'conjurIdentity', description: 'This inventory will pull new machines to grant a conjur identity from the source project.' }
   register: conjurIdentity_inventory
@@ -165,28 +189,29 @@
     status_code: 201
     return_content: yes
     validate_certs: NO
-    method: POST
-    body: ' {
-    "name": "{{ item.name }}",
-    "description": "{{ item.description }}",
-    "source": "scm",
-    "source_path": "inventory/hosts",
-    "source_script": null,
-    "source_vars": "",
-    "credential": null,
-    "source_regions": "",
-    "instance_filters": "",
-    "group_by": "",
-    "overwrite": false,
-    "overwrite_vars": false,
-    "timeout": 0,
-    "verbosity": 1,
-    "inventory": "{{ conjurIdentity_inventory.results[0].json.id }}",
-    "update_on_launch": false,
-    "update_cache_timeout": 0,
-    "source_project": "{{ LAB3_AnsibleConjurIdentity.results[0].json.id }}",
-    "update_on_project_update": false
-}'
+    method: PUT
+    body: |
+      {
+        "name": "{{ item.name }}",
+        "description": "{{ item.description }}",
+        "source": "scm",
+        "source_path": "inventory/hosts",
+        "source_script": null,
+        "source_vars": "",
+        "credential": null,
+        "source_regions": "",
+        "instance_filters": "",
+        "group_by": "",
+        "overwrite": false,
+        "overwrite_vars": false,
+        "timeout": 0,
+        "verbosity": 1,
+        "inventory": "{{ conjurIdentity_inventory.results[0].json.id }}",
+        "update_on_launch": false,
+        "update_cache_timeout": 0,
+        "source_project": "{{ LAB3_AnsibleConjurIdentity.results[0].json.id }}",
+        "update_on_project_update": false
+      }
   with_items:
       - { name: 'newMachines', description: 'Machines that will get a conjur identity' }
   register: conjurIdentity_inventorysource
@@ -216,43 +241,44 @@
     status_code: 201
     return_content: yes
     validate_certs: NO
-    method: POST
-    body: ' {
-    "name": "{{ item.name }}",
-    "description": "{{ item.description }}",
-    "job_type": "run",
-    "inventory": "{{ conjurIdentity_inventory.results[0].json.id }}",
-    "project": "{{ LAB3_AnsibleConjurIdentity.results[0].json.id }}",
-    "playbook": "createIdentity.yml",
-    "forks": 0,
-    "limit": "",
-    "verbosity": 0,
-    "extra_vars": "",
-    "job_tags": "",
-    "force_handlers": false,
-    "skip_tags": "",
-    "start_at_task": "",
-    "timeout": 0,
-    "use_fact_cache": false,
-    "host_config_key": "",
-    "ask_diff_mode_on_launch": false,
-    "ask_variables_on_launch": false,
-    "ask_limit_on_launch": false,
-    "ask_tags_on_launch": false,
-    "ask_skip_tags_on_launch": false,
-    "ask_job_type_on_launch": false,
-    "ask_verbosity_on_launch": false,
-    "ask_inventory_on_launch": false,
-    "ask_credential_on_launch": false,
-    "survey_enabled": false,
-    "become_enabled": false,
-    "diff_mode": false,
-    "allow_simultaneous": false,
-    "custom_virtualenv": null,
-    "job_slice_count": 1,
-    "credential": null,
-    "vault_credential": null
-}'
+    method: PUT
+    body: |
+      {
+        "name": "{{ item.name }}",
+        "description": "{{ item.description }}",
+        "job_type": "run",
+        "inventory": "{{ conjurIdentity_inventory.results[0].json.id }}",
+        "project": "{{ LAB3_AnsibleConjurIdentity.results[0].json.id }}",
+        "playbook": "createIdentity.yml",
+        "forks": 0,
+        "limit": "",
+        "verbosity": 0,
+        "extra_vars": "",
+        "job_tags": "",
+        "force_handlers": false,
+        "skip_tags": "",
+        "start_at_task": "",
+        "timeout": 0,
+        "use_fact_cache": false,
+        "host_config_key": "",
+        "ask_diff_mode_on_launch": false,
+        "ask_variables_on_launch": false,
+        "ask_limit_on_launch": false,
+        "ask_tags_on_launch": false,
+        "ask_skip_tags_on_launch": false,
+        "ask_job_type_on_launch": false,
+        "ask_verbosity_on_launch": false,
+        "ask_inventory_on_launch": false,
+        "ask_credential_on_launch": false,
+        "survey_enabled": false,
+        "become_enabled": false,
+        "diff_mode": false,
+        "allow_simultaneous": false,
+        "custom_virtualenv": null,
+        "job_slice_count": 1,
+        "credential": null,
+        "vault_credential": null
+      }
   with_items:
   - { name: 'conjurIdentityPush', description: 'Pushes a conjur identity to the machine' }
   register: cojurIdentity_template
@@ -267,23 +293,24 @@
     status_code: 201
     return_content: yes
     validate_certs: NO
-    method: POST
-    body: ' {
-    "name": "{{ item.name }}",
-    "description": "{{ item.description }}",
-    "local_path": "",
-    "scm_type": "git",
-    "scm_url": "{{ gogs_external_url }}/{{ gogs_organization }}/{{ item.name }}.git",
-    "scm_branch": "master",
-    "scm_clean": false,
-    "scm_delete_on_update": false,
-    "credential": "{{ gogs_cred.json.id }}",
-    "timeout": 0,
-    "organization": "{{ org.json.id }}",
-    "scm_update_on_launch": false,
-    "scm_update_cache_timeout": 0,
-    "custom_virtualenv": null
-}'
+    method: PUT
+    body: |
+      {
+        "name": "{{ item.name }}",
+        "description": "{{ item.description }}",
+        "local_path": "",
+        "scm_type": "git",
+        "scm_url": "{{ gogs_external_url }}/{{ gogs_organization }}/{{ item.name }}.git",
+        "scm_branch": "master",
+        "scm_clean": false,
+        "scm_delete_on_update": false,
+        "credential": "{{ gogs_cred.json.id }}",
+        "timeout": 0,
+        "organization": "{{ org.json.id }}",
+        "scm_update_on_launch": false,
+        "scm_update_cache_timeout": 0,
+        "custom_virtualenv": null
+      }
   with_items:
    - { name: 'LAB3_AnsibleConjurLookup', description: 'This project will look up a secret from Conjur.' }
   register: LAB3_AnsibleConjurLookup
