@@ -4,7 +4,7 @@
     src: "{{ ansible_download_url }}"
     remote_src: yes
     dest: "/opt"
-    creates: "/opt/ansible-tower-setup-*/"
+    creates: "/opt/{{ ansible_download_directory }}/"
 
 - name: Configure Ansible Tower
   shell: |
@@ -30,27 +30,18 @@
     force_basic_auth: yes
     body: "{{ lookup('file','license.json') }}"
 
-- name: Check for Ansible Tower DevOps user
-  uri:
-    url: "{{ ansible_external_url }}/api/v2/users/{{ ansible_user }}/"
-    method: GET
-    user: "admin"
-    password: "{{ ansible_password }}"
-    force_basic_auth: yes
-    validate_certs: NO
-  register: eva_id
-
 - name: Ensure DevOps user exists in Ansible Tower
   uri:
-    url: "{{ ansible_external_url }}/api/v2/users/"
+    url: "{{ ansible_external_url }}/api/v2/users/{{ ansible_user }}/"
     body_format: json
     user: "admin"
     password: "{{ ansible_password }}"
-    method: POST
+    method: PUT
     return_content: yes
     force_basic_auth: yes
     validate_certs: NO
-    status_code: 201
+    follow_redirects: "all"
+    status_code: 200, 201
     body: |
       {
         "username": "{{ ansible_user }}",
@@ -61,12 +52,9 @@
         "is_system_auditor": true,
         "password": "{{ ansible_password }}"
       }
-  register: eva_id_new
+  register: eva_id
 
-- set_fact: eva_id="{{ eva_id_new }}"
-  when: eva_id_new.changed
-
-- name: Create Organization in Ansible
+- name: Ensure Ansible organization exists in Ansible Tower
   uri:
     url: "{{ ansible_external_url }}/api/v2/organizations/1/"
     body_format: json
@@ -76,6 +64,8 @@
     force_basic_auth: yes
     validate_certs: NO
     method: PUT
+    follow_redirects: all
+    status_code: 200, 201
     body: |
       {
         "name": "{{ ansible_organization }}",
@@ -96,12 +86,13 @@
 
 - name: Ensure credential for Gogs exists in Ansible Tower
   uri:
-    url: "{{ ansible_external_url }}/api/v2/credentials/"
+    url: "{{ ansible_external_url }}/api/v2/credentials/gogscred++Source%20Control+scm++Cyberark/"
     body_format: json
     user: "{{ ansible_user }}"
     password: "{{ ansible_password }}"
     force_basic_auth: yes
-    status_code: 201
+    follow_redirects: all
+    status_code: 200, 201
     return_content: yes
     validate_certs: NO
     method: PUT
@@ -117,19 +108,15 @@
       }
   register: gogs_cred
 
-- debug:
-    var: gogs_cred
-- debug:
-    var: org
-
-- name: Create LAB3_AnsibleConjurIdentity project in Ansible
+- name: Ensure LAB3_AnsibleConjurIdentity project exists in Ansible Tower
   uri:
-    url: "{{ ansible_external_url }}/api/v2/projects/"
+    url: "{{ ansible_external_url }}/api/v2/projects/{{ item.name }}++Cyberark"
     body_format: json
     user: "{{ ansible_user }}"
     password: "{{ ansible_password }}"
     force_basic_auth: yes
-    status_code: 201
+    follow_redirects: all
+    status_code: 200, 201
     return_content: yes
     validate_certs: NO
     method: PUT
@@ -151,17 +138,18 @@
         "custom_virtualenv": null
       }
   with_items:
-   - { name: 'LAB3_AnsibleConjurIdentity', description: 'This project will deploy a conjur identity to a remote machine.' }
+    - { name: 'LAB3_AnsibleConjurIdentity', description: 'This project will deploy a conjur identity to a remote machine.' }
   register: LAB3_AnsibleConjurIdentity
 
-- name: Create conjurIdentity inventory
+- name: Ensure conjurIdentity inventory exists in Ansible Tower
   uri:
-    url: "{{ ansible_external_url }}/api/v2/inventories/"
+    url: "{{ ansible_external_url }}/api/v2/inventories/{{ item.name }}++Cyberark/"
     body_format: json
     user: "{{ ansible_user }}"
     password: "{{ ansible_password }}"
     force_basic_auth: yes
-    status_code: 201
+    follow_redirects: all
+    status_code: 200, 201
     return_content: yes
     validate_certs: NO
     method: PUT
@@ -176,17 +164,18 @@
         "insights_credential": null
       }
   with_items:
-   - { name: 'conjurIdentity', description: 'This inventory will pull new machines to grant a conjur identity from the source project.' }
+    - { name: 'conjurIdentity', description: 'This inventory will pull new machines to grant a conjur identity from the source project.' }
   register: conjurIdentity_inventory
 
-- name: Create conjurIdentity inventory source
+- name: Ensure conjurIdentity inventory source exists in Ansible Tower
   uri:
-    url: "{{ ansible_external_url }}/api/v2/inventory_sources/"
+    url: "{{ ansible_external_url }}/api/v2/inventory_sources/{{ item.name }}++conjurIdentity++Cyberark/"
     body_format: json
     user: "{{ ansible_user }}"
     password: "{{ ansible_password }}"
     force_basic_auth: yes
-    status_code: 201
+    follow_redirects: all
+    status_code: 200, 201
     return_content: yes
     validate_certs: NO
     method: PUT
@@ -213,7 +202,7 @@
         "update_on_project_update": false
       }
   with_items:
-      - { name: 'newMachines', description: 'Machines that will get a conjur identity' }
+    - { name: 'newMachines', description: 'Machines that will get a conjur identity' }
   register: conjurIdentity_inventorysource
 
 
@@ -231,14 +220,15 @@
   register: status
   until: '"successful" in status.json.status'
 
-- name: Create job template for conjurIdentity
+- name: Ensure job template for conjurIdentity exists in Ansible Tower
   uri:
-    url: "{{ ansible_external_url }}/api/v2/job_templates/"
+    url: "{{ ansible_external_url }}/api/v2/job_templates/{{ item.name }}"
     body_format: json
     user: "{{ ansible_user }}"
     password: "{{ ansible_password }}"
     force_basic_auth: yes
-    status_code: 201
+    follow_redirects: all
+    status_code: 200, 201
     return_content: yes
     validate_certs: NO
     method: PUT
@@ -280,17 +270,18 @@
         "vault_credential": null
       }
   with_items:
-  - { name: 'conjurIdentityPush', description: 'Pushes a conjur identity to the machine' }
+    - { name: 'conjurIdentityPush', description: 'Pushes a conjur identity to the machine' }
   register: cojurIdentity_template
 
-- name: Create LAB3_AnsibleConjurLookup project in Ansible
+- name: Ensure LAB3_AnsibleConjurLookup project exists in Ansible Tower
   uri:
-    url: "{{ ansible_external_url }}/api/v2/projects/"
+    url: "{{ ansible_external_url }}/api/v2/projects/{{ item.name }}++Cyberark/"
     body_format: json
     user: "{{ ansible_user }}"
     password: "{{ ansible_password }}"
     force_basic_auth: yes
-    status_code: 201
+    follow_redirects: all
+    status_code: 200, 201
     return_content: yes
     validate_certs: NO
     method: PUT
@@ -312,5 +303,5 @@
         "custom_virtualenv": null
       }
   with_items:
-   - { name: 'LAB3_AnsibleConjurLookup', description: 'This project will look up a secret from Conjur.' }
+    - { name: 'LAB3_AnsibleConjurLookup', description: 'This project will look up a secret from Conjur.' }
   register: LAB3_AnsibleConjurLookup
