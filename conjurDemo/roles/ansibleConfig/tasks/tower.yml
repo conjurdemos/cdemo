@@ -14,6 +14,25 @@
   args:
     chdir: "/opt/{{ ansible_download_directory }}"
 
+- name: Ensure Tower directory exists
+  file:
+    path: "/etc/tower"
+    state: directory
+
+- name: Create Tower CLI config file
+  copy:
+    dest: "/etc/tower/tower_cli.cfg"
+    content: |
+      host: {{ ansible_external_url }}
+      username: {{ ansible_user }}
+      password: {{ ansible_password }}
+
+- name: Copy the CLI config file into the Jenkins container
+  # I (Ryan) tried mounting it as a volume but the mount..........didn't work X.X
+  shell: |
+    docker exec jenkins mkdir -p /etc/tower
+    docker cp /etc/tower/tower_cli.cfg jenkins:/etc/tower/tower_cli.cfg
+
 - name: Wait for Ansible tower web interface
   pause:
     seconds: 15

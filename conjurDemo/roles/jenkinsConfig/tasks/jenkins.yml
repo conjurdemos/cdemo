@@ -21,6 +21,16 @@
     state: present
     force: yes
 
+- name: Ensure Tower directory exists
+  file:
+    path: "/etc/tower"
+    state: directory
+
+- name: Ensure tower_cli.cfg exists
+  file:
+    path: "/etc/tower/tower_cli.cfg"
+    state: touch
+
 - name: Start Jenkins
   docker_container:
     name: "{{ jenkins_container_name }}"
@@ -34,6 +44,7 @@
      - name: conjur
     volumes:
      - "/var/run/docker.sock:/var/run/docker.sock"
+     # - "/etc/tower/tower_cli.cfg:/etc/tower/tower_cli.cfg"
      - "conjur_cert:/conjur_cert"
      - "hostfactoryTokens:/hostfactoryTokens"
      - "identity:/identity"
