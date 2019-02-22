@@ -9,7 +9,7 @@ pipeline {
         }
         stage ('Remove host from Tower') {
             steps {
-                sh 'tower-cli config host 192.168.56.3:8080'
+                sh 'tower-cli config host {{ ansible_external_url }}'
                 sh 'tower-cli host delete -i conjurIdentity -n cdemo-ansible --insecure'
             }
         }
