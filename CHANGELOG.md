@@ -1,3 +1,8 @@
+## 1.4.0
+
+*   Created new feature that installs 3.11 of OKD. This just stands up OKD in a usuable state. It's accessible via https://okd.cyberark.local:8443 from the local machine.
+
+
 ## 1.3.0
 
 *   *\[breaking]* Replaced AWX with Ansible Tower
