@@ -1,7 +1,13 @@
-## 1.4.0
+## UNRELEASED
+
+*   Updates Jenkins minor version
+
+    The Jenkins declarative policy pipeline plugin, which we use in our labs,
+    got an update that dropped support for the version of Jenkins we had pinned,
+    specifically `2.133`. We upgraded the pinned version to `2.163`, which is
+    still supported by the plugin.
 
 *   Created new feature that installs 3.11 of OKD. This just stands up OKD in a usuable state. It's accessible via https://okd.cyberark.local:8443 from the local machine.
-
 
 ## 1.3.0
 
