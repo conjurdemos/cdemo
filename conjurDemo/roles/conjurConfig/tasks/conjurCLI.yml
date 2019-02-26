@@ -25,13 +25,13 @@
     name: "{{ conjur_cli_container_name }}"
     image: "{{ conjur_cli_image_name }}"
     state: started
+    user: root
     volumes:
-     - "hostfactoryTokens:/hostfactoryTokens"
-     - "identity:/identity"
-     - "tls:/tls"
+     - "hostfactoryTokens:/hostfactoryTokens:rw"
+     - "identity:/identity:rw"
+     - "tls:/tls:rw"
     restart_policy: always
     networks:
      - name: "{{ conjur_network_name }}"
-    recreate: yes
     entrypoint: []
     command: ["sleep", "infinity"]

@@ -1,0 +1,56 @@
+---
+- name: Create firewall Zone for Docker
+  firewalld:
+    state: present
+    zone: dockerc
+    permanent: yes
+
+- name: Set up docker zone
+  firewalld:
+    zone: dockerc
+    permanent: yes
+    source: 172.17.0.0/16
+    state: enabled
+
+- name: Set up ports
+  firewalld:
+    permanent: yes
+    zone: "{{ item.zone }}"
+    port: "{{ item.port }}"
+    state: enabled
+  with_items:
+  - { zone: "dockerc", port: "8443/tcp" }
+  - { zone: "dockerc", port: "53/udp" }
+  - { zone: "dockerc", port: "8053/udp" }
+  - { zone: "public", port: "8443/tcp" }
+  - { zone: "public", port: "53/udp" }
+  - { zone: "public", port: "8053/udp" }
+
+- name: Install packages
+  yum:
+    name: "{{ item.name }}"
+    state: latest
+  with_items:
+  - { name: "centos-release-openshift-origin311" }
+  - { name: "origin-clients" }
+
+- name: set up host file to allow for host communication with Conjur
+  lineinfile:
+    path: /etc/hosts
+    state: present
+    insertafter: EOF
+    line: "{{ item.ip }} {{ item.hostname }}"
+  with_items:
+  - { ip: "{{ ansible_default_ipv4.address }}", hostname: "okd"}
+  - { ip: "{{ ansible_default_ipv4.address }}", hostname: "okd.cyberark.local"}
+
+- name: Create Openshift configuration files directory
+  file:
+    path: /opt/openshift
+    state: directory
+
+- name: Start OKD
+  shell: oc cluster up --public-hostname=okd.cyberark.local
+  ignore_errors: true
+  args:
+    chdir: /opt/openshift/

@@ -19,6 +19,7 @@
     ansible_install: 'YES'
     ansible_pas: 'NO'
     splunk_install: 'YES'
+    openshift_install: 'NO'
  #### Conjur setup options ####
     conjur_container_name: 'conjur-master'
     conjur_EE_image_name: 'conjur-appliance'
@@ -62,6 +63,7 @@
     ansible_download_directory: "ansible-tower-setup-{{ ansible_download_version }}"
     ansible_download_url: "https://releases.ansible.com/ansible-tower/setup/{{ ansible_download_name }}"
     ansible_port: '8080'
+    ansible_postgres_port: '54321'
     ansible_external_url: "https://{{ ansible_default_ipv4.address }}:{{ ansible_port }}"
     ansible_password: 'Cyberark1'
     ansible_user: "{{ conjur_devops_admin_account }}"
