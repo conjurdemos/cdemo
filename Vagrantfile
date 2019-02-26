@@ -2,7 +2,7 @@ Vagrant.configure("2") do |config|
   config.vm.box = "centos/7"
   config.vm.provider "virtualbox" do |vbox|
     vbox.name = "cdemo"
-    vbox.memory = 1024*6
+    vbox.memory = 1024*8
     vbox.cpus = 4
   end
   config.vm.network "private_network", type: "dhcp"
