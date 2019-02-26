@@ -12,20 +12,20 @@
   vars:
   #### Select which components to install ####
     conjur_version: 'OSS'
-    conjur_install: 'NO'
-    weavescope_install: 'NO'
-    gogs_install: 'NO'
-    jenkins_install: 'NO'
-    ansible_install: 'NO'
+    conjur_install: 'YES'
+    weavescope_install: 'YES'
+    gogs_install: 'YES'
+    jenkins_install: 'YES'
+    ansible_install: 'YES'
     ansible_pas: 'NO'
-    splunk_install: 'NO'
-    openshift_install: 'YES'
+    splunk_install: 'YES'
+    openshift_install: 'NO'
  #### Conjur setup options ####
     conjur_container_name: 'conjur-master'
     conjur_EE_image_name: 'conjur-appliance'
     conjur_network_name: conjur
     conjur_https_port: '443'
-    conjur_postgres_rep_port: '5432'
+    conjur_postgres_rep_port: '54321'
     conjur_cli_container_name: 'conjur-cli'
     conjur_cli_image_name: 'cdemo/conjur-cli:latest'
     conjur_account: 'cyberark'
