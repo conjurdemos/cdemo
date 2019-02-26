@@ -21,6 +21,7 @@ main(){
   printf '\nRemoving hosts file changes\n'
   remove_hosts
   clean_yum
+  remove_openshift
 }
 
 stop_containers(){
@@ -90,5 +91,10 @@ remove_hosts(){
   sed -i '/cdemo/d' /etc/hosts
   sed -i '/conjur/d' /etc/hosts
   sed -i '/okd/d' /etc/hosts
+}
+
+remove_openshift(){
+  oc cluster down
+  rm -Rf /opt/openshift
 }
 main
