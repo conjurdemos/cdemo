@@ -25,15 +25,17 @@ main(){
 }
 
 stop_containers(){
-  docker container stop $(docker container ls -aq) &> /dev/null
-}
-
-remove_containers(){
-  docker container rm $(docker container ls -aq) &> /dev/null
+  oc cluster down
+  docker container rm -f splunk
+  docker container rm -f jenkins
+  docker container rm -f gogs
+  docker container rm -f weavescope
+  docker container rm -f conjur-master
+  docker container rm -f conjur-cli
 }
 
 remove_images(){
-  docker image rm -f $(docker image ls -aq) &> /dev/null
+  docker image prune -a --force
 }
 
 remove_network(){
@@ -94,7 +96,8 @@ remove_hosts(){
 }
 
 remove_openshift(){
-  oc cluster down
+  yum -y remove centos-release-openshift-origin*
+  yum -y remove origin-*
   rm -Rf /opt/openshift
 }
 main
