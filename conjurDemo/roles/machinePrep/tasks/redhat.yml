@@ -10,6 +10,7 @@
       - make
       - jq
       - docker
+      - firewalld
     update_cache: yes
     state: latest
 
