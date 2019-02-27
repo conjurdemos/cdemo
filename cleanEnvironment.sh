@@ -10,8 +10,8 @@ main(){
   remove_network
   printf '\nRemoving any conjur volume on the system.'
   remove_volume
-  # printf '\nRemoving pip and docker'
-  # remove_docker
+  printf '\nRemoving pip and docker'
+  remove_docker
   printf '\nRemoving Weavescope'
   remove_weavescope
   printf '\nRemoving Ansible Tower'
