@@ -18,7 +18,7 @@ set -u
 
 function main {
   printf '\n-----'
-  printf '\nStopping any running containers.'
+  printf '\nStopping and removing any running containers.'
   stop_containers
   printf '\nRemoving any stopped and running containers.'
   "$script_path"/remove-containers
