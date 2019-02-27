@@ -2,18 +2,16 @@
 
 main(){
   printf '\n-----'
-  printf '\nStopping any running containers.'
+  printf '\nStopping and removing any running containers.'
   stop_containers
-  printf '\nRemoving any stopped and running containers.'
-  remove_containers
   printf '\nRemoving any images on the system.'
   remove_images
   printf '\nRemoving any conjur network on the system.'
   remove_network
   printf '\nRemoving any conjur volume on the system.'
   remove_volume
-  printf '\nRemoving pip and docker'
-  remove_docker
+  # printf '\nRemoving pip and docker'
+  # remove_docker
   printf '\nRemoving Weavescope'
   remove_weavescope
   printf '\nRemoving Ansible Tower'
