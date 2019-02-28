@@ -41,8 +41,8 @@
     insertafter: EOF
     line: "{{ item.ip }} {{ item.hostname }}"
   with_items:
-  - { ip: "{{ ansible_default_ipv4.address }}", hostname: "okd"}
-  - { ip: "{{ ansible_default_ipv4.address }}", hostname: "okd.cyberark.local"}
+  - { ip: "{{ ansible_default_ipv4.address }}", hostname: "{{ okd_a_record }}"}
+  - { ip: "{{ ansible_default_ipv4.address }}", hostname: "{{ okd_fqdn }}"}
 
 - name: Create Openshift configuration files directory
   file:
@@ -51,7 +51,7 @@
 
 - name: Start OKD
   shell: |
-    oc cluster up --public-hostname=okd.cyberark.local
+    oc cluster up --public-hostname={{ okd_fqdn }}
   ignore_errors: true
   args:
     chdir: /opt/openshift/
@@ -75,7 +75,13 @@
     oc login -u system:admin
     oc adm policy add-scc-to-user anyuid system:serviceaccount:conjur:default
     oc login -u developer
-    oc new-app conjur/conjur-appliance --name=conjur-follower
+    oc delete project myproject
   args:
     chdir: /opt/openshift/
+    executable: /bin/bash
+
+- name: Start conjur
+  shell: |
+    oc apply -f {{ role_path }}/files/conjurFollower.yml
+  args:
     executable: /bin/bash

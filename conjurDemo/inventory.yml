@@ -15,4 +15,4 @@ jenkins_install=YES
 ansible_install=YES
 ansible_pas=NO
 splunk_install=YES
-openshift_install=NO
+openshift_install=YES
