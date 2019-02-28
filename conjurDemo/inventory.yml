@@ -1,6 +1,3 @@
-[demoMachines]
-default ansible_connection=local
-
 [toolMachines]
 default ansible_connection=local
 
