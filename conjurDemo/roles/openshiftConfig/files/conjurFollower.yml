@@ -1,0 +1,65 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: seed
+  namespace: conjur
+  labels:
+    app: conjur
+data:
+  seed.tar: ''
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: conjur-follower
+  namespace: conjur
+  labels:
+    app: conjur
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      role: follower
+  template:
+    metadata:
+      labels:
+        role: follower
+    spec:
+      volumes:
+      - name: seed
+        configMap:
+          name: seed
+      containers:
+      - name: follower
+        imagePullPolicy: IfNotPresent
+        image: 172.30.1.1:5000/conjur/conjur-appliance
+        env:
+          - name: CONJUR_AUTHENTICATORS
+            value: authn-k8s/okd-follower
+        ports:
+          - containerPort: 443
+            protocol: TCP
+          - containerPort: 5432
+            protocol: TCP
+          - containerPort: 1999
+            protocol: TCP
+        volumeMounts:
+        - mountPath: /seed
+          name: seed
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: conjur-follower
+  namespace: conjur
+spec:
+  ports:
+  - name: https
+    port: 443
+    targetPort: 443
+  selector:
+    role: follower
+  type: ClusterIP

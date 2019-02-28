@@ -1,13 +1,4 @@
 ---
-- import_playbook: machineSetup.yml
-  vars:
-    docker_edition: 'ce'
-    docker_package: "docker-{{ docker_edition }}"
-    docker_yum_repo_url: https://download.docker.com/linux/{{ (ansible_distribution == "Fedora") | ternary("fedora","centos") }}/docker-{{ docker_edition }}.repo
-    docker_apt_release_channel: stable
-    docker_apt_arch: amd64
-    docker_apt_repository: "deb [arch={{ docker_apt_arch }}] https://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} {{ docker_apt_release_channel }}"
-
 - import_playbook: toolSetup.yml
   vars:
   #### Select which components to install ####
@@ -20,12 +11,19 @@
     ansible_pas: 'NO'
     splunk_install: 'NO'
     openshift_install: 'YES'
+ #### Machine setup options ####
+    docker_edition: 'ce'
+    docker_package: "docker-{{ docker_edition }}"
+    docker_yum_repo_url: https://download.docker.com/linux/{{ (ansible_distribution == "Fedora") | ternary("fedora","centos") }}/docker-{{ docker_edition }}.repo
+    docker_apt_release_channel: stable
+    docker_apt_arch: amd64
+    docker_apt_repository: "deb [arch={{ docker_apt_arch }}] https://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} {{ docker_apt_release_channel }}"
  #### Conjur setup options ####
     conjur_container_name: 'conjur-master'
     conjur_EE_image_name: 'conjur-appliance'
     conjur_network_name: conjur
     conjur_https_port: '443'
-    conjur_postgres_rep_port: '54321'
+    conjur_postgres_rep_port: '5432'
     conjur_cli_container_name: 'conjur-cli'
     conjur_cli_image_name: 'cdemo/conjur-cli:latest'
     conjur_account: 'cyberark'
@@ -80,3 +78,6 @@
     splunk_audit_volume: "{{ conjur_audit_volume }}"
     splunk_audit_directory: '/conjur'
     splunk_account: "admin"
+#### Openshift set up options ####
+    okd_a_record: "okd"
+    okd_fqdn: "{{ okd_a_record }}.{{ okd_domain }}"
