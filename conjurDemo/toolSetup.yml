@@ -1,6 +1,11 @@
 ---
 - hosts: toolMachines
+  vars_prompt:
+    - name: "okd_domain"
+      prompt: "Enter your domain name:"
+      default: "cyberarkdemo.com"
   roles:
+    - machinePrep
     - conjurConfig
     - weavescopeConfig
     - gogsConfig
