@@ -1,15 +1,16 @@
 pipeline {
     agent any
-   
+
     stages {
         stage ('Stop Ansible containers') {
             steps {
                 sh 'docker container rm -f $(docker container ls -f name=cdemo-ansible* -q)'
             }
         }
-        stage ('Remove host from awx') {
-        	steps {
-            	sh 'docker exec awx_task ssh-keygen -R cdemo-ansible'
+        stage ('Remove host from Tower') {
+            steps {
+                sh 'tower-cli config host {{ ansible_external_url }}'
+                sh 'tower-cli host delete -i conjurIdentity -n cdemo-ansible --insecure'
             }
         }
     }

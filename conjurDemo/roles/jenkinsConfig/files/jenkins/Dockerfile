@@ -9,7 +9,8 @@ ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false
 COPY plugins.txt /plugins/
 
 RUN apt-get update &&\
-    apt-get install -qy git apt-utils curl dpkg jq libexpat1-dev libpython2.7-dev python2.7-dev vim sudo &&\
+  apt-get install -qy git apt-utils curl dpkg jq libexpat1-dev libpython2.7-dev python2.7-dev vim sudo python-pip &&\
+  pip install ansible-tower-cli &&\
 	apt-get install -f -qy &&\
 	rm -rf /var/lib/apt/lists/* &&\
 	curl -sSL https://raw.githubusercontent.com/cyberark/summon/master/install.sh | bash &&\

@@ -21,6 +21,11 @@
   retries: 60
   delay: 3
 
+- name: Process template for Jenkins Lab 3
+  template:
+    src: "{{ role_path }}/files/LAB3_AnsibleStopContainers/Jenkinsfile.template"
+    dest: "{{ role_path }}/files/LAB3_AnsibleStopContainers/Jenkinsfile"
+
 - name: Configure gogs
   shell: |
     docker cp "{{ role_path }}/files/{{ item }}" {{ conjur_cli_container_name }}:/{{ item }}
