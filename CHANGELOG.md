@@ -1,4 +1,10 @@
-## UNRELEASED
+## Unreleased
+
+*   Created new feature that installs 3.11 of OKD. This just stands up OKD in a
+    usuable state. It's accessible via https://okd.cyberark.local:8443 from the
+    local machine.
+
+## 1.3.1
 
 *   Updates Jenkins minor version
 
@@ -7,7 +13,10 @@
     specifically `2.133`. We upgraded the pinned version to `2.163`, which is
     still supported by the plugin.
 
-*   Created new feature that installs 3.11 of OKD. This just stands up OKD in a usuable state. It's accessible via https://okd.cyberark.local:8443 from the local machine.
+*   Made the Ansible Tower CLI available in the Jenkins container for easy
+    interaction between these two systems.
+
+*   Fixed: various breaking issues with Lab 3 (the Ansible Conjur identity demo)
 
 ## 1.3.0
 
