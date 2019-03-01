@@ -44,17 +44,3 @@ if can_docker; then
 else
     echo "remove-containers: fatal: user \"$(whoami)\" lacks permission to use Docker"
 fi
-
-echo "Removing Ansible Tower..."
-clean_tower
-
-function clean_tower(){
-  yum remove anisble-tower\*
-  yum -y remove rabbitmq-server
-  rm -rf /etc/tower /var/lib/{pgsql,awx,rabbitmq}
-  yum remove -y ansible-tower-*
-  yum remove -y postgresql*
-  yum remove -y nginx*
-  rm -rf /etc/nginx
-  rm -rf /opt/ansible*
-}
