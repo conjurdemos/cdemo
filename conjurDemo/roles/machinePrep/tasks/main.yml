@@ -15,6 +15,7 @@
   file:
     state: absent
     path: /etc/docker/daemon.json
+  when: openshift_install == 'YES'
 
 - name: Set insecure registry for openshift
   lineinfile:
@@ -23,6 +24,7 @@
     insertafter: EOF
     line: '{"insecure-registries":["172.30.0.0/16"]}'
     create: yes
+  when: openshift_install == 'YES'
 
 - name: start and enable docker service
   service:
@@ -46,6 +48,7 @@
   with_items:
   - { ip: "{{ ansible_default_ipv4.address }}", hostname: "cdemo-ansible"}
   - { ip: "{{ ansible_default_ipv4.address }}", hostname: "conjur-master"}
+  when: openshift_install == 'YES'
 
 - name: Set SELINUX to permissive mode
   selinux:

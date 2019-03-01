@@ -3,3 +3,19 @@ default ansible_connection=local
 
 [toolMachines]
 default ansible_connection=local
+
+[machines:children]
+toolMachines
+demoMachines
+
+[machines:vars]
+#### Select which components to install ####
+conjur_version=OSS
+conjur_install=YES
+weavescope_install=YES
+gogs_install=YES
+jenkins_install=YES
+ansible_install=YES
+ansible_pas=NO
+splunk_install=YES
+openshift_install=NO
