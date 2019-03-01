@@ -82,6 +82,22 @@
 
 - name: Start conjur
   shell: |
-    oc apply -f {{ role_path }}/files/conjurFollower.yml
+    oc create -f {{ role_path }}/files/conjurFollower.yml
   args:
+    executable: /bin/bash
+    chdir: /opt/openshift
+
+- name: Configure conjur certificate
+  shell: |
+    docker exec {{ conjur_container_name }} evoke ca issue --force {{ okd_fqdn }} {{ okd_follower_service }}
+    docker exec {{ conjur_container_name }} chpst -u conjur conjur-plugin-service possum rake authn_k8s:ca_init["conjur/authn-k8s/okd-follower"]
+  ignore_errors: true
+
+- name: Configure Conjur Follower
+  shell: |
+    docker exec {{ conjur_container_name }} evoke seed follower okd-follower conjur-master > seed.tar
+    oc create configmap seed --from-file seed.tar -o yaml --dry-run | oc replace -f -
+    rm -f seed.tar
+  args:
+    chdir: /opt/openshift/
     executable: /bin/bash
