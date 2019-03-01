@@ -1,6 +1,6 @@
 ---
 - name: installDependencies
-  yum:
+  package:
     name:
       - curl
       - yum-utils
@@ -9,9 +9,9 @@
       - git
       - make
       - jq
-      - docker
+      - docker-ce
       - firewalld
-    update_cache: yes
+    update_cache: no
     state: latest
 
 - name: install PIP
