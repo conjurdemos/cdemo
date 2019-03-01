@@ -5,17 +5,17 @@
 - include_tasks: debian.yml
   when: ansible_os_family == 'Debian'
 
-- name: ensure Docker is installed
-  yum:
-    name: docker
-    update_cache: yes
-    state: present
-
 - name: delete daemon.json
   file:
     state: absent
     path: /etc/docker/daemon.json
   when: openshift_install == 'YES'
+
+- name: Ensure Docker is started
+  service:
+    name: docker
+    state: restarted
+    enabled: yes
 
 - name: Set insecure registry for openshift
   lineinfile:
@@ -26,11 +26,6 @@
     create: yes
   when: openshift_install == 'YES'
 
-- name: start and enable docker service
-  service:
-    name: docker
-    state: restarted
-    enabled: yes
 
 - name: ensure docker-python is installed
   pip:
