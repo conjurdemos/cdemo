@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -eu
+
+# removes RabbitMQ
+
+yum -y remove rabbitmq-server
+rm -rf /var/lib/rabbitmq

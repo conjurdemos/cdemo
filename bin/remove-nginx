@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -eu
+
+# removes nginx install
+
+yum remove -y nginx*
+rm -rf /etc/nginx
