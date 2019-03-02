@@ -21,7 +21,7 @@
   retries: 60
   delay: 3
 
-- name: Process template for Jenkins Lab 3
+- name: Create Jenkinsfile for Jenkins Lab 3 from template
   template:
     src: "{{ role_path }}/files/LAB3_AnsibleStopContainers/Jenkinsfile.template"
     dest: "{{ role_path }}/files/LAB3_AnsibleStopContainers/Jenkinsfile"

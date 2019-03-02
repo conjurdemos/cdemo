@@ -72,7 +72,6 @@
 
 - name: configure cli for OSS
   shell: |
-    docker exec {{ conjur_cli_container_name }} bash -c "conjur init -u https://{{ conjur_container_name }} -a {{ conjur_account }} <<< yes"
     docker exec {{ conjur_cli_container_name }} conjur authn login -u admin -p {{ api_key.stdout }}
 
 - include_tasks: conjurFramework.yml

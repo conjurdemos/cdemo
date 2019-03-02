@@ -1,10 +1,8 @@
 ---
-- name: create volume for audit data
+- name: Create volume for audit data
   docker_volume:
-    name: "{{ item }}"
+    name: "{{ conjur_audit_volume }}"
     state: present
-  with_items:
-   - "{{ conjur_audit_volume }}"
 
 - name: Load Conjur appliance image from archive
   docker_image:
@@ -41,11 +39,22 @@
 
 - name: Configure Conjur container
   shell: |
-    docker exec {{ conjur_container_name }} evoke configure master -h {{ conjur_container_name }} -p {{ conjur_admin_password }} {{ conjur_account }}
+    docker exec {{ conjur_container_name }} \
+      evoke configure master \
+        -h {{ conjur_container_name }} \
+        -p {{ conjur_admin_password }} \
+        {{ conjur_account }}
 
-- name: Configure CLI for EE
+- name: Add Conjur Master's TLS cert to the CLI container
   shell: |
-    docker exec {{ conjur_cli_container_name }} bash -c "conjur init -u https://{{ conjur_container_name }} -a {{ conjur_account }} <<< yes"
-    docker exec {{ conjur_cli_container_name }} conjur authn login -u admin -p {{ conjur_admin_password }}
+    docker cp -L {{ conjur_container_name }}:/opt/conjur/etc/ssl/conjur.pem \
+      {{ role_path }}/files/conjur.pem
+    docker cp {{ role_path }}/files/conjur.pem \
+      {{ conjur_cli_container_name }}:/root/conjur.pem
+
+- name: Login the CLI container as Conjur admin
+  shell: |
+    docker exec {{ conjur_cli_container_name }} \
+      conjur authn login -u admin -p {{ conjur_admin_password }}
 
 - include_tasks: conjurFramework.yml
