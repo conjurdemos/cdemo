@@ -1,0 +1,3 @@
+appliance_url: https://{{ conjur_container_name }}
+account: {{ conjur_account }}
+cert_file: /root/conjur.pem
