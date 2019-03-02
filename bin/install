@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cd conjurDemo
+sudo ansible-playbook -i inventory.yml site.yml
