@@ -1,48 +1,64 @@
 #!/bin/bash
 
-main(){
+set -u
+
+# Removes packages, files, and containers from the environment in order to
+# uninstall cdemo, perhaps to prepare to re-install.
+#
+# == Consequences for packages other than cdemo ==
+#
+# If run with the flag `--remove-docker` it will uninstall Docker entirely,
+# which could have consequences for other workloads running on the machine.
+#
+# Also uninstalls these packages, which might impact other operations:
+# * rabbitmq
+# * postgres
+# * nginx
+# * ansible
+
+function main {
   printf '\n-----'
   printf '\nStopping any running containers.'
   stop_containers
   printf '\nRemoving any stopped and running containers.'
-  remove_containers
+  "$script_path"/remove-containers
   printf '\nRemoving any images on the system.'
   remove_images
   printf '\nRemoving any conjur network on the system.'
   remove_network
   printf '\nRemoving any conjur volume on the system.'
   remove_volume
-  printf '\nRemoving pip and docker'
-  remove_docker
+  if [[ "$flag_remove_docker" == 1 ]]; then
+    printf '\nRemoving docker'
+    remove_docker
+  fi
   printf '\nRemoving Weavescope'
   remove_weavescope
   printf '\nRemoving Ansible Tower'
-  remove_ansible
+  remove_ansible_and_tower
   printf '\nRemoving hosts file changes\n'
   remove_hosts
   clean_yum
   remove_openshift
+  printf 'Finished cleaning environment.\n'
 }
 
-stop_containers(){
-  oc cluster down
-  docker container rm -f splunk
-  docker container rm -f jenkins
-  docker container rm -f gogs
-  docker container rm -f weavescope
-  docker container rm -f conjur-master
-  docker container rm -f conjur-cli
+function stop_containers {
+  if type oc &>/dev/null; then
+    oc cluster down
+  fi
+  bin/remove-containers
 }
 
-remove_images(){
+function remove_images {
   docker image prune -a --force
 }
 
-remove_network(){
+function remove_network {
   docker network rm conjur &> /dev/null
 }
 
-remove_volume(){
+function remove_volume {
   docker volume rm audit &> /dev/null
   docker volume rm hostfactorytokens &> /dev/null
   docker volume rm identity &> /dev/null
@@ -50,7 +66,7 @@ remove_volume(){
   docker volume prune -f &> /dev/null
 }
 
-remove_docker(){
+function remove_docker {
   pip uninstall docker -y &> /dev/null
   pip uninstall docker-py -y &> /dev/null
   pip uninstall docker-pycreds -y &> /dev/null
@@ -67,37 +83,48 @@ remove_docker(){
     printf "\nCouldn't figure out OS"
     exit
   fi
-} 
+}
 
-clean_yum(){
+function clean_yum {
   yum clean all
   yum-complete-transaction
 }
 
-remove_weavescope(){
+function remove_weavescope {
   rm -f /usr/local/bin/scope &> /dev/null
 }
 
-remove_ansible(){
-  yum remove anisble-tower\*
-  yum -y remove rabbitmq-server
-  rm -rf /etc/tower /var/lib/{pgsql,awx,rabbitmq}
-  yum remove -y ansible-tower-*
-  yum remove -y postgresql*
-  yum remove -y nginx*
-  rm -rf /etc/nginx
-  rm -rf /opt/ansible*
+function remove_ansible_and_tower {
+  "$script_path"/remove-ansible
+  "$script_path"/bin/remove-rabbitmq
+  "$script_path"/remove-postgres
+  "$script_path"/remove-nginx
 }
 
-remove_hosts(){
+function remove_hosts {
   sed -i '/cdemo/d' /etc/hosts
   sed -i '/conjur/d' /etc/hosts
   sed -i '/okd/d' /etc/hosts
 }
 
-remove_openshift(){
+function remove_openshift {
   yum -y remove centos-release-openshift-origin*
   yum -y remove origin-*
   rm -Rf /opt/openshift
 }
-main
+
+script_path="$( cd "$(dirname "$0")" ; pwd -P )"
+
+flag_remove_docker=0
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --remove-docker)
+      flag_remove_docker=1
+      shift
+      ;;
+  esac
+done
+
+if [[ "$(basename "$0")" == "clean-environment" ]]; then
+  main
+fi
