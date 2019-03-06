@@ -10,28 +10,38 @@ The demo uses the lastest version of Conjur v5
 
 * Docker
 * Ansible Engine
+* Ansible Tower
 * Jenkins
 * Gogs
-* Ansible Tower
-* Conjur CLI 
+* Conjur CLI & Summoin
 * Conjur Enterprise v5 or Conjur OSS
 * Weavescope
 * Splunk (Requires Conjur Enterprise v5)
 
 ## How to use
 
-1. Clone the repo.
-2. Obtain the latest Conjur tar file and place it within the cDemo directory named 'conjur.tar'.
-    * If no tar file is located then a check for conjur docker registry access happens. If regsitry access comes back as successful then the latest version is pulled directly from the registry.
-    * Conjur OSS will automatically be pulled if there is no tar file or Conjur docker registry access.
-3. Run installAnsible.sh.
-   * Verify that ansible 2.5.x has been installed by running "ansible --version". 
-4. Change directory to conjurDemo.
-5. Edit inventory.yml to include any machines to be stood up as demo machines.
-6. Edit site.yml to change which tools are installed. Set each tool variable to 'YES' for it to be installed automatically. Set to 'NO' for it to be skipped.
-7. Run sudo ansible-playbook -i inventory.yml site.yml to install conjur and it's tools.
-    * Conjur alone can be configured by running sudo ansible-playbook -i inventory.yml conjurSetup.yml
-    * Ansible with PAS jobs can be deployed by setting the variable "ansible_pas: 'YES'" in site.yml
+1. Clone this repo.
+2. Obtain the latest Conjur tar file and place it within the cDemo directory
+   named 'conjur.tar'. (or '.tar.gz' or '.tgz')
+    * If no tar file is located then cdemo will check for conjur docker registry
+      access. If you set up your environment to access the private Conjur
+      regsitry, then cdemo will use the latest Conjur Enterprise image. version
+      is pulled directly from the registry.
+    * `cdemo` will automatically pull Conjur OSS if there is no tar file or
+      Conjur docker registry access.
+3. Run `bin/install-ansible`
+   * Verify that ansible 2.7.x has been installed by running `ansible --version`. 
+4. Edit `conjurDemo/inventory.yml` to include any machines to be stood up as
+   demo machines, and to select which tools are installed. Set each tool
+   variable to 'YES' to install it automatically. Set to 'NO' to skip it. Some
+   services (Conjur, Gogs, Jenkins) are required and installation of cdemo will
+   not finish without them.
+5. Run `bin/install` to install cdemo.
+6. To uninstall cdemo and its dependencies, run `bin/clean-environment`.
+
+
+Note: Ansible with PAS jobs can be deployed by setting the variable
+"ansible_pas: 'YES'" in `conjurDemo/inventory.yml`
 
 ## Using cdemo with Conjur Enterprise
 
@@ -81,11 +91,11 @@ the CLI container, the scripts folder is mounted to `/scripts`.
 1. Centos 7 OS
 2. Internet Connection
 3. 4 vCPU
-4. 4 GB Ram
+4. 8 GB Ram
 5. 32 GB hdd space at minimum
-6. Ansible v2.5
+6. Ansible v2.7
 
-## Access WEB interfaces
+## Access web interfaces
 
 The tools installed have a web interfaces that is made accessible to the host machine on the following network ports:
 
@@ -116,26 +126,41 @@ _If using v5 Enterprise Edition:_
 * Splunk - U: admin P: Cyberark1
 
 ### Gogs and Jenkins Jobs
-Jenkins and Gogs are connected via an internal docker network. Updating a job in Gitlab will be reflected in the subsequent Jenkins job at runtime.
+Jenkins and Gogs are connected via an internal docker network. Updating a job in
+Gitlab will be reflected in the subsequent Jenkins job at runtime.
 
-1. JOB1_Summon - This job uses summon and the jenkins identity to pull a password with a simplified script
-2. JOB2_Containers - This job spins up 5 webapp and 5 tomcat containers that are all pulling back a password. Jenkins generates a hostfactory token for each set of containers and then passes through an identity through container environment variables. Each container will then pull a password every 5 seconds.
+1. JOB1_Summon - This job uses summon and the jenkins identity to pull a
+   password with a simplified script
+2. JOB2_Containers - This job spins up 5 webapp and 5 tomcat containers that are
+   all pulling back a password. Jenkins generates a hostfactory token for each
+   set of containers and then passes through an identity through container
+   environment variables. Each container will then pull a password every 5
+   seconds.
 3. JOB2_Rotation - This job rotates the secret being pulled by the containers.
 4. JOB2_StopContainers - This job kills all of the tomcat and webapp containers.
 
 ### AWX , Gogs, and Jenkins Jobs
-AWX and Gogs are connected via an internal docker network. All projects in AWX have source code in Gogs.
+AWX and Gogs are connected via an internal docker network. All projects in AWX
+have source code in Gogs.
 
 1. LAB3_AnsibleBuildContainers (Jenkins) - Creates target for Ansible job.
-2. LAB3_AnsibleConjurIdentity - Pushes a conjur identity to a remote machine that is set up with the job above.
-3. LAB3_AnsibleConjurLookup - Returns a value from conjur is the ansible node has a conjur identity.
-4. LAB3_AnsibleStopContainers (Jenkins) - Removes target and clears awx known_hosts.
+2. LAB3_AnsibleConjurIdentity - Pushes a conjur identity to a remote machine
+   that is set up with the job above.
+3. LAB3_AnsibleConjurLookup - Returns a value from conjur is the ansible node
+   has a conjur identity.
+4. LAB3_AnsibleStopContainers (Jenkins) - Removes target and clears awx
+   known_hosts.
 
 ### API Scripts
-There are scripts that are copied into the CONJUR-CLI container that will interact with Conjur via rest calls to step through
+There are scripts that are copied into the `conjur-cli` container that will
+interact with Conjur via REST calls to step through:
 1. Hostfactory creation
 2. Identity creation using hostfactory token
 3. Pull password using identity
 
-The scripts are located in /scripts.  You can connect to the CONJUR-CLI container with:
-* docker exec -it conjur-cli bash
+The scripts are located in /scripts. You can connect to the `conjur-cli`
+container with:
+
+```
+$ sudo docker exec -it conjur-cli bash
+```
