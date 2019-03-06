@@ -1,5 +1,19 @@
 ---
-- name: installDependencies
+- name: Set up the Docker package repository
+  block:
+    - name: Install yum dependencies
+      package:
+        name:
+          - yum-utils
+          - device-mapper-persistent-data
+          - lvm2
+    - name: Add Docker CE repository to Yum
+      shell: |
+        yum-config-manager --add-repo \
+          https://download.docker.com/linux/centos/docker-ce.repo
+  become: true
+
+- name: Ensure installation dependencies are present
   package:
     name:
       - curl
@@ -10,16 +24,21 @@
       - make
       - jq
       - docker-ce
+      - docker-ce-cli
+      - containerd.io
       - firewalld
     update_cache: no
     state: latest
+  become: true
 
-- name: install PIP
+- name: Ensure Pip is present
   easy_install:
     name: pip
     state: latest
+  become: true
 
-- name: start firewalld service
+- name: Ensure firewalld service is running
   service:
     name: firewalld
     state: started
+  become: true

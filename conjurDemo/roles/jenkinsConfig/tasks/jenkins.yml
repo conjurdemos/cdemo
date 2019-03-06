@@ -1,11 +1,10 @@
 ---
-- name: install python jenkins
+- name: Ensure python-jenkins and lxml dependencies are satisfied
   pip:
-    name: "{{ item }}"
-    state: present
-  with_items:
-   - python-jenkins
-   - lxml
+    name:
+      - python-jenkins
+      - lxml
+    state: present   
 
 - name: Build curl image
   docker_image:
@@ -51,7 +50,7 @@
     restart_policy: always
     recreate: yes
 
-- name: create identity file for jenkins
+- name: Create identity file for jenkins
   shell: |
     docker exec conjur-cli bash -c "cd /scripts/ && bash 1_hfTokenREST.sh automate && bash 2_obtainIdentityREST.sh automate"
     docker exec {{ jenkins_container_name }} cp /identity/.netrc /root/.netrc
