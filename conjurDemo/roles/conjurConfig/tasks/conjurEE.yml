@@ -50,7 +50,7 @@
     docker cp -L {{ conjur_container_name }}:/opt/conjur/etc/ssl/conjur.pem \
       {{ role_path }}/files/conjur.pem
     docker cp {{ role_path }}/files/conjur.pem \
-      {{ conjur_cli_container_name }}:/root/conjur.pem
+      {{ conjur_cli_container_name }}:/root/conjur-{{ conjur_account }}.pem
 
 - name: Login the CLI container as Conjur admin
   shell: |
