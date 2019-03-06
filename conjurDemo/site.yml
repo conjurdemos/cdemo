@@ -57,7 +57,7 @@
     ansible_postgres_port: '54321'
     ansible_external_url: "https://{{ ansible_default_ipv4.address }}:{{ ansible_port }}"
     ansible_password: 'Cyberark1'
-    ansible_user: "{{ conjur_devops_admin_account }}"
+    ansible_tower_user: "{{ conjur_devops_admin_account }}"
     ansible_organization: 'Cyberark'
 #### Splunk set up options ####
     splunk_container_name: 'splunk'

@@ -24,7 +24,7 @@
     dest: "/etc/tower/tower_cli.cfg"
     content: |
       host: {{ ansible_external_url }}
-      username: {{ ansible_user }}
+      username: {{ ansible_tower_user }}
       password: {{ ansible_password }}
 
 - name: Copy the CLI config file into the Jenkins container
@@ -60,10 +60,10 @@
     validate_certs: NO
     status_code: 201
     body: {
-    "username": "{{ ansible_user }}",
-    "first_name": "{{ ansible_user }}",
+    "username": "{{ ansible_tower_user }}",
+    "first_name": "{{ ansible_tower_user }}",
     "last_name": "litwak",
-    "email": "{{ ansible_user }}@cyberark.com",
+    "email": "{{ ansible_tower_user }}@cyberark.com",
     "is_superuser": true,
     "is_system_auditor": true,
     "password": "{{ ansible_password }}"
@@ -74,7 +74,7 @@
   uri:
     url: "{{ ansible_external_url }}/api/v2/organizations/1/"
     body_format: json
-    user: "{{ ansible_user }}"
+    user: "{{ ansible_tower_user }}"
     password: "{{ ansible_password }}"
     return_content: yes
     force_basic_auth: yes
@@ -101,7 +101,7 @@
   uri:
     url: "{{ ansible_external_url }}/api/v2/credentials/"
     body_format: json
-    user: "{{ ansible_user }}"
+    user: "{{ ansible_tower_user }}"
     password: "{{ ansible_password }}"
     force_basic_auth: yes
     status_code: 201
@@ -123,7 +123,7 @@
   uri:
     url: "{{ ansible_external_url }}/api/v2/projects/"
     body_format: json
-    user: "{{ ansible_user }}"
+    user: "{{ ansible_tower_user }}"
     password: "{{ ansible_password }}"
     force_basic_auth: yes
     status_code: 201
@@ -154,7 +154,7 @@
   uri:
     url: "{{ ansible_external_url }}/api/v2/inventories/"
     body_format: json
-    user: "{{ ansible_user }}"
+    user: "{{ ansible_tower_user }}"
     password: "{{ ansible_password }}"
     force_basic_auth: yes
     status_code: 201
@@ -178,7 +178,7 @@
   uri:
     url: "{{ ansible_external_url }}/api/v2/inventory_sources/"
     body_format: json
-    user: "{{ ansible_user }}"
+    user: "{{ ansible_tower_user }}"
     password: "{{ ansible_password }}"
     force_basic_auth: yes
     status_code: 201
@@ -215,7 +215,7 @@
   uri:
     url: "{{ ansible_external_url }}/api/v2/projects/{{ LAB3_AnsibleConjurIdentity.results[0].json.id }}/"
     body_format: json
-    user: "{{ ansible_user }}"
+    user: "{{ ansible_tower_user }}"
     password: "{{ ansible_password }}"
     force_basic_auth: yes
     status_code: 200
@@ -229,7 +229,7 @@
   uri:
     url: "{{ ansible_external_url }}/api/v2/job_templates/"
     body_format: json
-    user: "{{ ansible_user }}"
+    user: "{{ ansible_tower_user }}"
     password: "{{ ansible_password }}"
     force_basic_auth: yes
     status_code: 201
@@ -280,7 +280,7 @@
   uri:
     url: "{{ ansible_external_url }}/api/v2/projects/"
     body_format: json
-    user: "{{ ansible_user }}"
+    user: "{{ ansible_tower_user }}"
     password: "{{ ansible_password }}"
     force_basic_auth: yes
     status_code: 201
