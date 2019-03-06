@@ -7,7 +7,7 @@ Vagrant.configure("2") do |config|
   end
   config.vm.network "private_network", type: "dhcp"
   config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
-  config.vm.provision "ansible", type: "shell", inline: "/vagrant/installAnsible.sh"
+  config.vm.provision "ansible", type: "shell", inline: "/vagrant/bin/install-ansible"
   config.vm.provision "cdemo", type: "ansible_local" do |ansible|
     ansible.install = false
     ansible.become = true
