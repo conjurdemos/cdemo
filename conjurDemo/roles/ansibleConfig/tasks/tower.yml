@@ -204,7 +204,7 @@
     "update_on_launch": true,
     "update_cache_timeout": 0,
     "source_project": "{{ LAB3_AnsibleConjurIdentity.results[0].json.id }}",
-    "update_on_project_update": true
+    "update_on_project_update": false
 }'
   with_items:
       - { name: 'newMachines', description: 'Machines that will get a conjur identity' }
