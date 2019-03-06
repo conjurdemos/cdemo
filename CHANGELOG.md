@@ -4,6 +4,69 @@
     usuable state. It's accessible via https://okd.cyberark.local:8443 from the
     local machine.
 
+## 1.4.0
+
+Moderate reorganization, plus fixes for correctness and readability
+
+*   *\[breaking]*: Component selection is now done in `conjurDemo/inventory.yml`
+    instead of in `conjurDemo/site.yml`.
+    
+    This was changed for two reasons:
+    * Inventory is an easier ini file to modify with less noise from the many
+      configuraiton options in `site.yml`, most of which users shouldn't have
+      reason to change.
+    * Configuration per-hosts in the inventory propagates to all playbooks run
+      on that host, removing repetition and complexity.
+
+*   Changes to scripts:
+
+    Two scripts were renamed-
+    1. `cleanEnvironment.sh` is now `bin/clean-environment`
+    2. `installAnsible.sh` is now `bin/install-ansible`
+
+*   The clean environment script will no longer remove Docker entirely by
+    default. If you want this behavior, you need to run it with a flag like so:
+       
+    ```
+    $ bin/clean-enviornment --remove-docker
+    ```
+
+*   Many parts of the clean script are broken out into dependencies, allowing
+    you to clean only certain parts of the environment if you desire.
+    Specifically, you have these additional options (all of which are also
+    invoked by the `clean-environment` script:)
+       
+    * `bin/remove-ansible`
+    * `bin/remove-containers`
+    * `bin/remove-nginx`
+    * `bin/remove-postgres`
+    * `bin/remove-rabbitmq`
+
+*    New script `bin/install` makes installing cdemo more foolproof. Instead of
+     typing out the `ansible-playbook` command by hand or pasting it out of the
+     documentation, you can run `bin/install`.
+     
+     This script also accepts a `--debug` flag which will enable Ansible's
+     "debug" strategy, giving you a REPL on installation failure instead of
+     aborting the playbook. This could be useful if you are making modifications
+     to the playbooks or if you're experiencing intermittant network issues and
+     would like to be able to retry steps instead of starting over.
+     
+*    We now use a `conjurrc` file and a copy of the certificate from the
+     appliance to configure the Conjur CLI instead of interactively running
+     `conjur init`. This is correct practice for automated use cases and for
+     improving security.
+
+*    The containers for `gogs` and `conjur-cli` are now added to the Ansible
+     inventory after they're created, so you can run commands against them. In
+     the future we may support dynamic Docker inventory to discover
+     already-running containers, and add other containers that are part of cdemo
+     to the inventory.
+     
+*    We now use the official Docker repositories to install the latest
+     `docker-ce`, `docker-ce-cli`, and `continerd.io`, which should provide the
+     most up to date fixes and features for Docker use cases.
+
 ## 1.3.1
 
 *   Updates Jenkins minor version
