@@ -46,3 +46,9 @@
      - name: "{{ conjur_network_name }}"
     entrypoint: []
     command: ["sleep", "infinity"]
+
+- name: Add Conjur CLI container to inventory
+  add_host:
+    name: "{{ conjur_cli_container_name }}"
+    ansible_connection: docker
+  changed_when: false

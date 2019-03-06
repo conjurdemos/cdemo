@@ -21,6 +21,12 @@
   retries: 60
   delay: 3
 
+- name: Add Gogs container to Ansible inventory
+  add_host:
+    name: "{{ gogs_container_name }}"
+    ansible_connection: docker
+  changed_when: false
+
 - name: Create Jenkinsfile for Jenkins Lab 3 from template
   template:
     src: "{{ role_path }}/files/LAB3_AnsibleStopContainers/Jenkinsfile.template"
