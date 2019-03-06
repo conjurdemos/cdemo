@@ -1,5 +1,5 @@
 ---
-- name: start gogs
+- name: Ensure gogs container is running
   docker_container:
     name: "{{ gogs_container_name }}"
     image: "{{ gogs_image_name }}"
@@ -12,7 +12,7 @@
     published_ports:
      - "{{ gogs_external_port }}:{{ gogs_internal_port }}"
 
-- name: Wait for gogs to start
+- name: Wait for Gogs service to be ready
   uri:
     url: "{{ gogs_external_url }}/install"
     return_content: yes
@@ -49,8 +49,21 @@
   delay: 3
 
 - name: Create gogs organization
-  shell: |
-    docker exec {{ conjur_cli_container_name }} curl -s -u "{{ gogs_account }}:{{ gogs_account_password }}" -X POST -H 'Content-Type: application/json' {{ gogs_internal_url }}/api/v1/admin/users/{{ gogs_account }}/orgs -d '{"username":"{{ gogs_organization }}","full_name":"Cyberark","description":"Cyberark_Org.","website":"https://www.cyberark.com","location":"USA"}'
+  uri:
+    url: "{{ gogs_external_url }}/api/v1/admin/users/{{ gogs_account }}/orgs"
+    method: POST
+    body_format: json
+    body: {
+      username: "{{ gogs_organization }}",
+      full_name": "Cyberark",
+      description: "Cyberark_Org.",
+      website: "https://www.cyberark.com",
+      location: "US"
+      }
+    user: "{{ gogs_account }}"
+    password: "{{ gogs_account_password }}"
+    force_basic_auth: true
+    status_code: [201, 422] # 422 status code is given when the org already exists
 
 - name: Create team for organization
   shell: |
@@ -75,34 +88,99 @@
   shell: |
     docker exec {{ conjur_cli_container_name }} curl -s -u "{{ gogs_account }}:{{ gogs_account_password }}" -X PUT "{{ gogs_internal_url }}/api/v1/admin/teams/{{ team_id.stdout }}/members/{{ username.stdout }}"
 
-- name: Create jobs for gogs
-  shell: |
-    docker exec "{{ gogs_container_name }}" bash -c "touch /data/gogs/conf/readme && echo "{Name}" > /data/gogs/conf/readme"
-    docker exec {{ conjur_cli_container_name }} curl -s -u "{{ gogs_account }}:{{ gogs_account_password }}" -X POST -H 'Content-Type: application/json' {{ gogs_internal_url }}/api/v1/org/{{ gogs_organization }}/repos -d '{"name":"{{ item.name }}", "description":"{{ item.description }}","private":true,"auto_init":true, "gitignores":"macOS","license":"MIT License"}'
-    docker exec {{ conjur_cli_container_name }} bash -c "cd / && git clone http://{{ gogs_account }}:{{ gogs_account_password }}@{{ gogs_container_name }}:{{ gogs_internal_port }}/{{ gogs_organization }}/{{ item.name }}.git"
-    docker cp "{{ role_path }}/files/{{ item.name }}/." {{ conjur_cli_container_name }}:/{{ item.name }}
-    docker exec {{ conjur_cli_container_name }} bash -c "cp /root/*.pem /{{ item.name }}"
-    docker exec {{ conjur_cli_container_name }} bash -c "cd /{{ item.name }} && git add --all && git -c user.name={{ gogs_account }} -c user.email={{ gogs_account_email }} commit -m 'Uploading files.' && git -c user.name={{ gogs_account }} -c user.email={{ gogs_account_email }} push http://{{ gogs_account }}:{{ gogs_account_password }}@{{ gogs_container_name }}:{{ gogs_internal_port }}/{{ gogs_organization }}/{{ item.name }}.git"
-  with_items:
-    - { name: 'LAB1_Summon', description: 'This job uses summon with the jenkins identity to pull a password from Conjur' }
-    - { name: 'LAB2_Containers', description: 'This job will spin up 5 tomcat and 5 webapp containers. Each container will pull back a password every couple of seconds. The output will be printed to the cc.log or to the stdout of the docker container.' }
-    - { name: 'LAB2_Rotation', description: 'This job will rotate the secret used in LAB2_Containers' }
-    - { name: 'LAB2_StopContainers', description: 'This job will destroy all of the tomcat and webapp containers' }
-    - { name: 'LAB3_AnsibleCCPaim', description: 'This job uses the Cyberark CCP to pull a password' }
-    - { name: 'LAB3_AnsibleConjurIdentity', description: 'This job pushes a Conjur identity using a hostfactory token.' }
-    - { name: 'LAB3_AnsibleConjurLookup', description: 'This job gets a secret from Conjur.' }
-    - { name: 'LAB3_AnsibleBuildContainers', description: 'This job builds containers which ansible can use as new machines.' } 
-    - { name: 'LAB3_AnsibleStopContainers', description: 'This job breaks down any containers created for use with Ansible.' } 
+- set_fact:
+    gogs_auth_url: "http://{{ gogs_account }}:{{ gogs_account_password }}@{{ gogs_container_name }}:{{ gogs_internal_port }}"
+    gogs_external_auth_url: "http://{{ gogs_account }}:{{ gogs_account_password }}@{{ ansible_default_ipv4.address }}:{{ gogs_external_port }}"
 
-- name: create gogs repo for policy
-  shell: |
-    docker exec {{ conjur_cli_container_name }} curl -s -u "{{ gogs_account }}:{{ gogs_account_password }}" -X POST -H 'Content-Type: application/json' {{ gogs_internal_url }}/api/v1/org/{{ gogs_organization }}/repos -d '{"name":"{{ item.name }}", "description":"{{ item.description }}","private":true,"auto_init":true, "gitignores":"macOS","license":"MIT License"}'
-    docker exec {{ conjur_cli_container_name }} bash -c "cd / && git clone http://{{ gogs_account }}:{{ gogs_account_password }}@{{ gogs_container_name }}:{{ gogs_internal_port }}/{{ gogs_organization }}/{{ item.name }}.git"
-    docker exec {{ conjur_cli_container_name }} bash -c "cp -R /policy/* /{{ item.name }}/"
-    docker cp "{{ role_path }}/files/{{ item.name }}/." "{{ conjur_cli_container_name }}:/{{ item.name }}"
-    docker exec {{ conjur_cli_container_name }} bash -c "cd /{{ item.name }} && git add --all && git -c user.name={{ gogs_account }} -c user.email={{ gogs_account_email }} commit -m 'Uploading files.' && git -c user.name={{ gogs_account }} -c user.email={{ gogs_account_email }} push http://{{ gogs_account }}:{{ gogs_account_password }}@{{ gogs_container_name }}:{{ gogs_internal_port }}/{{ gogs_organization }}/{{ item.name }}.git"    
-  with_items:
-    - { name: 'Conjur_Policy', description: 'This is the conjur policy that is loaded.' }
+- name: Create jobs for gogs
+  block:
+    - name: Create a README file
+      delegate_to: "{{ gogs_container_name }}"
+      raw: |
+        bash -c "touch /data/gogs/conf/readme && echo "{Name}" >/data/gogs/conf/readme"
+    - name: Create job repository objects in Gogs
+      uri:
+        url: "{{ gogs_external_url }}/api/v1/org/{{ gogs_organization }}/repos"
+        method: POST
+        body_format: json
+        body: {
+          name: "{{ item.name }}",
+          description: "{{ item.description }}",
+          private: true,
+          auto_init: true,
+          gitignores: macOS,
+          license: MIT License,
+          }
+        user: "{{ gogs_account }}"
+        password: "{{ gogs_account_password }}"
+        force_basic_auth: true
+        status_code: [201, 422] # 422 status code is given when the repository already exists
+      with_items: "{{ gogs_jobs }}"
+    - name: Sync job repos with Conjur CLI container filesystem
+      delegate_to: "{{ conjur_cli_container_name }}"
+      shell: |
+        cd /
+        rm -rf {{ item.name }}
+        git clone "{{ gogs_auth_url }}/{{ gogs_organization }}/{{ item.name }}.git"
+      with_items: "{{ gogs_jobs }}"
+    - name: Copy job files into Conjur CLI container
+      shell: |
+        docker cp "{{ role_path }}/files/{{ item.name }}/." {{ conjur_cli_container_name }}:/{{ item.name }}
+      with_items: "{{ gogs_jobs }}"
+    - name: Copy Conjur cert file into jobs
+      delegate_to: "{{ conjur_cli_container_name }}"
+      shell: |
+        cp /root/*.pem /{{ item.name }}
+      with_items: "{{ gogs_jobs }}"
+    - name: Configure the user's Git metadata
+      delegate_to: "{{ conjur_cli_container_name }}"
+      shell: |
+        git config --global user.name "{{ gogs_account }}"
+        git config --global user.email "{{ gogs_account_email }}"
+    - name: Commit files for each job and push the commits to Gogs
+      delegate_to: "{{ conjur_cli_container_name }}"
+      shell: |
+        cd /{{ item.name }}
+        git add --all
+        git commit -m 'Uploading files.'
+        git remote add origin {{ gogs_auth_url }}/{{ gogs_organization }}/{{ item.name }}.git
+        git push origin master
+      with_items: "{{ gogs_jobs }}"
+
+- name: Create gogs repo for policy
+  block:
+    - name: Create policy repo object
+      uri:
+        url: "{{ gogs_external_url }}/api/v1/org/{{ gogs_organization }}/repos"
+        method: POST
+        body_format: json
+        body: {
+          name: Conjur_Policy,
+          description: This is the authorization policy for Conjur,
+          private: true,
+          auto_init: true,
+          gitignores: macOS,
+          license: MIT License,
+          }
+        user: "{{ gogs_account }}"
+        password: "{{ gogs_account_password }}"
+        force_basic_auth: true
+        status_code: [201, 422] # 422 status code is given when the repository already exists
+    - name: Add Conjur policy files to the container filesystem
+      shell: |
+        docker cp "{{ role_path }}/files/Conjur_Policy/" {{ conjur_cli_container_name }}:/tmp/Conjur_Policy
+    - name: Commit data to policy repo
+      delegate_to: "{{ conjur_cli_container_name }}"
+      shell: |
+        cd /
+        git clone {{ gogs_auth_url }}/{{ gogs_organization }}/Conjur_Policy.git
+        cp -R /policy/* Conjur_Policy/
+        mv /tmp/Conjur_Policy/* Conjur_Policy/
+        cd /Conjur_Policy
+        git add --all
+        git commit -m 'Uploading files.'
+        git remote add origin {{ gogs_auth_url }}/{{ gogs_organization }}/Conjur_Policy.git
+        git push origin master
     
 - name: Add repositories to Team
   shell: |
