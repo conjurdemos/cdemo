@@ -42,7 +42,7 @@
 
 - name: create identity file for jenkins
   shell: |
-    docker exec conjur-cli bash -c "cd /scripts/ && bash 1_hfTokenREST.sh automate && bash 2_obtainIdentityREST.sh automate"
+    docker exec {{ conjur_cli_container_name }} bash -c "cd /scripts/ && bash 1_hfTokenREST.sh automate && bash 2_obtainIdentityREST.sh automate"
     docker exec {{ jenkins_container_name }} cp /identity/.netrc /root/.netrc
     docker exec {{ jenkins_container_name }} cp /identity/.conjurrc /root/.conjurrc
     docker exec {{ jenkins_container_name }} cp /identity/conjur-{{ conjur_account }}.pem /root/conjur-{{ conjur_account }}.pem
