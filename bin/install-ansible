@@ -36,7 +36,7 @@ function install_ansible_apt() {
     sudo apt-get install ansible -y
 }
 
-$SCRIPTPATH/bin/check-network
+$SCRIPTPATH/check-network
 separator
 echo 'Installing dependencies'
 if [[ $(cat /etc/*-release | grep -w ID_LIKE) == 'ID_LIKE="rhel fedora"' ]]; then
