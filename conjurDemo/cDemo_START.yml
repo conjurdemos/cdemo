@@ -11,6 +11,7 @@
     ansible_pas: 'NO'
     splunk_install: 'NO'
     openshift_install: 'YES'
+    kubernetes_install: 'NO'
  #### Machine setup options ####
 
  #### Conjur setup options ####
@@ -80,3 +81,4 @@
     okd_a_record: "okd"
     okd_fqdn: "{{ okd_a_record }}.{{ okd_domain }}"
     okd_follower_service: "conjur-follower.conjur.svc.cluster.local"
+#### Kubernetes set up options ####
