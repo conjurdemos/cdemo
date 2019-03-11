@@ -1,7 +1,7 @@
 ---
-- name: Check for conjur.tar
+- name: Check for DAP image
   stat:
-    path: ../conjur.{{item}}
+    path: ../conjur-appliance.{{item}}
   with_items:
     - "tar"
     - "tar.gz"
@@ -15,11 +15,8 @@
   when: item.stat.exists
   with_items: "{{ conjurTar.results }}"
 
-- include_tasks: conjurCLI.yml
-  when: conjur_install == 'YES'
-
 - include_tasks: conjurOSS.yml
-  when: conjur_version == 'OSS' and conjur_install == 'YES' 
+  when: conjur_version == 'OSS' and conjur_install == 'YES'
 
 - include_tasks: conjurEE.yml
   when: conjur_version == 'EE' and conjur_install == 'YES'

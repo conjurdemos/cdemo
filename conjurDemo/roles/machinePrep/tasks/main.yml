@@ -2,27 +2,11 @@
 - include_tasks: redhat.yml
   when: ansible_os_family == 'RedHat'
 
-- include_tasks: debian.yml
-  when: ansible_os_family == 'Debian'
-
 - name: ensure Docker is installed
   yum:
     name: docker
     update_cache: yes
     state: present
-
-- name: delete daemon.json
-  file:
-    state: absent
-    path: /etc/docker/daemon.json
-
-- name: Set insecure registry for openshift
-  lineinfile:
-    path: /etc/docker/daemon.json
-    state: present
-    insertafter: EOF
-    line: '{"insecure-registries":["172.30.0.0/16"]}'
-    create: yes
 
 - name: start and enable docker service
   service:
@@ -36,18 +20,10 @@
     state: latest
     extra_args: --ignore-installed
 
-
-- name: set up host file to allow for host communication with OKD
-  lineinfile:
-    path: /etc/hosts
-    state: present
-    insertafter: EOF
-    line: "{{ item.ip }} {{ item.hostname }}"
-  with_items:
-  - { ip: "{{ ansible_default_ipv4.address }}", hostname: "cdemo-ansible"}
-  - { ip: "{{ ansible_default_ipv4.address }}", hostname: "conjur-master"}
-
 - name: Set SELINUX to permissive mode
   selinux:
     policy: targeted
     state: permissive
+
+- include_tasks: openshiftPrep.yml
+  when: openshift_install == 'YES'
