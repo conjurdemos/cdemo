@@ -37,7 +37,7 @@
 
 - name: Copy API scripts into cli container
   shell: |
-    docker cp "{{ role_path}}/files/conjur_cli_image/apiInteraction" "{{ conjur_cli_container_name }}:/scripts"
+    docker cp "{{ role_path}}/files/conjur_cli_image/scripts/." "{{ conjur_cli_container_name }}:/scripts"
 
 - name: Load Conjur appliance image from archive
   docker_image:
