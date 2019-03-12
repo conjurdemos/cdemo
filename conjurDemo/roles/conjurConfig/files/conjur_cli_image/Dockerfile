@@ -1,6 +1,6 @@
 FROM cyberark/conjur-cli:5
 
-COPY ./apiInteraction /scripts/
+COPY ./scripts /scripts/
 
 COPY ./policy /policy/
 
