@@ -3,42 +3,14 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: summon-app
-  namespace: demo-app
-
----
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRole
-metadata:
-  name: conjur-authenticator
-rules:
-- apiGroups: [""]
-  resources: ["pods"]
-  verbs: ["get", "list"]
-- apiGroups: [""]
-  resources: ["pods/exec"]
-  verbs: ["create", "get"]
-
----
-kind: RoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
-metadata:
-  name: test-app-conjur-authenticator-role-binding
-  namespace: demoApp
-subjects:
-  - kind: ServiceAccount
-    name: default
-    namespace: conjur
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: conjur-authenticator
+  namespace: summon-app
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: summon-app
-  namespace: demo-app
+  namespace: summon-app
 spec:
   replicas: 1
   selector:
@@ -90,7 +62,7 @@ spec:
           - name: CONJUR_APPLIANCE_URL
             value: https://conjur-follower.conjur.svc.cluster.local/api
           - name: CONJUR_AUTHN_URL
-            value: https://conjur-authnk8s.cyberark-conjur-enterprise.svc.cluster.local/api/authn-k8s/okd-follower
+            value: https://conjur-follower.conjur.svc.cluster.local/api/authn-k8s/okd-follower
           - name: CONJUR_ACCOUNT
             value: cyberark
           - name: CONJUR_VERSION
@@ -115,7 +87,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: summon-app
-  namespace: demo-app
+  namespace: summon-app
   labels:
     app: summon-app
 spec:
