@@ -1,6 +1,0 @@
----
-- name: Create new test app myproject
-  shell: |
-    oc new-project demo-app
-    oc project demo-app
-    oc create -f {{ role_path }}/files/demoApp.yml

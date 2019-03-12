@@ -1,0 +1,27 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: conjur-authenticator
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list"]
+- apiGroups: [""]
+  resources: ["pods/exec"]
+  verbs: ["create", "get"]
+
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: test-app-conjur-authenticator-role-binding
+  namespace: summon-app
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: conjur
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: conjur-authenticator
