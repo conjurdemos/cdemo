@@ -4,6 +4,13 @@
     usuable state. It's accessible via https://okd.cyberark.local:8443 from the
     local machine.
 
+## 1.4.1
+
+Added a new pair of variables: `splunk_ingress_port` and
+`splunk_ingress_protocol`. By default the values are 51444 and UDP,
+respectively. The cdemo installer will open this port in the Splunk container,
+allowing services to send data in.
+
 ## 1.4.0
 
 Moderate reorganization, plus fixes for correctness and readability

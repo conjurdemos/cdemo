@@ -12,6 +12,7 @@
     published_ports:
      - "{{ splunk_external_port}}:{{ splunk_internal_port }}"
      - "{{ splunk_rest_port }}:{{ splunk_rest_port }}"
+     - "{{ splunk_ingress_port }}:{{ splunk_ingress_port }}/{{ splunk_ingress_protocol }}"
     volumes:
      - "{{ splunk_audit_volume }}:{{ splunk_audit_directory }}"
     env:
