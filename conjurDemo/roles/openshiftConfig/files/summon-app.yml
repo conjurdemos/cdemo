@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: summon-app
+  name: summon-app-service-account
   namespace: summon-app
 
 ---
@@ -68,7 +68,7 @@ spec:
           - name: CONJUR_VERSION
             value: '5'
           - name: CONJUR_AUTHN_LOGIN
-            value: k8s-app/*/*
+            value: summon-app/*/*
           - name: CONJUR_SSL_CERTIFICATE
             valueFrom:
               configMapKeyRef:

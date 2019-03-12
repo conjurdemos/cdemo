@@ -52,7 +52,7 @@
 - !policy
   id: tomcat
   owner: !group admins
-      
+
 - !policy
   id: webapp
   owner: !group admins
@@ -71,7 +71,7 @@
     annotations:
       description: authn service for cluster
   - !policy
-    id: ca 
+    id: ca
     body:
     - !variable
       id: cert
@@ -85,19 +85,19 @@
     id: apps
     owner: !group /admins
     annotations:
-      description: Identities permitted to authenticate 
+      description: Identities permitted to authenticate
     body:
     - !layer
       annotations:
         description: Layer of authenticator identities permitted to call authn svc
     - &hosts
       - !host
-        id: oc-app/*/*
+        id: summon-app/*/*
         annotations:
           kubernetes/authentication-container-name: authenticator
           openshift: "true"
       - !host
-        id: oc-app/service_account/apps-service-account
+        id: summon-app/service_account/summon-app-service-account
         annotations:
           kubernetes/authentication-container-name: authenticator
           openshift: "true"
@@ -105,7 +105,7 @@
       role: !layer
       members: *hosts
   - !permit
-    resource: !webservice 
+    resource: !webservice
     privilege: [ read, authenticate ]
     role: !layer /conjur/authn-k8s/okd-follower/apps
 
@@ -118,6 +118,6 @@
   - !layer
 
   - !grant
-    role: !layer 
+    role: !layer
     members:
     - !layer /conjur/authn-k8s/okd-follower/apps
