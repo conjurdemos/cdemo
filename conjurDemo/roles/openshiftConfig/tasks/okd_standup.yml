@@ -58,7 +58,7 @@
 
 - name: Wait for registry
   pause:
-    seconds: 8
+    seconds: 15
 
 - name: Create conjur project and log into local OKD registry
   shell: |
