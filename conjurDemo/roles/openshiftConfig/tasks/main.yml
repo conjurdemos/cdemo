@@ -1,3 +1,12 @@
 ---
-- include_tasks: okd.yml
+- include_tasks: okd_standup.yml
+  when: openshift_install == 'YES'
+
+- include_tasks: okd_weavescope.yml
+  when: openshift_install == 'YES'
+
+- include_tasks: okd_conjur.yml
+  when: openshift_install == 'YES' and conjur_install == 'YES'
+
+- include_tasks: okd_demoApp.yml
   when: openshift_install == 'YES' and conjur_install == 'YES'
