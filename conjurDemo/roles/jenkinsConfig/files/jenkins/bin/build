@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -eu
+
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+# from https://stackoverflow.com/questions/4774054/reliable-way-for-a-bash-script-to-get-the-full-path-to-itself
+
+tag="${JENKINS_IMAGE_TAG:-cdemo-jenkins}"
+
+cd "$SCRIPTPATH"
+docker build -t "$tag" ..

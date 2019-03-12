@@ -1,0 +1,36 @@
+#!/bin/bash
+
+set -eu
+
+GIT_ROOT="$(git rev-parse --show-toplevel)"
+cd "$GIT_ROOT"
+
+image_tag_prefix="${IMAGE_TAG_PREFIX:-ryanprior/cdemo}"
+version="$(cat VERSION)"
+
+flag_stable=0
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --stable)
+      flag_stable=1
+      shift
+      ;;
+    *)
+      echo "$0: error: unexpected argument: $1" >&2
+      exit 1
+  esac
+done
+
+function announce {
+  echo "$(basename $0): $@"
+}
+
+function push {
+  docker push "$@:latest"
+  if [[ $flag_stable == 1 ]]; then
+    docker push "$@:$version"
+  fi
+}
+
+announce Jenkins
+push "$image_tag_prefix-jenkins"

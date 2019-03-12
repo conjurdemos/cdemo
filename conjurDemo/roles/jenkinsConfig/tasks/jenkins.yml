@@ -13,12 +13,10 @@
     state: present
     force: yes
 
-- name: Build jenkins image
+- name: Pull jenkins image
   docker_image:
     name: "{{ jenkins_image_name }}"
-    path: "{{ role_path }}/files/jenkins/"
     state: present
-    force: yes
 
 - name: Ensure Tower directory exists
   file:
