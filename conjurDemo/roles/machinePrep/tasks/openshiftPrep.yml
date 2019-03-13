@@ -23,13 +23,3 @@
     name: docker
     state: started
     enabled: yes
-
-- name: set up host file to allow for host communication with OKD
-  lineinfile:
-    path: /etc/hosts
-    state: present
-    insertafter: EOF
-    line: "{{ item.ip }} {{ item.hostname }}"
-  with_items:
-  - { ip: "{{ ansible_default_ipv4.address }}", hostname: "cdemo-ansible"}
-  - { ip: "{{ ansible_default_ipv4.address }}", hostname: "conjur-master"}
