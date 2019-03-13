@@ -117,6 +117,7 @@ _If using v5 Enterprise Edition:_
 * Ansible Tower - U: eva P: Cyberark1
 * Gogs - U: eva P: Cyberark1
 * Splunk - U: admin P: Cyberark1
+* OKD - U:developer P: Cyberark1
 
 ### Gogs and Jenkins Jobs
 Jenkins and Gogs are connected via an internal docker network. Updating a job in Gitlab will be reflected in the subsequent Jenkins job at runtime.
