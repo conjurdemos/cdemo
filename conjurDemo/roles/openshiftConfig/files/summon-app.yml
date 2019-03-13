@@ -31,7 +31,7 @@ spec:
             protocol: TCP
         env:
           - name: CONJUR_APPLIANCE_URL
-            value: https://conjur-follower.conjur.svc.cluster.local/api
+            value: https://dap-follower.dap.svc.cluster.local/api
           - name: CONJUR_ACCOUNT
             value: cyberark
           - name: CONJUR_SSL_CERTIFICATE
@@ -60,9 +60,9 @@ spec:
               fieldRef:
                 fieldPath: status.podIP
           - name: CONJUR_APPLIANCE_URL
-            value: https://conjur-follower.conjur.svc.cluster.local/api
+            value: https://dap-follower.dap.svc.cluster.local/api
           - name: CONJUR_AUTHN_URL
-            value: https://conjur-follower.conjur.svc.cluster.local/api/authn-k8s/okd-follower
+            value: https://dap-follower.dap.svc.cluster.local/api/authn-k8s/okd-follower
           - name: CONJUR_ACCOUNT
             value: cyberark
           - name: CONJUR_VERSION
