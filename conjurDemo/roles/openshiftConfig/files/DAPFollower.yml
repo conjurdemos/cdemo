@@ -18,7 +18,7 @@ metadata:
   labels:
     app: dap
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       role: follower
