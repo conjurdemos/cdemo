@@ -42,7 +42,9 @@
 
 - name: Delete current pod
   shell: |
-    oc delete pod {{ podName.stdout }}
+    oc delete pod {{ item }}
+  with_items:
+    - "{{ podName.stdout_lines }}"
 
 - pause:
     seconds: 10
@@ -59,12 +61,18 @@
 
 - name: set hosts file
   shell: |
-    oc exec {{ podName.stdout }} -i -t -- bash -c 'echo "{{ dap_docker_ip.stdout }} {{ conjur_container_name}}" >> /etc/hosts'
+    oc exec {{ item }} -i -t -- bash -c 'echo "{{ dap_docker_ip.stdout }} {{ conjur_container_name}}" >> /etc/hosts'
+  with_items:
+    - "{{ podName.stdout_lines }}"
 
 - name: Unpack seed
   shell: |
-    oc exec {{ podName.stdout }} -- evoke unpack seed /seed/seed.tar
+    oc exec {{ item }} -- evoke unpack seed /seed/seed.tar
+  with_items:
+    - "{{ podName.stdout_lines }}"
 
 - name: Configure follower
   shell: |
-    oc exec {{ podName.stdout }} -- evoke configure follower
+    oc exec {{ item }} -- evoke configure follower
+  with_items:
+    - "{{ podName.stdout_lines }}"
