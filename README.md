@@ -82,7 +82,7 @@ the CLI container, the scripts folder is mounted to `/scripts`.
 1. Centos 7 OS
 2. Internet Connection
 3. 4 vCPU
-4. 4 GB Ram
+4. 8 GB Ram
 5. 32 GB hdd space at minimum
 6. Ansible v2.5
 
