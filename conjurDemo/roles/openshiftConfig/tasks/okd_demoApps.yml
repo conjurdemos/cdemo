@@ -12,7 +12,7 @@
 - name: Get Conjur SSL cert
   shell: |
     docker exec {{ conjur_container_name }} cat /opt/conjur/etc/ssl/conjur-master.pem > ssl.pem
-  register: conjur_ssl
+  register: dap_ssl
   args:
     chdir: /opt/openshift/
     executable: /bin/bash
