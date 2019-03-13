@@ -45,7 +45,7 @@
     oc delete pod {{ podName.stdout }}
 
 - pause:
-    seconds: 5
+    seconds: 10
 
 - name: Get follower pod name
   shell: |
