@@ -1,10 +1,10 @@
-# Cyberark Conjur Enterprise demonstration environment
+# Cyberark Dynamic Access Provider demonstration environment
 
-This will set up a new demo environment that will show off the features of a Conjur Enterprise in conjunction with common devops tools.  The tools are all docker containers that are all mapped to the same docker network to all for DNS resolution of the docker container name.
+This will set up a new demo environment that will show off the features of a Dynamic Access Provider (DAP) in conjunction with common devops tools.  The tools are all docker containers that are all mapped to the same docker network to all for DNS resolution of the docker container name.
 
-## Conjur Appliance
+## DAP Appliance
 
-The demo uses the lastest version of Conjur v5
+The demo uses the lastest version of DAP v5
 
 ## DevOps tools
 
@@ -13,10 +13,11 @@ The demo uses the lastest version of Conjur v5
 * Jenkins
 * Gogs
 * Ansible Tower
-* Conjur CLI 
-* Conjur Enterprise v5 or Conjur OSS
+* DAP CLI
+* DAP or Conjur
 * Weavescope
-* Splunk (Requires Conjur Enterprise v5)
+* Splunk (Requires DAP)
+* OKD 3.11 (Requires DAP)
 
 ## How to use
 
@@ -25,11 +26,11 @@ The demo uses the lastest version of Conjur v5
     * If no tar file is located then a check for conjur docker registry access happens. If regsitry access comes back as successful then the latest version is pulled directly from the registry.
     * Conjur OSS will automatically be pulled if there is no tar file or Conjur docker registry access.
 3. Run installAnsible.sh.
-   * Verify that ansible 2.5.x has been installed by running "ansible --version". 
+   * Verify that ansible 2.5.x has been installed by running "ansible --version".
 4. Change directory to conjurDemo.
 5. Edit inventory.yml to include any machines to be stood up as demo machines.
 6. Edit site.yml to change which tools are installed. Set each tool variable to 'YES' for it to be installed automatically. Set to 'NO' for it to be skipped.
-7. Run sudo ansible-playbook -i inventory.yml site.yml to install conjur and it's tools.
+7. Run sudo ansible-playbook cDemo_start.yml to install conjur and it's tools.
     * Conjur alone can be configured by running sudo ansible-playbook -i inventory.yml conjurSetup.yml
     * Ansible with PAS jobs can be deployed by setting the variable "ansible_pas: 'YES'" in site.yml
 
@@ -46,7 +47,7 @@ If you have access to a Docker registry containing Conjur Enterprise you can
 create the acrhive yourself like so:
 
 ```sh-session
-$ docker image save registry.local/conjur-appliance:5.0-stable | gzip -c >conjur.tgz
+$ docker image save registry.local/conjur-appliance:5.0-stable | gzip -c >conjur-appliance.tgz
 ```
 
 If you don't have access, you can download the archive file from your CyberArk
@@ -55,9 +56,9 @@ arcvhive file, move it to this folder.
 
 Note: in order to be recognized as a Conjur Enterprise archive file, it must
 have one of these names:
-* `conjur.tar`
-* `conjur.tar.gz`
-* `conjur.tgz`
+* `conjur-appliance.tar`
+* `conjur-appliance.tar.gz`
+* `conjur-appliance.tgz`
 
 *Any other archive file(s) will be ignored.*
 
@@ -102,6 +103,8 @@ _If using v5 Enterprise Edition:_
 |    Tool    	| Port 	|
 |:----------:	|------	|
 |   Splunk  	| 8000 	|
+|   OKD       | 8443  |
+
 
 ## Default Credentials
 * Jenkins - No credentials needed right now
@@ -111,7 +114,7 @@ _If using v5 Enterprise Edition:_
 * Conjur - U: cindy P: Cyberark1
 * Conjur - U: john P: Cyberark1
 * Conjur - U: eva P: Cyberark1
-* AWX - U: eva P: Cyberark1
+* Ansible Tower - U: eva P: Cyberark1
 * Gogs - U: eva P: Cyberark1
 * Splunk - U: admin P: Cyberark1
 
@@ -123,8 +126,8 @@ Jenkins and Gogs are connected via an internal docker network. Updating a job in
 3. JOB2_Rotation - This job rotates the secret being pulled by the containers.
 4. JOB2_StopContainers - This job kills all of the tomcat and webapp containers.
 
-### AWX , Gogs, and Jenkins Jobs
-AWX and Gogs are connected via an internal docker network. All projects in AWX have source code in Gogs.
+### Ansible Tower , Gogs, and Jenkins Jobs
+Ansible Tower and Gogs are connected via an internal docker network. All projects in AWX have source code in Gogs.
 
 1. LAB3_AnsibleBuildContainers (Jenkins) - Creates target for Ansible job.
 2. LAB3_AnsibleConjurIdentity - Pushes a conjur identity to a remote machine that is set up with the job above.
