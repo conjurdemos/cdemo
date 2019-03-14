@@ -55,11 +55,3 @@
   ignore_errors: true
   args:
     chdir: /opt/openshift/
-
-- name: Check for registry being up
-  shell: |
-    docker login -u developer -p $(oc whoami -t) 172.30.1.1:5000
-  register: result
-  until: result.stdout == 'Login Succeeded'
-  retries: 60
-  delay: 2
