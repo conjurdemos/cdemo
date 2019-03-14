@@ -1,13 +1,16 @@
 ---
-- name: Get registry IP
+
+- name: login as system
   shell: |
     oc login -u system:admin
+  
+- name: Get registry IP
+  shell: |
     oc get svc -n default | grep registry | awk '{print$3}'
   register: registry_ip
 
 - name: Get registry Port
   shell: |
-    oc login -u system:admin
     oc get svc -n default | grep registry | awk '{print$5}' | tr -d '/TCP'
   register: registry_port
 
