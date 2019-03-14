@@ -7,7 +7,7 @@
     weavescope_install: 'YES'
     gogs_install: 'YES'
     jenkins_install: 'YES'
-    ansible_install: 'NO'
+    ansible_install: 'YES'
     splunk_install: 'YES'
     openshift_install: 'YES'
     kubernetes_install: 'NO'
@@ -16,7 +16,7 @@
     conjur_EE_image_name: 'conjur-appliance'
     conjur_network_name: conjur
     conjur_https_port: '443'
-    conjur_postgres_rep_port: '5432'
+    conjur_postgres_rep_port: '54321'
     conjur_cli_repo: 'cyberark'
     conjur_cli_image: 'conjur-cli'
     conjur_cli_image_version: '5-latest'
@@ -62,6 +62,12 @@
     ansible_password: 'Cyberark1'
     ansible_user: "{{ conjur_devops_admin_account }}"
     ansible_organization: 'Cyberark'
+    postgres_hostname: "localhost"
+    postgres_container_name: "ansible_postgres"
+    postgres_image_name: "postgres"
+    postgres_image_version: "9.4"
+    postgres_username: 'awx'
+    postgres_db: 'awx'
 #### Splunk set up options ####
     splunk_container_name: 'splunk'
     splunk_image_version: '7.1.2'
