@@ -40,7 +40,7 @@
     force_basic_auth: yes
     validate_certs: NO
     status_code: 201
-    body: {
+    body: ' {
     "username": "{{ ansible_user }}",
     "first_name": "{{ ansible_user }}",
     "last_name": "litwak",
@@ -48,7 +48,7 @@
     "is_superuser": true,
     "is_system_auditor": true,
     "password": "{{ ansible_password }}"
-}
+}'
   register: eva_id
 
 - name: Create Organization in Ansible
