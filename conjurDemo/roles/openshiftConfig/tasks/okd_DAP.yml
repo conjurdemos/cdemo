@@ -1,5 +1,4 @@
 ---
-
 - name: login as system
   shell: |
     oc login -u system:admin
