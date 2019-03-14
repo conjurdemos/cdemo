@@ -13,6 +13,10 @@
     oc get svc -n default | grep registry | awk '{print$5}' | tr -d '/TCP'
   register: registry_port
 
+- name: login as developer
+  shell: |
+    oc login -u developer
+
 - name: Check for registry being up
   shell: |
     docker login -u developer -p $(oc whoami -t) {{ registry_ip.stdout }}:{{ registry_port.stdout }}
