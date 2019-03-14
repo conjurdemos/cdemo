@@ -3,9 +3,9 @@
   stat:
     path: "{{ item }}"
   with_items:
-    - "{{'../conjur-appliance_*.tar.gz' | fileglob}}"
-    - "{{'../conjur-appliance_*.tar' | fileglob}}"
-    - "{{'../conjur-appliance_*.tgz' | fileglob}}"
+    - "{{'../conjur-appliance*.tar.gz' | fileglob}}"
+    - "{{'../conjur-appliance*.tar' | fileglob}}"
+    - "{{'../conjur-appliance*.tgz' | fileglob}}"
   register: conjurTar
 
 - name: Inform about Enterprise availability
