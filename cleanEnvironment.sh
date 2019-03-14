@@ -30,6 +30,7 @@ stop_containers(){
   docker container rm -f weavescope
   docker container rm -f conjur-master
   docker container rm -f conjur-cli
+  docker container rm -f ansible_postgres
 }
 
 remove_images(){
@@ -91,11 +92,19 @@ remove_hosts(){
   sed -i '/cdemo/d' /etc/hosts
   sed -i '/conjur/d' /etc/hosts
   sed -i '/okd/d' /etc/hosts
+  sed -i '/postgres/d' /etc/hosts
 }
 
 remove_openshift(){
   yum -y remove centos-release-openshift-origin*
   yum -y remove origin-*
+  df -a | awk '{print $6}' | grep openshift > list.txt
+  while read DIRECTORY
+  do
+    echo "Unmounting $DIRECTORY"
+    umount -f $DIRECTORY
+  done < list.txt
+  rm -f list.txt
   rm -Rf /opt/openshift
 }
 main
