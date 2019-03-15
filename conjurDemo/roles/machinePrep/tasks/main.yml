@@ -1,13 +1,7 @@
 - include_tasks: redhat.yml
   when: ansible_os_family == 'RedHat'
 
-- include_tasks: debian.yml
-  when: ansible_os_family == 'Debian'
-
-- name: delete daemon.json
-  file:
-    state: absent
-    path: /etc/docker/daemon.json
+- include_tasks: openshiftPrep.yml
   when: openshift_install == 'YES'
 
 - name: Ensure Docker is started
@@ -48,7 +42,3 @@
   selinux:
     policy: targeted
     state: permissive
-
-- include_tasks: openshiftPrep.yml
-  when: openshift_install == 'YES'
-
