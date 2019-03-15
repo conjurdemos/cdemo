@@ -44,7 +44,7 @@ spec:
             name: conjur-access-token
             readOnly: true
       - name: authenticator
-        image: cyberark/conjur-kubernetes-authenticator
+        image: cyberark/conjur-authn-k8s-client
         imagePullPolicy: Always
         env:
           - name: MY_POD_NAME
