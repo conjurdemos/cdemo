@@ -23,26 +23,6 @@ spec:
     spec:
       serviceAccountName: summon-app-service-account
       containers:
-      - name: summon-app
-        image: captainfluffytoes/docker_k8s_test_app2
-        imagePullPolicy: Always
-        ports:
-          - containerPort: 80
-            protocol: TCP
-        env:
-          - name: CONJUR_APPLIANCE_URL
-            value: https://dap-follower.dap.svc.cluster.local/api
-          - name: CONJUR_ACCOUNT
-            value: cyberark
-          - name: CONJUR_SSL_CERTIFICATE
-            valueFrom:
-              configMapKeyRef:
-                name: k8s-app-ssl
-                key: ssl-certificate
-        volumeMounts:
-          - mountPath: /run/conjur
-            name: conjur-access-token
-            readOnly: true
       - name: authenticator
         image: cyberark/conjur-authn-k8s-client
         imagePullPolicy: Always
@@ -77,6 +57,28 @@ spec:
         volumeMounts:
           - mountPath: /run/conjur
             name: conjur-access-token
+      - name: summon-app
+        image: captainfluffytoes/tastapp1
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 80
+            protocol: TCP
+        env:
+          - name: CONJUR_APPLIANCE_URL
+            value: https://dap-follower.dap.svc.cluster.local/api
+          - name: CONJUR_ACCOUNT
+            value: cyberark
+          - name: SECRET
+            value: secrets/frontend/aws_access_key
+          - name: CONJUR_SSL_CERTIFICATE
+            valueFrom:
+              configMapKeyRef:
+                name: k8s-app-ssl
+                key: ssl-certificate
+        volumeMounts:
+          - mountPath: /run/conjur
+            name: conjur-access-token
+            readOnly: true      
       volumes:
         - name: conjur-access-token
           emptyDir:
