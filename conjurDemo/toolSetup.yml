@@ -9,7 +9,7 @@
   vars_prompt:
     - name: "okd_domain"
       prompt: "Enter your domain name:"
-      default: "cyberarkdemo.com"
+      default: "cyberarkdemo.local"
   roles:
     - machinePrep
     - conjurConfig
