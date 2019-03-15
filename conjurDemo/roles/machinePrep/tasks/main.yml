@@ -2,6 +2,9 @@
 - include_tasks: redhat.yml
   when: ansible_os_family == 'RedHat'
 
+- include_tasks: openshiftPrep.yml
+  when: openshift_install == 'YES'
+
 - name: ensure Docker is installed
   yum:
     name: docker
@@ -24,6 +27,3 @@
   selinux:
     policy: targeted
     state: permissive
-
-- include_tasks: openshiftPrep.yml
-  when: openshift_install == 'YES'
