@@ -8,7 +8,6 @@
 - name: installDependencies
   yum:
     name:
-      - epel-release
       - curl
       - yum-utils
       - device-mapper-persistent-data
