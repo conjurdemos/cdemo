@@ -58,7 +58,7 @@ spec:
           - mountPath: /run/conjur
             name: conjur-access-token
       - name: summon-app
-        image: captainfluffytoes/tastapp1
+        image: captainfluffytoes/testapp1
         imagePullPolicy: Always
         ports:
           - containerPort: 80
@@ -68,8 +68,6 @@ spec:
             value: https://dap-follower.dap.svc.cluster.local/api
           - name: CONJUR_ACCOUNT
             value: cyberark
-          - name: SECRET
-            value: secrets/frontend/aws_access_key
           - name: CONJUR_SSL_CERTIFICATE
             valueFrom:
               configMapKeyRef:
