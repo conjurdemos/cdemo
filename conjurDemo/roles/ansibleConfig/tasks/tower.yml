@@ -14,10 +14,19 @@
   args:
     chdir: "/opt/{{ ansible_download_directory }}"
 
-- name: Wait for Ansible tower web interface
-  pause:
-    seconds: 15
-  
+- name: Wait for ansible website
+  uri:
+    url: "{{ ansible_external_url }}/#/login"
+    body_format: json
+    status_code: 200
+    return_content: yes
+    validate_certs: NO
+    method: GET
+  register: status
+  until: '"Finish" in status.json.status'
+  retries: 60
+  delay: 2
+
 - name: Set license
   uri:
     url: "{{ ansible_external_url }}/api/v2/config/"
