@@ -4,11 +4,11 @@
   #### Select which components to install ####
     conjur_version: 'OSS'
     conjur_install: 'YES'
-    weavescope_install: 'NO'
-    gogs_install: 'NO'
-    jenkins_install: 'NO'
-    ansible_install: 'NO'
-    splunk_install: 'NO'
+    weavescope_install: 'YES'
+    gogs_install: 'YES'
+    jenkins_install: 'YES'
+    ansible_install: 'YES'
+    splunk_install: 'YES'
     openshift_install: 'YES'
     kubernetes_install: 'NO'
  #### Conjur setup options ####
