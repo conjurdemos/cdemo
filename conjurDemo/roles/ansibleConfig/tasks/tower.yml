@@ -233,6 +233,8 @@
     method: GET
   register: status
   until: '"successful" in status.json.status'
+  retries: 60
+  delay: 2
 
 - name: Create job template for conjurIdentity
   uri:
