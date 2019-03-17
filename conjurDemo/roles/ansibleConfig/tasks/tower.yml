@@ -23,7 +23,7 @@
     validate_certs: NO
     method: GET
   register: status
-  until: '"Finish" in status.json.status'
+  until: '"Welcome to Ansible Tower" in status.json.status'
   retries: 60
   delay: 2
 
