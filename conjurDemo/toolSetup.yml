@@ -20,9 +20,9 @@
       retries: 5
       delay: 2
       with_items:
-      - { url: https://hub.docker.com }
-      - { url: https://github.com }
-      - { url: https://plugins.jenkins.io }
+      - { url: 'https://hub.docker.com' }
+      - { url: 'https://github.com' }
+      - { url: 'https://plugins.jenkins.io' }
       
   vars_prompt:
     - name: "okd_domain"
