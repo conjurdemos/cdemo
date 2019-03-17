@@ -10,6 +10,7 @@
     - name: "okd_domain"
       prompt: "Enter your domain name:"
       default: "cyberarkdemo.local"
+      private: no
   roles:
     - machinePrep
     - conjurConfig
