@@ -6,6 +6,24 @@
         that: "ansible_version.full is version_compare('2.6', '>=')"
         msg: >
           " You must update Ansible to at least 2.6."
+          
+    - name: Check for websites
+      uri:
+        url: "{{ item.url }}"
+        body_format: json
+        status_code: 200
+        return_content: yes
+        validate_certs: NO
+        method: GET
+      register: result
+      until: result.status == 200
+      retries: 5
+      delay: 2
+      with_items:
+      - { url: https://hub.docker.com }
+      - { url: https://github.com }
+      - { url: https://plugins.jenkins.io }
+      
   vars_prompt:
     - name: "okd_domain"
       prompt: "Enter your domain name:"
