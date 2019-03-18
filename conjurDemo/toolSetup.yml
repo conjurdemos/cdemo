@@ -39,4 +39,3 @@
     - ansibleConfig
     - splunk
     - openshiftConfig
-    - kubernetesConfig
