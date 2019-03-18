@@ -36,6 +36,10 @@
     password: "{{ ansible_password }}"
     force_basic_auth: yes
     body: "{{ lookup('file','license.json') }}"
+  register: result
+  until: result.status == 200
+  retries: 60
+  delay: 2
 
 - name: Create user in Ansible
   uri:
@@ -78,6 +82,10 @@
     "custom_virtualenv": null
 }'
   register: org
+  until: org.status == 200
+  retries: 60
+  delay: 2
+
 
 - name: get gogs api user password
   shell: |
