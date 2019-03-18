@@ -3,7 +3,7 @@
   tasks:
     - name: Pull password from CCP
       uri: 
-        url: https://{{ ccp_ip }}/aimwebservice/api/Accounts?AppID={{ ccp_app_id }}&Safe={{ ccp_safe }}&Object={{ ccp_object_name }}
+        url: https://{{ ccp_address }}/aimwebservice/api/Accounts?AppID={{ ccp_app_id }}&Safe={{ ccp_safe }}&Object={{ ccp_object_name }}
         method: GET
         headers:
           Content-Type: "application/json"
@@ -12,7 +12,7 @@
         body_format: json
       register: response
       vars:
-        ccp_ip: "10.0.2.12"
+        ccp_address: "10.0.2.12"
         ccp_app_id: "AIM_ACCESS"
         ccp_safe: "AIM_ACCESS"
         ccp_folder: 'root'
