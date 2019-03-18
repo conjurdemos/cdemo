@@ -18,12 +18,11 @@
   uri:
     url: "{{ ansible_external_url }}/#/login"
     body_format: json
-    status_code: 200
     return_content: yes
     validate_certs: NO
     method: GET
-  register: status
-  until: '"<-- Password Dialog -->" in status.content'
+  register: result
+  until: result.status == 200
   retries: 60
   delay: 2
 
