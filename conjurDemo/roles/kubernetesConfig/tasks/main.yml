@@ -1,4 +1,0 @@
----
-# tasks file for kubernetesConfig
-- include_tasks: kubernetes.yml
-  when: kubernetes_install == 'YES'

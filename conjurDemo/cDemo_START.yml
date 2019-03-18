@@ -10,7 +10,6 @@
     ansible_install: 'YES'
     splunk_install: 'YES'
     openshift_install: 'YES'
-    kubernetes_install: 'NO'
  #### Conjur setup options ####
     conjur_container_name: 'conjur-master'
     conjur_EE_image_name: 'conjur-appliance'
