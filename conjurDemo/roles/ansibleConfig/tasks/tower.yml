@@ -63,6 +63,10 @@
     password: "{{ ansible_password }}"
     force_basic_auth: yes
     body: "{{ lookup('file','license.json') }}"
+  register: result
+  until: result.status == 200
+  retries: 60
+  delay: 2
 
 - name: Create user in Ansible
   uri:
@@ -86,6 +90,9 @@
         "password": "{{ ansible_password }}"
       }
   register: eva_id
+  until: eva_id.status == 201
+  retries: 60
+  delay: 2
 
 - name: Create Organization in Ansible
   uri:
@@ -103,6 +110,10 @@
     "custom_virtualenv": null
 }'
   register: org
+  until: org.status == 200
+  retries: 60
+  delay: 2
+
 
 - name: get gogs api user password
   shell: |
@@ -135,6 +146,9 @@
     "inputs": {"username":"{{ gogs_username.stdout }}","password":"{{ gogs_password.stdout }}"}
 }'
   register: gogs_cred
+  until: gogs_cred.status == 201
+  retries: 60
+  delay: 2
 
 - name: Create LAB3_AnsibleConjurIdentity project in Ansible
   uri:
@@ -166,6 +180,9 @@
   with_items:
    - { name: 'LAB3_AnsibleConjurIdentity', description: 'This project will deploy a conjur identity to a remote machine.' }
   register: LAB3_AnsibleConjurIdentity
+  until: LAB3_AnsibleConjurIdentity.status == 201
+  retries: 60
+  delay: 2
 
 - name: Create conjurIdentity inventory
   uri:
@@ -190,6 +207,9 @@
   with_items:
    - { name: 'conjurIdentity', description: 'This inventory will pull new machines to grant a conjur identity from the source project.' }
   register: conjurIdentity_inventory
+  until: conjurIdentity_inventory.status == 201
+  retries: 60
+  delay: 2
 
 - name: Create conjurIdentity inventory source
   uri:
@@ -226,7 +246,9 @@
   with_items:
       - { name: 'newMachines', description: 'Machines that will get a conjur identity' }
   register: conjurIdentity_inventorysource
-
+  until: conjurIdentity_inventorysource.status == 201
+  retries: 60
+  delay: 2
 
 - name: Get conjurIdentity Project status
   uri:
@@ -294,6 +316,9 @@
   with_items:
   - { name: 'conjurIdentityPush', description: 'Pushes a conjur identity to the machine' }
   register: cojurIdentity_template
+  until: cojurIdentity_template.status == 201
+  retries: 60
+  delay: 2
 
 - name: Create LAB3_AnsibleConjurLookup project in Ansible
   uri:
@@ -325,3 +350,6 @@
   with_items:
    - { name: 'LAB3_AnsibleConjurLookup', description: 'This project will look up a secret from Conjur.' }
   register: LAB3_AnsibleConjurLookup
+  until: LAB3_AnsibleConjurLookup.status == 201
+  retries: 60
+  delay: 2
