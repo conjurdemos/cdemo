@@ -15,7 +15,6 @@
     chdir: "/opt/{{ ansible_download_directory }}"
 
 - pause:
-    seconds: 15
 
 - name: Wait for ansible website
   uri:
