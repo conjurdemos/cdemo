@@ -62,6 +62,7 @@
 - name: Start OKD
   shell: |
     oc cluster up --public-hostname={{ okd_fqdn }}
-  ignore_errors: true
+  register: okd
+  failed_when: okd.rc > 0
   args:
     chdir: /opt/openshift/
