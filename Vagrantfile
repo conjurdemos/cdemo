@@ -13,6 +13,6 @@ Vagrant.configure("2") do |config|
     ansible.become = true
     ansible.provisioning_path = "/vagrant/conjurDemo"
     ansible.inventory_path = "inventory.yml"
-    ansible.playbook = "site.yml"
+    ansible.playbook = "cDemo_start.yml"
   end
 end
