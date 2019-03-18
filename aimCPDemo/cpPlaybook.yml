@@ -9,7 +9,6 @@
           query: "safe=AIM_ACCESS;folder=root;object=AIM_USER"
           output: "Password,PassProps.UserName,PassProps.Address,PasswordChangeInProcess"
 
-
     - name: used in a loop
       debug: msg={{item}}
       with_cyberarkpassword:

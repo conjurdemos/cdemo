@@ -21,4 +21,4 @@ fi
 
 # install cdemo
 cd "$SCRIPTPATH/../conjurDemo"
-sudo -E ansible-playbook -i inventory.yml cDemo.yml
+sudo -E ansible-playbook -i inventory.yml cDemo_START.yml
