@@ -14,23 +14,6 @@
   args:
     chdir: "/opt/{{ ansible_download_directory }}"
 
-- pause:
-
-- name: Wait for ansible website
-  uri:
-    url: "{{ ansible_external_url }}/#/login"
-    body_format: json
-    return_content: yes
-    validate_certs: NO
-    method: GET
-  register: status
-
-- debug:
-    msg: "{{ status }}"
-
-
-- pause:
-
 - name: Wait for ansible website
   uri:
     url: "{{ ansible_external_url }}/#/login"
@@ -40,7 +23,7 @@
     validate_certs: NO
     method: GET
   register: status
-  until: '"Welcome to Ansible Tower" in status.json.status'
+  until: '"<-- Password Dialog -->" in status.content'
   retries: 60
   delay: 2
 
