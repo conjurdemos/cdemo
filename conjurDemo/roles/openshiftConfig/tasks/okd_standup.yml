@@ -10,11 +10,16 @@
     zone: dockerc
     permanent: yes
 
+- name: Get docker networking bridge subnet
+  shell: |
+    docker network inspect -f "{{ '{{range .IPAM.Config }}{{ .Subnet }}{{end}}' }}" bridge
+  register: bridge_network
+
 - name: Set up docker zone
   firewalld:
     zone: dockerc
     permanent: yes
-    source: 172.17.0.0/16
+    source: "{{ bridge_network.stdout }}"
     state: enabled
 
 - name: Set up ports
