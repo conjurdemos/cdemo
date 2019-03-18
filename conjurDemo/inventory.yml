@@ -1,2 +1,2 @@
 [toolMachines]
-default ansible_connection=local
+default ansible_connection=local ansible_become=true
