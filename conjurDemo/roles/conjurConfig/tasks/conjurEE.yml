@@ -77,6 +77,8 @@
      - "{{ conjur_postgres_rep_port }}:5432"
     volumes:
      - "{{ conjur_audit_volume }}:{{ conjur_audit_directory }}"
+    env:
+      CONJUR_AUTHENTICATORS="authn,authn-iam/prod,authn-k8s/okd-follower"
     restart_policy: always
 
 - name: Configure Conjur container
