@@ -160,13 +160,13 @@
   # Add our host into our layer
   - !grant
     role: !layer
-    member: 978458609324/MyApp
+    member: !host 978458609324/MyApp
 
   # Give the host in our layer permission to retrieve variables
   - !grant
     member: !layer
     role: !group secrets-users
   
-  - !grant
-  role: !group /conjur/authn-iam/prod/clients
+- !grant
+  role: !group conjur/authn-iam/prod/clients
   member: !host myapp/978458609324/MyApp
