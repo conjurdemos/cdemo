@@ -137,6 +137,7 @@
 
 - !policy 
   id: myapp
+  owner: !group /admins
   body:
   - &variables
     - !variable database/username
