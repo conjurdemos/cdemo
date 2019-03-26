@@ -40,6 +40,8 @@
      - secrets/frontend/aws_access_key
      - secrets/frontend/aws_secret_key
      - secrets/frontend/sql_password
+     - myapp/database/username
+     - myapp/database/password
 
 - name: Setting Passwords for Secure users
   shell: |
