@@ -70,8 +70,16 @@
     docker exec {{ conjur_cli_container_name }} echo "{{ account.stdout }}" | awk '/admin:/{print $5}' | tr -d '\r\n'
   register: api_key
 
-- name: configure cli for OSS
+- name: Add Conjur proxy's TLS cert to the CLI container
   shell: |
-    docker exec {{ conjur_cli_container_name }} conjur authn login -u admin -p {{ api_key.stdout }}
+    docker exec {{ conjur_cli_container_name }} \
+      openssl x509 -in /tls/nginx.crt -out /root/conjur-{{ conjur_account }}.pem -outform PEM
+
+- name: Login the CLI container as Conjur admin and set password
+  shell: |
+    docker exec {{ conjur_cli_container_name }} \
+      conjur authn login -u admin -p {{ api_key.stdout }}
+    docker exec {{ conjur_cli_container_name }} \
+      conjur user update_password -p {{ conjur_admin_password }}
 
 - include_tasks: conjurFramework.yml

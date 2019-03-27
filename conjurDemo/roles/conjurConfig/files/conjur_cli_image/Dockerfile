@@ -6,6 +6,7 @@ COPY ./policy /policy/
 
 COPY ./tls /tls
 
+RUN awk '!/jessie-updates/' /etc/apt/sources.list | tee /etc/apt/sources.list
 RUN apt-get update -y && apt-get install openssl -y
 
 WORKDIR /tls

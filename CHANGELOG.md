@@ -4,6 +4,19 @@
     usuable state. It's accessible via https://okd.cyberark.local:8443 from the
     local machine.
 
+## 1.4.2
+
+Installing cdemo without Conjur Enterprise/DAP was busted & these changes fix it
+up:
+
+*   Conjur playbook now puts the TLS cert in place for the CLI in both
+    installation scenarios.
+
+*   The Dockerfile for our custom Conjur CLI image removes apt-sources for
+    `jessie-updates`. This is inelegant, but temporarily needed because Debian
+    discontinued that repo. We may resolve the issue outside cdemo by updating
+    the `cyberark/conjur-cli:5` image, but for now it's patched here.
+
 ## 1.4.1
 
 Added a new pair of variables: `splunk_ingress_port` and
