@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -u
+
+# removes postgresql installation
+
+yum remove -y postgresql*
+rm -rf /var/lib/pgsql

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -u
+
+# removes Ansible & Ansible Tower
+
+yum remove anisble-tower\*
+rm -rf /etc/tower /var/lib/awx
+yum remove -y ansible-tower-*
+rm -rf /opt/ansible*

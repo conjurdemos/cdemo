@@ -1,2 +1,0 @@
-[aimMachines]
-localhost ansible_connection=local
