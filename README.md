@@ -1,6 +1,6 @@
-# Cyberark Conjur Enterprise demonstration environment
+# Dynamic Access Provider demonstration environment
 
-This will set up a new demo environment that will show off the features of a Conjur Enterprise in conjunction with common devops tools.  The tools are all docker containers that are all mapped to the same docker network to all for DNS resolution of the docker container name.
+This will set up a new demo environment that will show off the features of DAP in conjunction with common devops tools.  The tools are all docker containers that are all mapped to the same docker network to all for DNS resolution of the docker container name.
 
 ## Conjur Appliance
 
@@ -14,9 +14,9 @@ The demo uses the lastest version of Conjur v5
 * Jenkins
 * Gogs
 * Conjur CLI & Summoin
-* Conjur Enterprise v5 or Conjur OSS
+* DAP or Conjur OSS
 * Weavescope
-* Splunk (Requires Conjur Enterprise v5)
+* Splunk (Requires DAP)
 
 ## How to use
 
@@ -25,10 +25,8 @@ The demo uses the lastest version of Conjur v5
    named 'conjur.tar'. (or '.tar.gz' or '.tgz')
     * If no tar file is located then cdemo will check for conjur docker registry
       access. If you set up your environment to access the private Conjur
-      regsitry, then cdemo will use the latest Conjur Enterprise image. version
-      is pulled directly from the registry.
-    * `cdemo` will automatically pull Conjur OSS if there is no tar file or
-      Conjur docker registry access.
+      regsitry, then cdemo will use the latest DAP image.
+    * `cdemo` will automatically pull Conjur if there is no tar file.
 3. Run `bin/install-ansible`
    * Verify that ansible 2.7.x has been installed by running `ansible --version`. 
 4. Edit `conjurDemo/inventory.yml` to include any machines to be stood up as
@@ -43,43 +41,42 @@ The demo uses the lastest version of Conjur v5
 Note: Ansible with PAS jobs can be deployed by setting the variable
 "ansible_pas: 'YES'" in `conjurDemo/inventory.yml`
 
-## Using cdemo with Conjur Enterprise
+## Using cdemo with Dynamic Access Provider
 
-By default, cdemo will build with Conjur Open Source which is available to
-everyone as LGPL software. However, if you have access to Conjur Enterprise,
-cdemo can use that instead.
+By default, cdemo will build with Conjur which is available to everyone as LGPL
+software. However, if you have access to DAP, cdemo can use that instead.
 
-In order to enable Conjur Enterprise, you need an archive containing the Conjur
-Enterprise appliance image in the root directory of cdemo (same as this readme.)
+In order to enable DAP, you need an archive containing the DAP appliance image
+in the root directory of cdemo (same as this readme.)
 
-If you have access to a Docker registry containing Conjur Enterprise you can
+If you have access to a Docker registry containing DAP you can
 create the acrhive yourself like so:
 
 ```sh-session
-$ docker image save registry.local/conjur-appliance:5.0-stable | gzip -c >conjur.tgz
+$ docker image save registry.local/conjur-appliance:5.0-stable | gzip -c >conjur-appliance.tgz
 ```
 
 If you don't have access, you can download the archive file from your CyberArk
 support vault or contact CyberArk sales to get access. After downloading the
 arcvhive file, move it to this folder.
 
-Note: in order to be recognized as a Conjur Enterprise archive file, it must
-have one of these names:
-* `conjur.tar`
-* `conjur.tar.gz`
-* `conjur.tgz`
+Note: in order to be recognized as a DAP archive file, it must have one of these
+names:
+* `conjur-appliance.tar`
+* `conjur-appliance.tar.gz`
+* `conjur-appliance.tgz`
 
 *Any other archive file(s) will be ignored.*
 
-### Use case: I have Conjur Enterprise in a local registry & don't want to mess with creating archive files
+### Use case: I have DAP in a local registry & don't want to mess with creating archive files
 
-In this case, you can enable Conjur Enterprise with these steps:
+In this case, you can enable DAP with these steps:
 1. edit `cdemo/conjurDemo/roles/conjurConfig/defaults/main.yml`
 2. change `conjur_version` to `EE`
-3. change `conjur_EE_image_name` to the fully qualified name of the Conjur
-   Enterprise appliance image in your local registry.
+3. change `conjur_EE_image_name` to the fully qualified name of the DAP
+   appliance image in your local registry.
 
-Now cdemo will use Conjur Enterprise without requiring an archive file.
+Now cdemo will use DAP without requiring an archive file.
 
 ## Conjur CLI information
 
@@ -107,7 +104,7 @@ The tools installed have a web interfaces that is made accessible to the host ma
 | Conjur        |    443 |
 | Weavescope    |   4040 |
 
-_If using v5 Enterprise Edition:_
+_If using DAP:_
 
 |    Tool    	| Port 	|
 |:----------:	|------	|

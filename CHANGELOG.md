@@ -3,6 +3,12 @@
 *   Created new feature that installs 3.11 of OKD. This just stands up OKD in a
     usuable state. It's accessible via https://okd.cyberark.local:8443 from the
     local machine.
+    
+*   Updated references to Conjur Enteprise to say DAP instead, which is the new
+    enterprise product that contains Conjur.
+    
+*   *\[breaking]*: The cdemo installer now looks for `conjur-appliance.tgz`
+    instead of `conjur.tgz` like it did before. (Likewise with `.tar`, etc)
 
 ## 1.4.2
 
