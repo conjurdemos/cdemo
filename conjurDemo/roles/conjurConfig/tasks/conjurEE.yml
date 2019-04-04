@@ -1,8 +1,50 @@
 ---
+<<<<<<< HEAD
 - name: Create volume for audit data
+=======
+- name: createConjurNetwork
+  docker_network:
+    name: "{{ conjur_network_name }}"
+    state: present
+
+- name: createConjurVolume
+>>>>>>> 4e9142e... Removed the need to build a new container image when using Conjur EE.
   docker_volume:
     name: "{{ conjur_audit_volume }}"
     state: present
+<<<<<<< HEAD
+=======
+  with_items:
+   - hostfactoryTokens
+   - identity
+   - tls
+   - "{{ conjur_audit_volume }}"
+>>>>>>> 4e9142e... Removed the need to build a new container image when using Conjur EE.
+
+- name: Start Conjur CLI
+  docker_container:
+    name: "{{ conjur_cli_container_name }}"
+    image: "{{ conjur_cli_image_name }}"
+    state: started
+    user: root
+    volumes:
+     - "hostfactoryTokens:/hostfactoryTokens:rw"
+     - "identity:/identity:rw"
+     - "tls:/tls:rw"
+    restart_policy: always
+    networks:
+     - name: "{{ conjur_network_name }}"
+    working_dir: /scripts
+    entrypoint: []
+    command: ["sleep", "infinity"]
+
+- name: Copy policies into cli container
+  shell: |
+    docker cp "{{ role_path}}/files/conjur_cli_image/policy" "{{ conjur_cli_container_name }}:/policy"
+
+- name: Copy API scripts into cli container
+  shell: |
+    docker cp "{{ role_path}}/files/conjur_cli_image/apiInteraction" "{{ conjur_cli_container_name }}:/scripts"
 
 - name: Load Conjur appliance image from archive
   docker_image:

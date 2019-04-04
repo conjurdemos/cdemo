@@ -8,8 +8,11 @@
     conjur_network_name: conjur
     conjur_https_port: '443'
     conjur_postgres_rep_port: '5432'
-    conjur_cli_container_name: 'conjur-cli'
-    conjur_cli_image_name: 'cdemo/conjur-cli:latest'
+    conjur_cli_repo: 'cyberark'
+    conjur_cli_image: 'conjur-cli'
+    conjur_cli_image_version: '5-latest'
+    conjur_cli_image_name: "{{ conjur_cli_repo }}/{{ conjur_cli_image }}:{{ conjur_cli_image_version }}"
+    conjur_cli_container_name: "{{ conjur_cli_image }}"
     conjur_account: 'cyberark'
     conjur_admin_password: 'Cyberark1'
     conjur_internal_url: "https://{{ conjur_container_name }}"
