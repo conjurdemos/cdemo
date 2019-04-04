@@ -9,6 +9,8 @@
     
 *   *\[breaking]*: The cdemo installer now looks for `conjur-appliance.tgz`
     instead of `conjur.tgz` like it did before. (Likewise with `.tar`, etc)
+    
+*   Changed `conjurDemo/site.yml` to `conjurDemo/cDemo.yml`
 
 ## 1.4.2
 
