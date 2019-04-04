@@ -48,3 +48,7 @@
   selinux:
     policy: targeted
     state: permissive
+
+- include_tasks: openshiftPrep.yml
+  when: openshift_install == 'YES'
+
