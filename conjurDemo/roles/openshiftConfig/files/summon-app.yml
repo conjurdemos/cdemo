@@ -1,0 +1,99 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: summon-app
+  namespace: summon-app
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: summon-app
+  namespace: summon-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: summon-app
+  template:
+    metadata:
+      labels:
+        app: summon-app
+    spec:
+      serviceAccountName: summon-app
+      containers:
+      - name: summon-app
+        image: captainfluffytoes/docker_k8s_test_app2
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 80
+            protocol: TCP
+        env:
+          - name: CONJUR_APPLIANCE_URL
+            value: https://conjur-follower.conjur.svc.cluster.local/api
+          - name: CONJUR_ACCOUNT
+            value: cyberark
+          - name: CONJUR_SSL_CERTIFICATE
+            valueFrom:
+              configMapKeyRef:
+                name: k8s-app-ssl
+                key: ssl-certificate
+        volumeMounts:
+          - mountPath: /run/conjur
+            name: conjur-access-token
+            readOnly: true
+      - name: authenticator
+        image: cyberark/conjur-kubernetes-authenticator
+        imagePullPolicy: Always
+        env:
+          - name: MY_POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: MY_POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: MY_POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          - name: CONJUR_APPLIANCE_URL
+            value: https://conjur-follower.conjur.svc.cluster.local/api
+          - name: CONJUR_AUTHN_URL
+            value: https://conjur-follower.conjur.svc.cluster.local/api/authn-k8s/okd-follower
+          - name: CONJUR_ACCOUNT
+            value: cyberark
+          - name: CONJUR_VERSION
+            value: '5'
+          - name: CONJUR_AUTHN_LOGIN
+            value: k8s-app/*/*
+          - name: CONJUR_SSL_CERTIFICATE
+            valueFrom:
+              configMapKeyRef:
+                name: k8s-app-ssl
+                key: ssl-certificate
+        volumeMounts:
+          - mountPath: /run/conjur
+            name: conjur-access-token
+      volumes:
+        - name: conjur-access-token
+          emptyDir:
+            medium: Memory
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: summon-app
+  namespace: summon-app
+  labels:
+    app: summon-app
+spec:
+  ports:
+  - protocol: TCP
+    port: 80
+  selector:
+    app: summon-app
+  type: NodePort

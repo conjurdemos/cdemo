@@ -1,0 +1,9 @@
+---
+- name: Confiure Weavescope inside okd
+  shell: |
+    oc login -u system:admin
+    oc new-project weave
+    oc adm policy add-cluster-role-to-user cluster-admin -z weave-scope
+    oc adm policy add-scc-to-user privileged -z weave-scope
+    oc adm policy add-scc-to-user anyuid -z default
+    oc create -f 'https://cloud.weave.works/k8s/scope.yaml'

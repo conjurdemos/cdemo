@@ -1,0 +1,68 @@
+---
+- name: Grab Conjur docker ip
+  shell: |
+    docker inspect {{ conjur_container_name }} | jq .[].NetworkSettings.IPAddress | tr -d \"
+  register: conjur_docker_ip
+
+- name: Set up OKD to run Conjur and push conjur image to local registry
+  shell: |
+    docker tag $(docker image ls | grep conjur-appliance | awk '//{print$3}') 172.30.1.1:5000/conjur/conjur-appliance
+    docker push 172.30.1.1:5000/conjur/conjur-appliance
+    oc login -u system:admin
+    oc adm policy add-scc-to-user anyuid system:serviceaccount:conjur:default
+  args:
+    chdir: /opt/openshift/
+    executable: /bin/bash
+
+- name: Start conjur
+  shell: |
+    oc login -u developer
+    oc delete project myproject
+    oc create -f {{ role_path }}/files/conjurFollower.yml
+  args:
+    executable: /bin/bash
+    chdir: /opt/openshift
+
+- name: Configure conjur certificate
+  shell: |
+    docker exec {{ conjur_container_name }} evoke ca issue --force {{ okd_fqdn }} {{ okd_follower_service }}
+    docker exec {{ conjur_container_name }} chpst -u conjur conjur-plugin-service possum rake authn_k8s:ca_init["conjur/authn-k8s/okd-follower"]
+  ignore_errors: true
+
+- name: Create DAP seed file.
+  shell: |
+    docker exec {{ conjur_container_name }} evoke seed follower okd-follower conjur-master > seed.tar
+    oc create configmap seed --from-file seed.tar -o yaml --dry-run | oc replace -f -
+    rm -f seed.tar
+  args:
+    chdir: /opt/openshift/
+    executable: /bin/bash
+
+- name: Get follower pod name
+  shell: |
+    oc get pods | grep conjur | awk '{print$1}'
+  register: podName
+
+- name: Delete current pod
+  shell: |
+    oc delete pod {{ podName.stdout }}
+
+- pause:
+    seconds: 5
+
+- name: Get follower pod name
+  shell: |
+    oc get pods | grep conjur | awk '{print$1}'
+  register: podName
+
+- name: set hosts file
+  shell: |
+    oc exec {{ podName.stdout }} -i -t -- bash -c 'echo "{{ conjur_docker_ip.stdout }} {{ conjur_container_name}}" >> /etc/hosts'
+
+- name: Unpack seed
+  shell: |
+    oc exec {{ podName.stdout }} -- evoke unpack seed /seed/seed.tar
+
+- name: Configure follower
+  shell: |
+    oc exec {{ podName.stdout }} -- evoke configure follower

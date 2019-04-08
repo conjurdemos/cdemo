@@ -55,49 +55,15 @@
   ignore_errors: true
   args:
     chdir: /opt/openshift/
-  
+
 - name: Wait for registry
   pause:
-    seconds: 15
+    seconds: 8
 
-- name: Login to openshift registry
+- name: Create conjur project and log into local OKD registry
   shell: |
     oc new-project conjur
     docker login -u developer -p $(oc whoami -t) 172.30.1.1:5000
-  args:
-    chdir: /opt/openshift/
-    executable: /bin/bash
-
-- name: Configure OKD
-  shell: |
-    docker tag $(docker image ls | grep conjur-appliance | awk '//{print$3}') 172.30.1.1:5000/conjur/conjur-appliance
-    docker push 172.30.1.1:5000/conjur/conjur-appliance
-    oc login -u system:admin
-    oc adm policy add-scc-to-user anyuid system:serviceaccount:conjur:default
-    oc login -u developer
-    oc delete project myproject
-  args:
-    chdir: /opt/openshift/
-    executable: /bin/bash
-
-- name: Start conjur
-  shell: |
-    oc create -f {{ role_path }}/files/conjurFollower.yml
-  args:
-    executable: /bin/bash
-    chdir: /opt/openshift
-
-- name: Configure conjur certificate
-  shell: |
-    docker exec {{ conjur_container_name }} evoke ca issue --force {{ okd_fqdn }} {{ okd_follower_service }}
-    docker exec {{ conjur_container_name }} chpst -u conjur conjur-plugin-service possum rake authn_k8s:ca_init["conjur/authn-k8s/okd-follower"]
-  ignore_errors: true
-
-- name: Configure Conjur Follower
-  shell: |
-    docker exec {{ conjur_container_name }} evoke seed follower okd-follower conjur-master > seed.tar
-    oc create configmap seed --from-file seed.tar -o yaml --dry-run | oc replace -f -
-    rm -f seed.tar
   args:
     chdir: /opt/openshift/
     executable: /bin/bash
