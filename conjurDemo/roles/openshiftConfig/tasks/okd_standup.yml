@@ -34,7 +34,7 @@
   - { name: "centos-release-openshift-origin311" }
   - { name: "origin-clients" }
 
-- name: set up host file to allow for host communication with Conjur
+- name: set up host file to allow for host communication with DAP
   lineinfile:
     path: /etc/hosts
     state: present
@@ -61,5 +61,5 @@
     docker login -u developer -p $(oc whoami -t) 172.30.1.1:5000
   register: result
   until: result.stdout == 'Login Succeeded'
-  retries: 500
+  retries: 60
   delay: 2

@@ -2,7 +2,7 @@
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
-  name: conjur-authenticator
+  name: dap-authenticator
 rules:
 - apiGroups: [""]
   resources: ["pods"]
@@ -20,8 +20,8 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: default
-    namespace: conjur
+    namespace: dap
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: conjur-authenticator
+  name: dap-authenticator

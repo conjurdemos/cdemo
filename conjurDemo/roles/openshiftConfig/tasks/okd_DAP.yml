@@ -2,25 +2,25 @@
 - name: Create new project for DAP and push image
   shell: |
     oc login -u developer
-    oc new-project conjur
-    docker tag $(docker image ls | grep conjur-appliance | awk '//{print$3}') 172.30.1.1:5000/conjur/conjur-appliance
+    oc new-project dap
+    docker tag $(docker image ls | grep conjur-appliance | awk '//{print$3}') 172.30.1.1:5000/dap/dap-appliance
     docker login -u developer -p $(oc whoami -t) 172.30.1.1:5000
-    docker push 172.30.1.1:5000/conjur/conjur-appliance
+    docker push 172.30.1.1:5000/dap/dap-appliance
 
-- name: Grant anyuid privileges to conjur project default service account.
+- name: Grant anyuid privileges to dap project default service account.
   shell: |
     oc login -u system:admin
-    oc adm policy add-scc-to-user anyuid system:serviceaccount:conjur:default
+    oc adm policy add-scc-to-user anyuid system:serviceaccount:dap:default
 
-- name: Start conjur
+- name: Start DAP
   shell: |
     oc login -u developer
     oc delete project myproject
-    oc create -f {{ role_path }}/files/conjurFollower.yml
+    oc create -f {{ role_path }}/files/DAPFollower.yml
   args:
     chdir: /opt/openshift
 
-- name: Configure conjur follower certificate
+- name: Configure DAP follower certificate
   shell: |
     docker exec {{ conjur_container_name }} evoke ca issue --force {{ okd_fqdn }}
     docker exec {{ conjur_container_name }} evoke ca issue --force {{ okd_follower_service }}
@@ -37,7 +37,7 @@
 
 - name: Get follower pod name
   shell: |
-    oc get pods | grep conjur | awk '{print$1}'
+    oc get pods | grep dap | awk '{print$1}'
   register: podName
 
 - name: Delete current pod
@@ -49,17 +49,17 @@
 
 - name: Get follower pod name
   shell: |
-    oc get pods | grep conjur | awk '{print$1}'
+    oc get pods | grep dap | awk '{print$1}'
   register: podName
 
-- name: Grab Conjur docker ip
+- name: Grab DAP docker ip
   shell: |
     docker inspect {{ conjur_container_name }} | jq .[].NetworkSettings.IPAddress | tr -d \"
-  register: conjur_docker_ip
+  register: dap_docker_ip
 
 - name: set hosts file
   shell: |
-    oc exec {{ podName.stdout }} -i -t -- bash -c 'echo "{{ conjur_docker_ip.stdout }} {{ conjur_container_name}}" >> /etc/hosts'
+    oc exec {{ podName.stdout }} -i -t -- bash -c 'echo "{{ dap_docker_ip.stdout }} {{ conjur_container_name}}" >> /etc/hosts'
 
 - name: Unpack seed
   shell: |
