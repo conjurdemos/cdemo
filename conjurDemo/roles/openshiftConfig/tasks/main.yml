@@ -10,3 +10,9 @@
 
 - include_tasks: okd_demoApps.yml
   when: openshift_install == 'YES' and conjur_install == 'YES'
+
+- name: Make sure all containers restart
+  shell: |
+    docker update --restart always $(docker container ls -aq)
+  args:
+    executable: /bin/bash
