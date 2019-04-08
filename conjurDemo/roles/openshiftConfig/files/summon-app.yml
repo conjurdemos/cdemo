@@ -21,7 +21,7 @@ spec:
       labels:
         app: summon-app
     spec:
-      serviceAccountName: summon-app
+      serviceAccountName: summon-app-service-account
       containers:
       - name: summon-app
         image: captainfluffytoes/docker_k8s_test_app2
