@@ -1,4 +1,12 @@
 ---
+- name: Create conjur project and log into local OKD registry
+  shell: |
+    oc new-project conjur
+    docker login -u developer -p $(oc whoami -t) 172.30.1.1:5000
+  args:
+    chdir: /opt/openshift/
+    executable: /bin/bash
+    
 - name: Grab Conjur docker ip
   shell: |
     docker inspect {{ conjur_container_name }} | jq .[].NetworkSettings.IPAddress | tr -d \"

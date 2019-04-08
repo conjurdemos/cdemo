@@ -56,14 +56,10 @@
   args:
     chdir: /opt/openshift/
 
-- name: Wait for registry
-  pause:
-    seconds: 8
-
-- name: Create conjur project and log into local OKD registry
+- name: Check for registry being up
   shell: |
-    oc new-project conjur
     docker login -u developer -p $(oc whoami -t) 172.30.1.1:5000
-  args:
-    chdir: /opt/openshift/
-    executable: /bin/bash
+  register: result
+  until: result.stdout == 'Login Succeeded'
+  retries: 500
+  delay: 2
