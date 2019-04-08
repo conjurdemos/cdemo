@@ -10,3 +10,4 @@ conjur.tar
 *.cliidentity
 tar.conjur
 .vagrant
+conjur-appliance.tar.gz
