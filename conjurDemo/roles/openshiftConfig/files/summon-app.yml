@@ -68,7 +68,7 @@ spec:
           - name: CONJUR_VERSION
             value: '5'
           - name: CONJUR_AUTHN_LOGIN
-            value: summon-app/*/*
+            value: host/conjur/authn-k8s/okd-follower/apps/summon-app/*/*
           - name: CONJUR_SSL_CERTIFICATE
             valueFrom:
               configMapKeyRef:
