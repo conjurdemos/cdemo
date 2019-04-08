@@ -1,11 +1,31 @@
 ---
+- name: Get registry IP
+  shell: |
+    oc login -u system:admin
+    oc get svc -n default | grep registry | awk '{print$3}'
+  register: registry_ip
+
+- name: Get registry Port
+  shell: |
+    oc login -u system:admin
+    oc get svc -n default | grep registry | awk '{print$5}' | tr -d '/TCP'
+  register: registry_port
+
+- name: Check for registry being up
+  shell: |
+    docker login -u developer -p $(oc whoami -t) {{ registry_ip.stdout }}:{{ registry_port.stdout }}
+  register: result
+  until: result.stdout == 'Login Succeeded'
+  retries: 60
+  delay: 2
+
 - name: Create new project for DAP and push image
   shell: |
     oc login -u developer
     oc new-project {{ dap_project_name }}
-    docker tag $(docker image ls | grep conjur-appliance | awk '//{print$3}') 172.30.1.1:5000/{{ dap_project_name }}/dap-appliance
-    docker login -u developer -p $(oc whoami -t) 172.30.1.1:5000
-    docker push 172.30.1.1:5000/{{ dap_project_name }}/dap-appliance
+    docker tag $(docker image ls | grep conjur-appliance | awk '//{print$3}') {{ registry_ip.stdout }}:{{ registry_port.stdout }}/{{ dap_project_name }}/dap-appliance
+    docker login -u developer -p $(oc whoami -t) {{ registry_ip.stdout }}:{{ registry_port.stdout }}
+    docker push {{ registry_ip.stdout }}:{{ registry_port.stdout }}/{{ dap_project_name }}/dap-appliance
 
 - name: Grant anyuid privileges to dap project default service account.
   shell: |
