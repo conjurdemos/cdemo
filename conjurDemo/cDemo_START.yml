@@ -70,5 +70,6 @@
 #### Openshift set up options ####
     okd_a_record: "okd"
     okd_fqdn: "{{ okd_a_record }}.{{ okd_domain }}"
-    okd_follower_service: "dap-follower.conjur.svc.cluster.local"
+    dap_project_name: "dap"
+    okd_follower_service: "dap-follower.{{ dap_project_name }}.svc.cluster.local"
 #### Kubernetes set up options ####
