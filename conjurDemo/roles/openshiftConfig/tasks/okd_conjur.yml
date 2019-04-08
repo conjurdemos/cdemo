@@ -23,7 +23,7 @@
     executable: /bin/bash
     chdir: /opt/openshift
 
-- name: Configure conjur certificate
+- name: Configure conjur follower certificate
   shell: |
     docker exec {{ conjur_container_name }} evoke ca issue --force {{ okd_fqdn }} {{ okd_follower_service }}
     docker exec {{ conjur_container_name }} chpst -u conjur conjur-plugin-service possum rake authn_k8s:ca_init["conjur/authn-k8s/okd-follower"]

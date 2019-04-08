@@ -8,5 +8,5 @@
 - include_tasks: okd_conjur.yml
   when: openshift_install == 'YES' and conjur_install == 'YES'
 
-- include_tasks: okd_demoApp.yml
+- include_tasks: okd_demoApps.yml
   when: openshift_install == 'YES' and conjur_install == 'YES'
