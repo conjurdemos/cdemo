@@ -25,13 +25,14 @@
 
 - name: Configure conjur follower certificate
   shell: |
-    docker exec {{ conjur_container_name }} evoke ca issue --force {{ okd_fqdn }} {{ okd_follower_service }}
+    docker exec {{ conjur_container_name }} evoke ca issue --force {{ okd_fqdn }}
+    docker exec {{ conjur_container_name }} evoke ca issue --force {{ okd_follower_service }}
     docker exec {{ conjur_container_name }} chpst -u conjur conjur-plugin-service possum rake authn_k8s:ca_init["conjur/authn-k8s/okd-follower"]
   ignore_errors: true
 
 - name: Create DAP seed file.
   shell: |
-    docker exec {{ conjur_container_name }} evoke seed follower okd-follower conjur-master > seed.tar
+    docker exec {{ conjur_container_name }} evoke seed follower {{ okd_follower_service }}  > seed.tar
     oc create configmap seed --from-file seed.tar -o yaml --dry-run | oc replace -f -
     rm -f seed.tar
   args:

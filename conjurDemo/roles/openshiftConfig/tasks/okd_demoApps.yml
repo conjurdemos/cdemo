@@ -5,15 +5,25 @@
     oc login -u system:admin
     oc project summon-app
     oc create -f {{ role_path }}/files/summon-app_security.yml
+  args:
+    chdir: /opt/openshift/
+    executable: /bin/bash
 
 - name: Get Conjur SSL cert
   shell: |
-    docker exec {{ conjur_container_name }} cat /opt/conjur/etc/ssl/conjur-master.pem
+    docker exec {{ conjur_container_name }} cat /opt/conjur/etc/ssl/conjur-master.pem > ssl.pem
   register: conjur_ssl
+  args:
+    chdir: /opt/openshift/
+    executable: /bin/bash
 
 - name: Create configmap and store ssl cert
   shell: |
     oc login -u developer
     oc project summon-app
-    oc create configmap k8s-app-ssl --from-literal=ssl-certificate={{ conjur_ssl.stdout }}
+    oc create configmap k8s-app-ssl --from-file=ssl-certificate=ssl.pem
+    rm -f ssl.pem
     oc create -f {{ role_path }}/files/summon-app.yml
+  args:
+    chdir: /opt/openshift/
+    executable: /bin/bash
