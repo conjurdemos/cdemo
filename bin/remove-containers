@@ -20,6 +20,7 @@ cdemo_container_names=(
     conjur-master
     conjur-cli
     weavescope
+    ansible_postgres
 )
 
 # NOTE <2019-02-05 Fri>: `awx_task` and `awx_web` containers are no longer part
