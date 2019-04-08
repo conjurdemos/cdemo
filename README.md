@@ -1,10 +1,10 @@
-# Dynamic Access Provider demonstration environment
+# CyberArk Conjur & Dynamic Access Provider demo environment
 
-This will set up a new demo environment that will show off the features of DAP in conjunction with common devops tools.  The tools are all docker containers that are all mapped to the same docker network to all for DNS resolution of the docker container name.
+This will set up a new demo environment that will show off the features of a Dynamic Access Provider (DAP) in conjunction with common devops tools.  The tools are all docker containers that are all mapped to the same docker network to all for DNS resolution of the docker container name.
 
-## Conjur Appliance
+## DAP Appliance
 
-The demo uses the lastest version of Conjur v5
+The demo uses the lastest version of DAP v5
 
 ## DevOps tools
 
@@ -13,10 +13,12 @@ The demo uses the lastest version of Conjur v5
 * Ansible Tower
 * Jenkins
 * Gogs
-* Conjur CLI & Summoin
-* DAP or Conjur OSS
+* Ansible Tower
+* Conjur CLI
+* DAP or Conjur
 * Weavescope
 * Splunk (Requires DAP)
+* OKD 3.11 (Requires DAP)
 
 ## How to use
 
@@ -109,6 +111,8 @@ _If using DAP:_
 |    Tool    	| Port 	|
 |:----------:	|------	|
 |   Splunk  	| 8000 	|
+|   OKD       | 8443  |
+
 
 ## Default Credentials
 * Jenkins - No credentials needed right now
@@ -118,7 +122,7 @@ _If using DAP:_
 * Conjur - U: cindy P: Cyberark1
 * Conjur - U: john P: Cyberark1
 * Conjur - U: eva P: Cyberark1
-* AWX - U: eva P: Cyberark1
+* Ansible Tower - U: eva P: Cyberark1
 * Gogs - U: eva P: Cyberark1
 * Splunk - U: admin P: Cyberark1
 
@@ -136,9 +140,8 @@ Gitlab will be reflected in the subsequent Jenkins job at runtime.
 3. JOB2_Rotation - This job rotates the secret being pulled by the containers.
 4. JOB2_StopContainers - This job kills all of the tomcat and webapp containers.
 
-### AWX , Gogs, and Jenkins Jobs
-AWX and Gogs are connected via an internal docker network. All projects in AWX
-have source code in Gogs.
+### Ansible Tower, Gogs, and Jenkins Jobs
+Ansible Tower and Gogs are connected via an internal docker network. All projects in AWX have source code in Gogs.
 
 1. LAB3_AnsibleBuildContainers (Jenkins) - Creates target for Ansible job.
 2. LAB3_AnsibleConjurIdentity - Pushes a conjur identity to a remote machine
