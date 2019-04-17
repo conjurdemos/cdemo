@@ -1,4 +1,10 @@
 ---
+- name: Ensure epel repository is available
+  yum:
+    name:
+      - epel-release
+    state: latest
+
 - name: Set up the Docker package repository
   block:
     - name: Install yum dependencies
