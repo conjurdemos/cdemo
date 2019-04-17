@@ -1,11 +1,11 @@
 ---
 - name: Check for DAP image
   stat:
-    path: ../conjur-appliance.{{item}}
+    path: "{{ item }}"
   with_items:
-    - "tar"
-    - "tar.gz"
-    - "tgz"
+    - "{{'../conjur-appliance*.tar.gz' | fileglob}}"
+    - "{{'../conjur-appliance*.tar' | fileglob}}"
+    - "{{'../conjur-appliance*.tgz' | fileglob}}"
   register: conjurTar
 
 - name: Inform about Enterprise availability
