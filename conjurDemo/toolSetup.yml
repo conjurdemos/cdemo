@@ -23,6 +23,7 @@
       - { url: 'https://hub.docker.com' }
       - { url: 'https://github.com' }
       - { url: 'https://plugins.jenkins.io' }
+      - { url: 'https://releases.ansible.com/ansible-tower/setup/' }
       
   vars_prompt:
     - name: "okd_domain"
