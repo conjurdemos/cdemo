@@ -1,10 +1,4 @@
 ---
-- name: Stop docker service
-  service:
-    name: docker
-    state: stopped
-    enabled: yes
-
 - name: delete daemon.json
   file:
     state: absent
@@ -17,9 +11,3 @@
     insertafter: EOF
     line: '{"insecure-registries":["172.30.0.0/16"]}'
     create: yes
-
-- name: Start docker service
-  service:
-    name: docker
-    state: started
-    enabled: yes

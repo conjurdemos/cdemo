@@ -1,4 +1,9 @@
 ---
+- name: Ensure firewalld service is up
+  service:
+    name: firewalld
+    state: restarted
+
 - name: Create firewall Zone for Docker
   firewalld:
     state: present
@@ -25,6 +30,11 @@
   - { zone: "public", port: "8443/tcp" }
   - { zone: "public", port: "53/udp" }
   - { zone: "public", port: "8053/udp" }
+
+- name: Restart firewalld service
+  service:
+    name: firewalld
+    state: restarted
 
 - name: Install packages
   yum:
