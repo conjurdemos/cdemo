@@ -4,6 +4,7 @@ gogs_jobs:
   - { name: 'LAB2_Containers', description: 'This job will spin up 5 tomcat and 5 webapp containers. Each container will pull back a password every couple of seconds. The output will be printed to the cc.log or to the stdout of the docker container.' }
   - { name: 'LAB2_Rotation', description: 'This job will rotate the secret used in LAB2_Containers' }
   - { name: 'LAB2_StopContainers', description: 'This job will destroy all of the tomcat and webapp containers' }
+  - { name: 'LAB2_CleanOrphanedContainers', description: 'This job cleans any dangling webpp and/or tomcat containers.'}
   - { name: 'LAB3_AnsibleCCPaim', description: 'This job uses the Cyberark CCP to pull a password' }
   - { name: 'LAB3_AnsibleConjurIdentity', description: 'This job pushes a Conjur identity using a hostfactory token.' }
   - { name: 'LAB3_AnsibleConjurLookup', description: 'This job gets a secret from Conjur.' }

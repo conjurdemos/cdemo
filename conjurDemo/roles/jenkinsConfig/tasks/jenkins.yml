@@ -91,6 +91,7 @@
    - { name: 'LAB2_Containers', config: "{{ lookup('file', 'files/LAB2_Containers/config.xml') }}"}
    - { name: 'LAB2_Rotation', config: "{{lookup('file', 'files/LAB2_Rotation/config.xml') }}"}
    - { name: 'LAB2_StopContainers', config: "{{lookup('file', 'files/LAB2_StopContainers/config.xml') }}"}
+   - { name: 'LAB2_CleanOrphanedContainers', config: "{{lookup('file', 'files/LAB2_CleanOrphanedContainers/config.xml') }}"}
    - { name: 'LAB3_AnsibleBuildContainers', config: "{{lookup('file', 'files/LAB3_AnsibleBuildContainers/config.xml') }}"}
    - { name: 'LAB3_AnsibleStopContainers', config: "{{lookup('file', 'files/LAB3_AnsibleStopContainers/config.xml') }}"}
    - { name: 'Conjur_Policy', config: "{{lookup('file', 'files/Conjur_Policy/config.xml') }}"}

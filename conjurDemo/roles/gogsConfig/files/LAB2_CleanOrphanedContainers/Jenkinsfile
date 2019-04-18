@@ -1,0 +1,16 @@
+pipeline {
+    agent any
+   
+    stages {
+        stage ('Clean Orphaned Webapp Containers') {
+            steps {
+                sh "docker container rm -f \$(docker container ls -aq --filter \"Name=webapp*\")"
+            }
+        }
+		stage ('Clean Orphaned Tomcat Containers'){
+			steps {
+				sh "docker container rm -f \$(docker container ls -aq --filter \"Name=tomcat*\")"
+			}
+		}
+    }
+}
