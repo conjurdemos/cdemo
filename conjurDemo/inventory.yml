@@ -3,7 +3,6 @@ default ansible_connection=local
 
 [machines:children]
 toolMachines
-demoMachines
 
 [machines:vars]
 #### Select which components to install ####
