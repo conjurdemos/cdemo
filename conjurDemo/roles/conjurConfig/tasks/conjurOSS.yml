@@ -112,7 +112,6 @@
     docker exec {{ conjur_cli_container_name }} \
       openssl x509 -in /tls/nginx.crt -out /root/conjur-{{ conjur_account }}.pem -outform PEM
 
-<<<<<<< HEAD
 - name: Login the CLI container as Conjur admin and set password
   shell: |
     docker exec {{ conjur_cli_container_name }} \
@@ -120,6 +119,4 @@
     docker exec {{ conjur_cli_container_name }} \
       conjur user update_password -p {{ conjur_admin_password }}
 
-=======
->>>>>>> 4e9142e... Removed the need to build a new container image when using Conjur EE.
 - include_tasks: conjurFramework.yml
