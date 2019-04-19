@@ -33,7 +33,7 @@
       - docker-ce-cli
       - containerd.io
       - firewalld
-    update_cache: no
+    update_cache: yes
     state: latest
   become: true
 
