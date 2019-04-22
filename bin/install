@@ -4,6 +4,8 @@ set -eu
 
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 # from https://stackoverflow.com/questions/4774054/reliable-way-for-a-bash-script-to-get-the-full-path-to-itself
+interactive=True
+script_name="$(basename "$0")"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -11,6 +13,17 @@ while [[ $# -gt 0 ]]; do
       export ANSIBLE_ENABLE_TASK_DEBUGGER=True
       shift
       ;;
+    --interactive)
+      interactive="True"
+      shift
+      ;;
+    --no-interactive)
+      interactive="False"
+      shift
+      ;;
+    *)
+      echo "fatal: $script_name: unexpected option $1" >&2
+      exit 1
   esac
 done
 
@@ -19,6 +32,15 @@ if ! type -p ansible-playbook >/dev/null; then
   $SCRIPTPATH/install-ansible
 fi
 
+extra_vars=''
+if [[ $interactive == "False" ]]; then
+  extra_vars='okd_domain="cyberarkdemo.local"'
+fi
+
 # install cdemo
 cd "$SCRIPTPATH/../conjurDemo"
-sudo -E ansible-playbook -i inventory.yml cDemo_START.yml
+set -x
+sudo -E ansible-playbook \
+     -i inventory.yml \
+     --extra-vars "$extra_vars" \
+     cDemo_START.yml
