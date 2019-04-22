@@ -20,6 +20,16 @@
    - identity
    - tls
 
+- name: Ensure conjurrc file exists
+  file:
+    state: touch
+    path: "{{ role_path }}/files/conjurrc"
+
+- name: Update conjurrc file from template
+  template:
+    src: "{{ role_path }}/files/conjurrc.template"
+    dest: "{{ role_path }}/files/conjurrc"
+
 - name: Start Conjur CLI
   docker_container:
     name: "{{ conjur_cli_container_name }}"
@@ -27,14 +37,21 @@
     state: started
     user: root
     volumes:
-     - "hostfactoryTokens:/hostfactoryTokens:rw"
-     - "identity:/identity:rw"
-     - "tls:/tls:rw"
+      - "{{ role_path }}/files/conjurrc:/root/.conjurrc"
+      - "hostfactoryTokens:/hostfactoryTokens:rw"
+      - "identity:/identity:rw"
+      - "tls:/tls:rw"
     restart_policy: always
     networks:
      - name: "{{ conjur_network_name }}"
     entrypoint: []
     command: ["sleep", "infinity"]
+
+- name: Add Conjur CLI container to inventory
+  add_host:
+    name: "{{ conjur_cli_container_name }}"
+    ansible_connection: docker
+  changed_when: false
 
 - name: Start postgres
   docker_container:
