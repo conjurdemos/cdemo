@@ -94,7 +94,6 @@ handy-uri-templates-2-api
 cloudbees-bitbucket-branch-source
 blueocean-bitbucket-pipeline
 blueocean-dashboard
-blueocean-personalization
 jira
 blueocean-jira
 blueocean-display-url
