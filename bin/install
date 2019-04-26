@@ -1,5 +1,10 @@
 #!/bin/bash
 
+set -eu
+
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+# from https://stackoverflow.com/questions/4774054/reliable-way-for-a-bash-script-to-get-the-full-path-to-itself
+
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --debug)
@@ -9,5 +14,11 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-cd conjurDemo
+# install Ansible if not already available
+if ! type -p ansible-playbook >/dev/null; then
+  $SCRIPTPATH/install-ansible
+fi
+
+# install cdemo
+cd "$SCRIPTPATH/../conjurDemo"
 sudo -E ansible-playbook -i inventory.yml site.yml
