@@ -143,7 +143,10 @@
         cd /{{ item.name }}
         git add --all
         git commit -m 'Uploading files.'
-        git remote add origin {{ gogs_auth_url }}/{{ gogs_organization }}/{{ item.name }}.git
+        if ! git ls-remote origin >/dev/null; then
+          git remote add origin {{ gogs_auth_url }}/{{ gogs_organization }}/{{ item.name }}.git
+        fi
+        git pull --rebase
         git push origin master
       with_items: "{{ gogs_jobs }}"
 
@@ -179,7 +182,10 @@
         cd /Conjur_Policy
         git add --all
         git commit -m 'Uploading files.'
-        git remote add origin {{ gogs_auth_url }}/{{ gogs_organization }}/Conjur_Policy.git
+        if ! git ls-remote origin >/dev/null; then
+          git remote add origin {{ gogs_auth_url }}/{{ gogs_organization }}/Conjur_Policy.git
+        fi
+        git pull --rebase
         git push origin master
     
 - name: Add repositories to Team
