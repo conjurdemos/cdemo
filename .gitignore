@@ -11,3 +11,4 @@ conjur.tar
 tar.conjur
 .vagrant
 conjur-appliance.tar.gz
+conjur-appliance.tar
