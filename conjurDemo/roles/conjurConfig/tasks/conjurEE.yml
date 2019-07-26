@@ -41,6 +41,8 @@
   shell: |
     docker exec {{ conjur_container_name }} \
       evoke configure master \
+        $(docker exec {{ conjur_container_name }} evoke configure master --help | \
+          grep -q accept-eula && echo "--accept-eula") \
         -h {{ conjur_container_name }} \
         -p {{ conjur_admin_password }} \
         {{ conjur_account }}
