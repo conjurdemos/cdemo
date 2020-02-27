@@ -14,10 +14,10 @@ Here's how to propose a change to cdemo without writing any code:
 1. Open an issue here in the GitHub project
 2. In the issue, describe the experience you want to have and your vision around
    it. Implementation suggestions are helpful but not required.
-3. Post a link to your issue in the public Conjur Slack ([sign up here][slack])
-   or otherwise get in touch with a maintainer.
+3. Post a link to your issue on the CyberArk Commons ([sign up here][commons])
+   to discuss the issue.
 
-[slack]: https://slackin-conjur.herokuapp.com/
+[commons]: https://discuss.cyberarkcommons.org
 
 To propose a change with a working implementation, open a [GitHub pull
 request][PR].
